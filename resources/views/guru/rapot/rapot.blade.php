@@ -2,11 +2,10 @@
 @section('pageTitle', 'Entry Nilai Rapot')
 @section('title', 'Entry Nilai Rapot')
 @section('content')
-    <h1 class="text-2xl mb-4 dark:text-gray-300">Nilai Rapot Siswa</h1>
     <div class="w-full">
         <!-- Header -->
         <div class="bg-brand-500 text-gray-200 px-6 py-4 rounded-t-xl">
-            <h3 class="text-lg font-semibold">Entry Nilai Rapot</h3>
+            <h3 class="text-lg font-semibold">Nilai Rapot Siswa</h3>
         </div>
 
         <!-- Body -->
