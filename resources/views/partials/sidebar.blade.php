@@ -6,17 +6,17 @@
         <a href="{{ url()->current() }}">
             <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
                 <img class="w-full lg:h-24 mt-16 lg:mt-0"
-                    src="https://unuha.ac.id/wp-content/uploads/2018/09/cropped-siakad.png" alt="Large Logo" />
+                    src="https://www.cybermakassar.com/asset/foto_berita/siakad-app.png" alt="Large Logo" />
 
                 {{-- <img
           class="hidden dark:block"
-          src="https://unuha.ac.id/wp-content/uploads/2018/09/cropped-siakad.png"
+          src="https://www.cybermakassar.com/asset/foto_berita/siakad-app.png"
           alt="Logo"
         /> --}}
             </span>
 
             <img class="logo-icon" :class="sidebarToggle ? 'lg:block mt-16 lg:mt-0' : 'hidden'"
-                src="https://unuha.ac.id/wp-content/uploads/2018/09/cropped-siakad.png" alt="Small Logo" />
+                src="https://www.cybermakassar.com/asset/foto_berita/siakad-app.png" alt="Small Logo" />
         </a>
     </div>
     <!-- SIDEBAR HEADER -->
@@ -85,7 +85,7 @@
                                 </svg>
 
                                 <span class="menu-item-text" :class="sidebarToggle ? 'lg:hidden' : ''">
-                                    Absen Guru
+                                    Absensi Guru
                                 </span>
                             </a>
                         </li>

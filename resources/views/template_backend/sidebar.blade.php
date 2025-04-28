@@ -13,14 +13,14 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Operator')
                     <li class="nav-item has-treeview" id="liDashboard">
-                        <a href="#" class="nav-link" id="Dashboard">
+                        <a href="{{ route('admin.home') }}" class="nav-link" id="AdminHome">
                             <i class="nav-icon fas fa-home"></i>
                             <p>
-                                Dashboard
-                                <i class="fas fa-angle-left right"></i>
+                                Dashboard Admin
+                                {{-- <i class="fas fa-angle-left right"></i> --}}
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        {{-- <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ url('/') }}" class="nav-link" id="Home">
                                     <i class="fas fa-home nav-icon"></i>
@@ -33,7 +33,7 @@
                                     <p>Dashboard Admin</p>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> --}}
                     </li>
                     <li class="nav-item has-treeview" id="liMasterData">
                         <a href="#" class="nav-link" id="MasterData">
@@ -153,12 +153,12 @@
                                     <p>Nilai Ulangan</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('sikap-kelas') }}" class="nav-link" id="Sikap">
                                     <i class="fas fa-file-alt nav-icon"></i>
                                     <p>Nilai Sikap</p>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('rapot-kelas') }}" class="nav-link" id="Rapot">
                                     <i class="fas fa-file-alt nav-icon"></i>

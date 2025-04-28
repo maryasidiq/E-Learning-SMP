@@ -39,8 +39,8 @@ class HomeController extends Controller
         $jadwal = Jadwal::OrderBy('jam_mulai')->OrderBy('jam_selesai')->OrderBy('kelas_id')->where('hari_id', $hari)->where('jam_mulai', '<=', $jam)->where('jam_selesai', '>=', $jam)->get();
         $pengumuman = Pengumuman::first();
         $kehadiran = Kehadiran::all();
-        if (Auth::user()->role == "Admin") {
-            return view('admin-home', compact('jadwal', 'pengumuman', 'kehadiran'));
+        if (Auth::user()->role == "Admin" || Auth::user()->role == "Operator") {
+            return redirect()->route('admin.home', compact('jadwal', 'pengumuman', 'kehadiran'));
         } else {
             return view('home', compact('jadwal', 'pengumuman', 'kehadiran'));
         }
