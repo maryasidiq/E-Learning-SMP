@@ -5,7 +5,7 @@
   <li class="breadcrumb-item active">Edit Mapel</li>
 @endsection
 @section('content')
-<div class="col-md-12">
+  <div class="col-md-12">
     <!-- general form elements -->
     <div class="card card-primary">
       <div class="card-header">
@@ -18,73 +18,59 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-12">
-                <input type="hidden" name="mapel_id" value="{{ $mapel->id }}">
-                <div class="form-group">
-                  <label for="nama_mapel">Nama Mapel</label>
-                  <input type="text" id="nama_mapel" name="nama_mapel" value="{{ $mapel->nama_mapel }}" class="form-control @error('nama_mapel') is-invalid @enderror" placeholder="{{ __('Nama Mata Pelajaran') }}">
-                </div>
-                <div class="form-group">
-                  <label for="paket_id">Paket</label>
-                  <select id="paket_id" name="paket_id" class="form-control @error('paket_id') is-invalid @enderror select2bs4">
-                    <option value="">-- Pilih Paket Mapel --</option>
-                    <option value="9"
-                        @if ($mapel->paket_id == '9')
-                            selected
-                        @endif
-                    >Semua</option>
-                    @foreach ($paket as $data)
-                      <option value="{{ $data->id }}"
-                        @if ($mapel->paket_id == $data->id)
-                            selected
-                        @endif
-                      >{{ $data->ket }}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="form-group">
-                    <label for="kelompok">Kelompok</label>
-                    <select id="kelompok" name="kelompok" class="select2bs4 form-control @error('kelompok') is-invalid @enderror">
-                        <option value="">-- Pilih Kelompok Mapel --</option>
-                        <option value="A"
-                            @if ($mapel->kelompok == 'A')
-                                selected
-                            @endif
-                        >Pelajaran Umum</option>
-                        <option value="B"
-                            @if ($mapel->kelompok == 'B')
-                                selected
-                            @endif
-                        >Pelajaran Khusus</option>
-                        <option value="C"
-                            @if ($mapel->kelompok == 'C')
-                                selected
-                            @endif
-                        >Pelajaran Keahlian</option>
-                    </select>
-                </div>
+              <input type="hidden" name="mapel_id" value="{{ $mapel->id }}">
+              <div class="form-group">
+                <label for="nama_mapel">Nama Mapel</label>
+                <input type="text" id="nama_mapel" name="nama_mapel" value="{{ $mapel->nama_mapel }}"
+                  class="form-control @error('nama_mapel') is-invalid @enderror"
+                  placeholder="{{ __('Nama Mata Pelajaran') }}">
+              </div>
+              <div class="form-group">
+                <label for="paket_id">Tingkat Kelas</label>
+                <select id="paket_id" name="paket_id"
+                  class="form-control @error('paket_id') is-invalid @enderror select2bs4">
+                  <option value="">-- Pilih Tingkat Kelas --</option>
+                  <option value="7" @if ($mapel->paket_id == '7') selected @endif>7</option>
+                  <option value="8" @if ($mapel->paket_id == '8') selected @endif>8</option>
+                  <option value="9" @if ($mapel->paket_id == '9') selected @endif>9</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="kelompok">Kelas</label>
+                <select id="kelompok" name="kelompok"
+                  class="select2bs4 form-control @error('kelompok') is-invalid @enderror">
+                  <option value="">-- Pilih Kelas --</option>
+                  <option value="A" @if ($mapel->kelompok == 'A') selected @endif>Kelas A</option>
+                  <option value="B" @if ($mapel->kelompok == 'B') selected @endif>Kelas B</option>
+                  <option value="C" @if ($mapel->kelompok == 'C') selected @endif>Kelas C</option>
+                  <option value="D" @if ($mapel->kelompok == 'D') selected @endif>Kelas D</option>
+                  <option value="E" @if ($mapel->kelompok == 'E') selected @endif>Kelas E</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
         <!-- /.card-body -->
 
         <div class="card-footer">
-          <a href="#" name="kembali" class="btn btn-default" id="back"><i class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</a> &nbsp;
+          <a href="#" name="kembali" class="btn btn-default" id="back"><i class='nav-icon fas fa-arrow-left'></i> &nbsp;
+            Kembali</a> &nbsp;
           <button name="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp; Update</button>
         </div>
       </form>
     </div>
     <!-- /.card -->
-</div>
+  </div>
 @endsection
 @section('script')
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#back').click(function() {
-        window.location="{{ route('mapel.index') }}";
-        });
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#back').click(function () {
+        window.location = "{{ route('mapel.index') }}";
+      });
     });
     $("#MasterData").addClass("active");
     $("#liMasterData").addClass("menu-open");
     $("#DataMapel").addClass("active");
-</script>
+  </script>
 @endsection

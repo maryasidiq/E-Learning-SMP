@@ -25,11 +25,10 @@
                 </div>
                 <div class="form-group">
                     <label for="mapel_id">Mapel</label>
-                    <select id="mapel_id" name="mapel_id" class="select2bs4 form-control @error('mapel_id') is-invalid @enderror">
-                        <option value="">-- Pilih Mapel --</option>
+                    <select id="mapel_id" name="mapel_id[]" class="select2bs4 form-control @error('mapel_id') is-invalid @enderror" multiple>
                         @foreach ($mapel as $data)
                             <option value="{{ $data->id }}"
-                                @if ($guru->mapel_id == $data->id)
+                                @if ($guru->mapel->contains($data->id))
                                     selected
                                 @endif
                             >{{ $data->nama_mapel }}</option>
@@ -95,8 +94,8 @@
 @section('script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#back').click(function() {
-        window.location="{{ route('guru.mapel', Crypt::encrypt($guru->mapel_id)) }}";
+    $('#back').click(function() {
+        window.location="{{ route('guru.index') }}";
         });
     });
     $("#MasterData").addClass("active");

@@ -9,6 +9,7 @@ use App\Kelas;
 use App\Guru;
 use App\Siswa;
 use App\Ruang;
+use App\Mapel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
@@ -31,7 +32,8 @@ class JadwalController extends Controller
         $kelas = Kelas::OrderBy('nama_kelas', 'asc')->get();
         $ruang = Ruang::all();
         $guru = Guru::OrderBy('kode', 'asc')->get();
-        return view('admin.jadwal.index', compact('hari', 'kelas', 'guru', 'ruang'));
+        $mapel = Mapel::all();
+        return view('admin.jadwal.index', compact('hari', 'kelas', 'guru', 'ruang', 'mapel'));
     }
 
     /**
@@ -56,12 +58,12 @@ class JadwalController extends Controller
             'hari_id' => 'required',
             'kelas_id' => 'required',
             'guru_id' => 'required',
+            'mapel_id' => 'required',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required',
             'ruang_id' => 'required',
         ]);
 
-        $guru = Guru::findorfail($request->guru_id);
         Jadwal::updateOrCreate(
             [
                 'id' => $request->jadwal_id
@@ -69,7 +71,7 @@ class JadwalController extends Controller
             [
                 'hari_id' => $request->hari_id,
                 'kelas_id' => $request->kelas_id,
-                'mapel_id' => $guru->mapel_id,
+                'mapel_id' => $request->mapel_id,
                 'guru_id' => $request->guru_id,
                 'jam_mulai' => $request->jam_mulai,
                 'jam_selesai' => $request->jam_selesai,
@@ -231,6 +233,27 @@ class JadwalController extends Controller
         $file->move('file_jadwal', $nama_file);
         Excel::import(new JadwalImport, public_path('/file_jadwal/' . $nama_file));
         return redirect()->back()->with('success', 'Data Siswa Berhasil Diimport!');
+    }
+
+    public function getMapel($guru_id)
+    {
+        $guru = Guru::find($guru_id);
+        $mapels = $guru->mapel;
+        return response()->json($mapels);
+    }
+
+    public function getMapelByKelas($kelas_id)
+    {
+        $kelas = Kelas::find($kelas_id);
+        $mapels = Mapel::where('paket_id', $kelas->paket_id)->where('kelompok', $kelas->kelompok)->get();
+        return response()->json($mapels);
+    }
+
+    public function getGuruByMapel($mapel_id)
+    {
+        $mapel = Mapel::find($mapel_id);
+        $gurus = $mapel->guru;
+        return response()->json($gurus);
     }
 
     public function deleteAll()

@@ -81,10 +81,10 @@
                     @click.prevent="dropdownOpen = ! dropdownOpen">
                     <span class="mr-3 h-11 w-11 overflow-hidden rounded-full">
                         @if (auth()->user()->role === 'Guru')
-                            <img src="{{ asset(auth()->user()->guru(auth()->user()->id_card)->foto) }}"
+                            <img src="{{ auth()->user()->guru(auth()->user()->id_card) ? asset(auth()->user()->guru(auth()->user()->id_card)->foto) : asset('img/male.jpg') }}"
                                 alt="User Profile" />
                         @elseif (auth()->user()->role === 'Siswa')
-                            <img src="{{ asset(auth()->user()->siswa(auth()->user()->no_induk)->foto) }}"
+                            <img src="{{ auth()->user()->siswa(auth()->user()->no_induk) ? asset(auth()->user()->siswa(auth()->user()->no_induk)->foto) : asset('img/male.jpg') }}"
                                 alt="User Profile" />
                         @else
                             <img src="{{ asset('img/male.jpg') }}" alt="User Profile" />

@@ -113,11 +113,8 @@ class MapelController extends Controller
             $jadwal = Jadwal::where('mapel_id', $mapel->id)->delete();
         } else {
         }
-        $countGuru = Guru::where('mapel_id', $mapel->id)->count();
-        if ($countGuru >= 1) {
-            $guru = Guru::where('mapel_id', $mapel->id)->delete();
-        } else {
-        }
+        // Since many-to-many, we detach relationships instead of deleting gurus
+        $mapel->guru()->detach();
         $mapel->delete();
         return redirect()->back()->with('warning', 'Data mapel berhasil dihapus! (Silahkan cek trash data mapel)');
     }
@@ -137,11 +134,7 @@ class MapelController extends Controller
             $jadwal = Jadwal::withTrashed()->where('mapel_id', $mapel->id)->restore();
         } else {
         }
-        $countGuru = Guru::withTrashed()->where('mapel_id', $mapel->id)->count();
-        if ($countGuru >= 1) {
-            $guru = Guru::withTrashed()->where('mapel_id', $mapel->id)->restore();
-        } else {
-        }
+        // Since many-to-many, relationships are handled via pivot table, no need to restore gurus
         $mapel->restore();
         return redirect()->back()->with('info', 'Data mapel berhasil direstore! (Silahkan cek data mapel)');
     }
@@ -154,11 +147,7 @@ class MapelController extends Controller
             $jadwal = Jadwal::withTrashed()->where('mapel_id', $mapel->id)->forceDelete();
         } else {
         }
-        $countGuru = Guru::withTrashed()->where('mapel_id', $mapel->id)->count();
-        if ($countGuru >= 1) {
-            $guru = Guru::withTrashed()->where('mapel_id', $mapel->id)->forceDelete();
-        } else {
-        }
+        // Since many-to-many, pivot table entries are automatically handled, no need to force delete gurus
         $mapel->forceDelete();
         return redirect()->back()->with('success', 'Data mapel berhasil dihapus secara permanent');
     }

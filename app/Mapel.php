@@ -17,6 +17,11 @@ class Mapel extends Model
         return $this->belongsTo('App\Paket')->withDefault();
     }
 
+    public function guru()
+    {
+        return $this->belongsToMany('App\Guru')->withTimestamps();
+    }
+
     public function sikap($id)
     {
         $siswa = Siswa::where('no_induk', Auth::user()->no_induk)->first();

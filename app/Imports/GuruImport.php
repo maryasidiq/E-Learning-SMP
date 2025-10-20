@@ -28,20 +28,35 @@ class GuruImport implements ToModel
         } else {
             $id_card = $kode;
         }
-        $mapel = Mapel::where('nama_mapel', $row[3])->first();
+        // Assuming multiple mapels are in subsequent columns, e.g., $row[3], $row[4], etc.
+        // For simplicity, assume mapels are comma-separated in $row[3]
+        $mapelNames = explode(',', $row[3]);
+        $mapelIds = [];
+        foreach ($mapelNames as $name) {
+            $mapel = Mapel::where('nama_mapel', trim($name))->first();
+            if ($mapel) {
+                $mapelIds[] = $mapel->id;
+            }
+        }
+
         if ($row[2] == 'L') {
             $foto = 'uploads/guru/35251431012020_male.jpg';
         } else {
             $foto = 'uploads/guru/23171022042020_female.jpg';
         }
 
-        return new Guru([
+        $guru = Guru::create([
             'id_card' => $id_card,
             'nama_guru' => $row[0],
             'nip' => $row[1],
             'jk' => $row[2],
             'foto' => $foto,
-            'mapel_id' => $mapel->id,
         ]);
+
+        if (!empty($mapelIds)) {
+            $guru->mapel()->attach($mapelIds);
+        }
+
+        return $guru;
     }
 }

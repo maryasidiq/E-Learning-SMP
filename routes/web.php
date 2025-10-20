@@ -121,6 +121,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal/export_excel', 'JadwalController@export_excel')->name('jadwal.export_excel');
     Route::post('/jadwal/import_excel', 'JadwalController@import_excel')->name('jadwal.import_excel');
     Route::delete('/jadwal/deleteAll', 'JadwalController@deleteAll')->name('jadwal.deleteAll');
+    Route::get('/admin/jadwal/get-mapel/{guru_id}', 'JadwalController@getMapel')->name('jadwal.getMapel');
+    Route::get('/admin/jadwal/get-mapel-by-kelas/{kelas_id}', 'JadwalController@getMapelByKelas')->name('jadwal.getMapelByKelas');
+    Route::get('/admin/jadwal/get-guru-by-mapel/{mapel_id}', 'JadwalController@getGuruByMapel')->name('jadwal.getGuruByMapel');
     Route::resource('/jadwal', 'JadwalController');
     Route::get('/ulangan-kelas', 'UlanganController@create')->name('ulangan-kelas');
     Route::get('/ulangan-siswa/{id}', 'UlanganController@edit')->name('ulangan-siswa');

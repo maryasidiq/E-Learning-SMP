@@ -9,7 +9,7 @@ class Kelas extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['paket_id', 'nama_kelas', 'guru_id'];
+    protected $fillable = ['nama_kelas', 'paket_id', 'kelompok', 'guru_id'];
 
     public function guru()
     {

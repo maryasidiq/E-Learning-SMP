@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Kelas;
 use App\Guru;
 use App\Paket;
+use App\Mapel;
 use App\Jadwal;
 use App\Siswa;
 use Illuminate\Http\Request;
@@ -22,7 +23,16 @@ class KelasController extends Controller
         $kelas = Kelas::OrderBy('nama_kelas', 'asc')->get();
         $guru = Guru::OrderBy('nama_guru', 'asc')->get();
         $paket = Paket::all();
-        return view('admin.kelas.index', compact('kelas', 'guru', 'paket'));
+        $kelas_options = Mapel::selectRaw("CONCAT(paket_id, ' ', kelompok) as kelas, paket_id, kelompok")
+            ->distinct()
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'value' => $item->kelas,
+                    'label' => $item->kelas
+                ];
+            });
+        return view('admin.kelas.index', compact('kelas', 'guru', 'paket', 'kelas_options'));
     }
 
     /**
@@ -44,17 +54,29 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'nama_kelas' => 'required',
+            'guru_id' => 'required',
+        ]);
+
+        // Parse nama_kelas to get paket and kelompok
+        $parts = explode(' ', $request->nama_kelas);
+        $paket_id = $parts[0];
+        $kelompok = $parts[1];
+
+        // Find paket by id
+        $paket = Paket::find($paket_id);
+        if (!$paket) {
+            return redirect()->back()->with('error', 'Paket tidak ditemukan!');
+        }
+
         if ($request->id != '') {
             $this->validate($request, [
-                'nama_kelas' => 'required|min:6|max:10',
-                'paket_id' => 'required',
-                'guru_id' => 'required|unique:kelas',
+                'guru_id' => 'required',
             ]);
         } else {
             $this->validate($request, [
-                'nama_kelas' => 'required|unique:kelas|min:6|max:10',
-                'paket_id' => 'required',
-                'guru_id' => 'required|unique:kelas',
+                'guru_id' => 'required',
             ]);
         }
 
@@ -64,7 +86,8 @@ class KelasController extends Controller
             ],
             [
                 'nama_kelas' => $request->nama_kelas,
-                'paket_id' => $request->paket_id,
+                'paket_id' => $paket->id,
+                'kelompok' => $kelompok,
                 'guru_id' => $request->guru_id,
             ]
         );
@@ -177,7 +200,9 @@ class KelasController extends Controller
             $newForm[] = array(
                 'id' => $val->id,
                 'nama' => $val->nama_kelas,
+                'nama_kelas' => $val->nama_kelas,
                 'paket_id' => $val->paket_id,
+                'kelompok' => $val->kelompok,
                 'guru_id' => $val->guru_id,
             );
         }

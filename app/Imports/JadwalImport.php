@@ -25,6 +25,11 @@ class JadwalImport implements ToModel
         $guru = Guru::where('nama_guru', $row[3])->first();
         $ruang = Ruang::where('nama_ruang', $row[6])->first();
 
+        if ($guru && $mapel) {
+            // Ensure the guru is attached to the mapel
+            $guru->mapel()->syncWithoutDetaching([$mapel->id]);
+        }
+
         return new Jadwal([
             'hari_id' => $hari->id,
             'kelas_id' => $kelas->id,

@@ -1,7 +1,7 @@
 {{-- @extends('template_backend.home')
 @section('heading', 'Jadwal Guru')
 @section('heading')
-    Jadwal Guru {{ Auth::user()->guru(Auth::user()->id_card)->nama_guru }}
+    Jadwal Guru {{ Auth::user()->guru(Auth::user()->id_card) ? Auth::user()->guru(Auth::user()->id_card)->nama_guru : Auth::user()->name }}
 @endsection
 @section('page')
   <li class="breadcrumb-item active">Jadwal Guru</li>

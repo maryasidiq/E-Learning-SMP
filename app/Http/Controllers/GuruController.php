@@ -29,7 +29,20 @@ class GuruController extends Controller
     {
         $mapel = Mapel::orderBy('nama_mapel')->get();
         $max = Guru::max('id_card');
-        return view('admin.guru.index', compact('mapel', 'max'));
+        $guruMapels = Guru::with('mapel')->get()->map(function ($guru) {
+            $mapels = $guru->mapel->map(function ($mapel) {
+                return [
+                    'nama_mapel' => $mapel->nama_mapel,
+                    'paket_id' => $mapel->paket_id,
+                    'kelompok' => $mapel->kelompok
+                ];
+            });
+            return [
+                'guru' => $guru,
+                'mapels' => $mapels
+            ];
+        });
+        return view('admin.guru.index', compact('mapel', 'max', 'guruMapels'));
     }
 
     /**
@@ -53,9 +66,15 @@ class GuruController extends Controller
         $this->validate($request, [
             'id_card' => 'required',
             'nama_guru' => 'required',
-            'mapel_id' => 'required',
+            'mapel_id' => 'required|array',
+            'mapel_id.*' => 'required|integer',
             'kode' => 'required|string|unique:guru|min:2|max:3',
             'jk' => 'required'
+        ], [
+            'mapel_id.required' => 'Mapel harus dipilih.',
+            'mapel_id.array' => 'Mapel harus berupa array.',
+            'mapel_id.*.required' => 'Setiap mapel harus dipilih.',
+            'mapel_id.*.integer' => 'ID mapel harus berupa angka.',
         ]);
 
         if ($request->foto) {
@@ -75,7 +94,6 @@ class GuruController extends Controller
             'id_card' => $request->id_card,
             'nip' => $request->nip,
             'nama_guru' => $request->nama_guru,
-            'mapel_id' => $request->mapel_id,
             'kode' => $request->kode,
             'jk' => $request->jk,
             'telp' => $request->telp,
@@ -83,6 +101,8 @@ class GuruController extends Controller
             'tgl_lahir' => $request->tgl_lahir,
             'foto' => $nameFoto
         ]);
+
+        $guru->mapel()->attach($request->mapel_id);
 
         Nilai::create([
             'guru_id' => $guru->id
@@ -129,7 +149,8 @@ class GuruController extends Controller
     {
         $this->validate($request, [
             'nama_guru' => 'required',
-            'mapel_id' => 'required',
+            'mapel_id' => 'required|array',
+            'mapel_id.*' => 'required|integer',
             'jk' => 'required',
         ]);
 
@@ -144,13 +165,13 @@ class GuruController extends Controller
         }
         $guru_data = [
             'nama_guru' => $request->nama_guru,
-            'mapel_id' => $request->mapel_id,
             'jk' => $request->jk,
             'telp' => $request->telp,
             'tmp_lahir' => $request->tmp_lahir,
             'tgl_lahir' => $request->tgl_lahir
         ];
         $guru->update($guru_data);
+        $guru->mapel()->sync($request->mapel_id);
 
         return redirect()->route('guru.index')->with('success', 'Data guru berhasil diperbarui!');
     }
@@ -248,7 +269,7 @@ class GuruController extends Controller
     {
         $id = Crypt::decrypt($id);
         $mapel = Mapel::findorfail($id);
-        $guru = Guru::where('mapel_id', $id)->orderBy('kode', 'asc')->get();
+        $guru = $mapel->guru()->orderBy('kode', 'asc')->get();
         return view('admin.guru.show', compact('mapel', 'guru'));
     }
 
