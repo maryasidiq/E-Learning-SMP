@@ -31,11 +31,6 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $data->nama_mapel }}</td>
                 <td>{{ $data->paket_id }}</td>
-                <!-- @if ($data->paket_id == 9)
-                      <td>{{ 'Semua' }}</td>
-                    @else
-                      <td>{{ $data->paket_id }}</td>
-                    @endif -->
                 <td>{{ $data->kelompok }}</td>
                 <td>
                   <form action="{{ route('mapel.destroy', $data->id) }}" method="post">

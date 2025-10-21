@@ -750,3 +750,46 @@ span.flatpickr-weekday,
   cursor: grabbing; /* Changes the cursor to indicate dragging */
 }
 
+
+.ck-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #1f2937; /* text-gray-800 */
+}
+
+.ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4 {
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
+
+.ck-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ck-content img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Pastikan list di dalam CKEditor tetap tampil normal */
+.ck-content ul,
+.ck-content ol {
+    list-style: initial !important;
+    margin-left: 1.5rem !important;
+    padding-left: 1.5rem !important;
+}
+
+/* Agar tampilan list rapi di dark mode */
+.dark .ck-content ul,
+.dark .ck-content ol {
+    list-style: initial !important;
+}
+.ck-content li {
+    margin-bottom: 0.25rem;
+}
+
