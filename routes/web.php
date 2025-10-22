@@ -52,6 +52,8 @@ Route::middleware(['auth'])->group(function () {
 
   Route::middleware(['siswa'])->group(function () {
     Route::get('/jadwal/siswa', 'JadwalController@siswa')->name('jadwal.siswa');
+    Route::get('/materi/siswa', 'SiswaMateriController@index')->name('materi.siswa');
+    Route::get('/materi/siswa/{id}', 'SiswaMateriController@show')->name('materi.siswa.show');
     Route::get('/ulangan/siswa', 'UlanganController@siswa')->name('ulangan.siswa');
     Route::get('/sikap/siswa', 'SikapController@siswa')->name('sikap.siswa');
     Route::get('/rapot/siswa', 'RapotController@siswa')->name('rapot.siswa');
