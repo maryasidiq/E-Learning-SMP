@@ -7,12 +7,12 @@ use App\Guru;
 use App\Jadwal;
 use App\Kelas;
 use App\Mapel;
-use App\Quis;
-use App\SoalQuis;
+use App\Latihan;
+use App\SoalLatihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
-class QuisController extends Controller
+class LatihanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,8 +20,8 @@ class QuisController extends Controller
     public function index()
     {
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
-        $quis = Quis::where('guru_id', $guru->id)->orderBy('created_at', 'desc')->get();
-        return view('guru.quis.index', compact('quis', 'guru'));
+        $latihan = Latihan::where('guru_id', $guru->id)->orderBy('created_at', 'desc')->get();
+        return view('guru.latihan.index', compact('latihan', 'guru'));
     }
 
     /**
@@ -39,7 +39,7 @@ class QuisController extends Controller
                 'nama_kelas' => $j->kelas->nama_kelas,
             ];
         });
-        return view('guru.quis.create', compact('guru', 'mapelKelas'));
+        return view('guru.latihan.create', compact('guru', 'mapelKelas'));
     }
 
     /**
@@ -69,7 +69,7 @@ class QuisController extends Controller
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         list($mapel_id, $kelas_id) = explode('-', $request->mapel_kelas);
 
-        $quis = Quis::create([
+        $latihan = Latihan::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'guru_id' => $guru->id,
@@ -83,8 +83,8 @@ class QuisController extends Controller
         // Save soal if provided
         if ($request->has('soal') && is_array($request->soal)) {
             foreach ($request->soal as $soalData) {
-                SoalQuis::create([
-                    'quis_id' => $quis->id,
+                SoalLatihan::create([
+                    'latihan_id' => $latihan->id,
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
                     'pilihan_a' => $soalData['pilihan_a'] ?? null,
@@ -98,7 +98,7 @@ class QuisController extends Controller
             }
         }
 
-        return redirect()->route('quis.index')->with('success', 'Quis berhasil dibuat!');
+        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil dibuat!');
     }
 
     /**
@@ -107,9 +107,9 @@ class QuisController extends Controller
     public function show(string $id)
     {
         $id = Crypt::decrypt($id);
-        $quis = Quis::findOrFail($id);
-        $soal = SoalQuis::where('quis_id', $id)->get();
-        return view('guru.quis.show', compact('quis', 'soal'));
+        $latihan = Latihan::findOrFail($id);
+        $soal = SoalLatihan::where('latihan_id', $id)->get();
+        return view('guru.latihan.show', compact('latihan', 'soal'));
     }
 
     /**
@@ -118,8 +118,8 @@ class QuisController extends Controller
     public function edit(string $id)
     {
         $id = Crypt::decrypt($id);
-        $quis = Quis::findOrFail($id);
-        $soal = SoalQuis::where('quis_id', $id)->get();
+        $latihan = Latihan::findOrFail($id);
+        $soal = SoalLatihan::where('latihan_id', $id)->get();
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $jadwal = Jadwal::where('guru_id', $guru->id)->with('mapel', 'kelas')->get();
         $mapelKelas = $jadwal->map(function ($j) {
@@ -130,7 +130,7 @@ class QuisController extends Controller
                 'nama_kelas' => $j->kelas->nama_kelas,
             ];
         });
-        return view('guru.quis.edit', compact('quis', 'soal', 'guru', 'mapelKelas'));
+        return view('guru.latihan.edit', compact('latihan', 'soal', 'guru', 'mapelKelas'));
     }
 
     /**
@@ -157,7 +157,7 @@ class QuisController extends Controller
             'soal.*.jawaban_benar' => 'nullable|string',
             'soal.*.bobot' => 'required_with:soal|integer|min:1',
             'existing_soal' => 'nullable|array',
-            'existing_soal.*.id' => 'required_with:existing_soal|integer|exists:soal_quis,id',
+            'existing_soal.*.id' => 'required_with:existing_soal|integer|exists:soal_latihan,id',
             'existing_soal.*.tipe' => 'required_with:existing_soal|in:pilihan_ganda,essay',
             'existing_soal.*.pertanyaan' => 'required_with:existing_soal|string',
             'existing_soal.*.pilihan_a' => 'nullable|string',
@@ -168,12 +168,12 @@ class QuisController extends Controller
             'existing_soal.*.jawaban_benar' => 'nullable|string',
             'existing_soal.*.bobot' => 'required_with:existing_soal|integer|min:1',
             'delete_soal' => 'nullable|array',
-            'delete_soal.*' => 'integer|exists:soal_quis,id',
+            'delete_soal.*' => 'integer|exists:soal_latihan,id',
         ]);
 
-        $quis = Quis::findOrFail($id);
+        $latihan = Latihan::findOrFail($id);
         list($mapel_id, $kelas_id) = explode('-', $request->mapel_kelas);
-        $quis->update([
+        $latihan->update([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'kelas_id' => $kelas_id,
@@ -186,7 +186,7 @@ class QuisController extends Controller
         // Handle existing soal updates
         if ($request->has('existing_soal') && is_array($request->existing_soal)) {
             foreach ($request->existing_soal as $soalData) {
-                $soal = SoalQuis::findOrFail($soalData['id']);
+                $soal = SoalLatihan::findOrFail($soalData['id']);
                 $soal->update([
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
@@ -204,8 +204,8 @@ class QuisController extends Controller
         // Handle new soal
         if ($request->has('soal') && is_array($request->soal)) {
             foreach ($request->soal as $soalData) {
-                SoalQuis::create([
-                    'quis_id' => $id,
+                SoalLatihan::create([
+                    'latihan_id' => $id,
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
                     'pilihan_a' => $soalData['pilihan_a'] ?? null,
@@ -222,12 +222,12 @@ class QuisController extends Controller
         // Handle soal deletion
         if ($request->has('delete_soal') && is_array($request->delete_soal)) {
             foreach ($request->delete_soal as $soalId) {
-                $soal = SoalQuis::findOrFail($soalId);
+                $soal = SoalLatihan::findOrFail($soalId);
                 $soal->delete();
             }
         }
 
-        return redirect()->route('quis.index')->with('success', 'Quis berhasil diperbarui!');
+        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil diperbarui!');
     }
 
     /**
@@ -236,17 +236,18 @@ class QuisController extends Controller
     public function destroy(string $id)
     {
         $id = Crypt::decrypt($id);
-        $quis = Quis::findOrFail($id);
-        $quis->delete();
+        $latihan = Latihan::findOrFail($id);
+        $latihan->delete();
 
-        return redirect()->route('quis.index')->with('success', 'Quis berhasil dihapus!');
+        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil dihapus!');
     }
 
     public function createSoal($id)
     {
         $id = Crypt::decrypt($id);
-        $quis = Quis::findOrFail($id);
-        return view('guru.quis.create_soal', compact('quis'));
+        $latihan = Latihan::findOrFail($id);
+        $csrf = csrf_token();
+        return view('guru.latihan.create_soal', compact('latihan', 'csrf'));
     }
 
     public function storeSoal(Request $request, $id)
@@ -266,8 +267,8 @@ class QuisController extends Controller
         ]);
 
         foreach ($request->soal as $soalData) {
-            SoalQuis::create([
-                'quis_id' => $id,
+            SoalLatihan::create([
+                'latihan_id' => $id,
                 'tipe' => $soalData['tipe'],
                 'pertanyaan' => $soalData['pertanyaan'],
                 'pilihan_a' => $soalData['pilihan_a'] ?? null,
@@ -280,21 +281,21 @@ class QuisController extends Controller
             ]);
         }
 
-        return redirect()->route('quis.show', Crypt::encrypt($id))->with('success', 'Soal berhasil ditambahkan!');
+        return redirect()->route('latihan.show', Crypt::encrypt($id))->with('success', 'Soal berhasil ditambahkan!');
     }
 
-    public function editSoal($quis_id, $soal_id)
+    public function editSoal($latihan_id, $soal_id)
     {
-        $quis_id = Crypt::decrypt($quis_id);
+        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
-        $quis = Quis::findOrFail($quis_id);
-        $soal = SoalQuis::findOrFail($soal_id);
-        return view('guru.quis.edit_soal', compact('quis', 'soal'));
+        $latihan = Latihan::findOrFail($latihan_id);
+        $soal = SoalLatihan::findOrFail($soal_id);
+        return view('guru.latihan.edit_soal', compact('latihan', 'soal'));
     }
 
-    public function updateSoal(Request $request, $quis_id, $soal_id)
+    public function updateSoal(Request $request, $latihan_id, $soal_id)
     {
-        $quis_id = Crypt::decrypt($quis_id);
+        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
         $request->validate([
             'tipe' => 'required|in:pilihan_ganda,essay',
@@ -308,43 +309,44 @@ class QuisController extends Controller
             'bobot' => 'required|integer|min:1',
         ]);
 
-        $soal = SoalQuis::findOrFail($soal_id);
+        $soal = SoalLatihan::findOrFail($soal_id);
         $soal->update($request->all());
 
-        return redirect()->route('quis.show', Crypt::encrypt($quis_id))->with('success', 'Soal berhasil diperbarui!');
+        return redirect()->route('latihan.show', Crypt::encrypt($latihan_id))->with('success', 'Soal berhasil diperbarui!');
     }
 
-    public function destroySoal($quis_id, $soal_id)
+    public function destroySoal($latihan_id, $soal_id)
     {
-        $quis_id = Crypt::decrypt($quis_id);
+        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
-        $soal = SoalQuis::findOrFail($soal_id);
+        $soal = SoalLatihan::findOrFail($soal_id);
         $soal->delete();
 
-        return redirect()->route('quis.show', Crypt::encrypt($quis_id))->with('success', 'Soal berhasil dihapus!');
+        return redirect()->route('latihan.show', Crypt::encrypt($latihan_id))->with('success', 'Soal berhasil dihapus!');
     }
 
-    public function generateSoalFromPDF(Request $request)
+    public function generateSoalFromExcel(Request $request)
     {
         $request->validate([
-            'pdf_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
+            'excel_file' => 'required|file|mimes:xlsx,xls|max:10240', // 10MB max
             'jumlah_soal' => 'required|integer|min:1|max:50',
         ]);
 
         // Generate unique cache key
-        $cacheKey = 'pdf_soal_' . uniqid();
+        $cacheKey = 'excel_soal_' . uniqid();
 
         // Store file temporarily
-        $pdfPath = $request->file('pdf_file')->store('temp', 'local');
-        $fullPath = storage_path('app/' . $pdfPath);
+        $excelPath = $request->file('excel_file')->store('temp', 'local');
+        $fullPath = storage_path('app/' . $excelPath);
 
-        // Dispatch job
-        \App\Jobs\GenerateSoalFromPDF::dispatch($fullPath, $request->jumlah_soal, $cacheKey, 'quis');
+        // Process directly without queue
+        $job = new \App\Jobs\GenerateSoalFromExcel($fullPath, $request->jumlah_soal, $cacheKey);
+        $job->handle();
 
         return response()->json([
             'success' => true,
             'cache_key' => $cacheKey,
-            'message' => 'PDF sedang diproses. Silakan tunggu...',
+            'message' => 'Excel sedang diproses. Silakan tunggu...',
         ]);
     }
 

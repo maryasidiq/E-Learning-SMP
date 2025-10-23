@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ujian extends Model
+class Latihan extends Model
 {
     protected $fillable = ['judul', 'deskripsi', 'guru_id', 'mapel_id', 'kelas_id', 'waktu_mulai', 'waktu_selesai', 'durasi'];
 
-    protected $table = 'ujian';
+    protected $table = 'latihan';
 
     public function guru()
     {
@@ -27,6 +27,6 @@ class Ujian extends Model
 
     public function soal()
     {
-        return $this->hasMany(SoalUjian::class);
+        return $this->hasMany(SoalLatihan::class);
     }
 }

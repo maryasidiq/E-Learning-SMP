@@ -122,7 +122,6 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
 
             <div
                 class="relative items-center hidden w-full h-full bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 lg:grid lg:w-1/2">
-
                 <div class="flex items-center justify-center z-1">
                     <!-- ===== Common Grid Shape Start ===== -->
                     @include('partials.common-grid-shape')

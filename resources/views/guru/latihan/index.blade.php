@@ -1,16 +1,16 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Ujian')
-@section('title', 'Ujian')
+@section('pageTitle', 'Latihan')
+@section('title', 'Latihan')
 @section('content')
-    <h1 class="text-2xl mb-4 dark:text-gray-300">Daftar Ujian</h1>
+    <h1 class="text-2xl mb-4 dark:text-gray-300">Daftar Latihan</h1>
     <div class="mb-4">
-        <a href="{{ route('ujian.create') }}"
+        <a href="{{ route('latihan.create') }}"
             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-            Tambah Ujian
+            Tambah Latihan
         </a>
     </div>
 
-    @if($ujian->count() > 0)
+    @if($latihan->count() > 0)
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="max-w-full overflow-x-auto">
                 <table class="min-w-full">
@@ -27,7 +27,7 @@
                             <th class="px-5 py-3 sm:px-6">
                                 <div class="flex items-center">
                                     <p class="font-bold text-theme-sm dark:text-gray-300">
-                                        Judul Ujian
+                                        Judul Latihan
                                     </p>
                                 </div>
                             </th>
@@ -57,7 +57,7 @@
                     <!-- table header end -->
                     <!-- table body start -->
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                        @foreach($ujian as $index => $item)
+                        @foreach($latihan as $index => $item)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30">
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="text-gray-800 text-theme-sm dark:text-gray-400">
@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('ujian.show', Crypt::encrypt($item->id)) }}"
+                                        <a href="{{ route('latihan.show', Crypt::encrypt($item->id)) }}"
                                             class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors">
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -98,7 +98,7 @@
                                             </svg>
                                             Lihat
                                         </a>
-                                        <a href="{{ route('ujian.edit', Crypt::encrypt($item->id)) }}"
+                                        <a href="{{ route('latihan.edit', Crypt::encrypt($item->id)) }}"
                                             class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full hover:bg-yellow-200 transition-colors">
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,12 +107,12 @@
                                             </svg>
                                             Edit
                                         </a>
-                                        <form action="{{ route('ujian.destroy', $item->id) }}" method="POST" class="inline">
+                                        <form action="{{ route('latihan.destroy', $item->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
                                                 class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full hover:bg-red-200 transition-colors"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus ujian ini?')">
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus latihan ini?')">
                                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -136,8 +136,8 @@
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                 </path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada ujian</h3>
-            <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan ujian pertama Anda.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada latihan</h3>
+            <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan latihan pertama Anda.</p>
         </div>
     @endif
 @endsection

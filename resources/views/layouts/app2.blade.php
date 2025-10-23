@@ -7,13 +7,16 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>@yield('title') | {{ ENV('APP_NAME') }}</title>
+    <link rel="icon" href="{{ asset('img/logo2.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-200" x-data="{ page: 'comingSoon', 'loaded': true, 'darkMode': false, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode'));
+<body class="bg-gray-200"
+    x-data="{ page: 'comingSoon', 'loaded': true, 'darkMode': false, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false }"
+    x-init="darkMode = JSON.parse(localStorage.getItem('darkMode'));
 $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
     :class="{ 'dark bg-gray-900': darkMode === true }">
     <!-- ===== Preloader Start ===== -->
@@ -49,8 +52,8 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            $('#role').change(function() {
+        $(document).ready(function () {
+            $('#role').change(function () {
                 var kel = $('#role option:selected').val();
                 if (kel == "Guru") {
                     $("#noId").addClass("mb-3");
