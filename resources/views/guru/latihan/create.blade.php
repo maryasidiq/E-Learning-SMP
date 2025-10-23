@@ -43,7 +43,7 @@
                 @enderror
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
                 <div>
                     <label for="waktu_mulai" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Waktu
                         Mulai</label>
@@ -164,82 +164,82 @@
             const soalDiv = document.createElement('div');
             soalDiv.className = 'mb-8 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg';
             soalDiv.innerHTML = `
-                                                        <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${index}</h3>
+                                                            <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${index}</h3>
 
-                                                        <div class="mb-4">
-                                                            <label for="tipe_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
-                                                            <select id="tipe_${index}" name="soal[${index}][tipe]"
-                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                required onchange="toggleOptions(${index})">
-                                                                <option value="">Pilih Tipe Soal</option>
-                                                                <option value="pilihan_ganda">Pilihan Ganda</option>
-                                                                <option value="essay">Essay</option>
-                                                            </select>
-                                                        </div>
+                                                            <div class="mb-4">
+                                                                <label for="tipe_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
+                                                                <select id="tipe_${index}" name="soal[${index}][tipe]"
+                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                    required onchange="toggleOptions(${index})">
+                                                                    <option value="">Pilih Tipe Soal</option>
+                                                                    <option value="pilihan_ganda">Pilihan Ganda</option>
+                                                                    <option value="essay">Essay</option>
+                                                                </select>
+                                                            </div>
 
-                                                        <div class="mb-4">
-                                                            <label for="pertanyaan_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
-                                                            <textarea id="pertanyaan_${index}" name="soal[${index}][pertanyaan]" rows="4"
-                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                required></textarea>
-                                                        </div>
+                                                            <div class="mb-4">
+                                                                <label for="pertanyaan_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
+                                                                <textarea id="pertanyaan_${index}" name="soal[${index}][pertanyaan]" rows="4"
+                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                    required></textarea>
+                                                            </div>
 
-                                                        <div id="pilihan_ganda_options_${index}" class="mb-4" style="display: none;">
-                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
+                                                            <div id="pilihan_ganda_options_${index}" class="mb-4" style="display: none;">
+                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
 
-                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                <div>
-                                                                    <label for="pilihan_a_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
-                                                                    <input type="text" id="pilihan_a_${index}" name="soal[${index}][pilihan_a]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                </div>
+                                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                    <div>
+                                                                        <label for="pilihan_a_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
+                                                                        <input type="text" id="pilihan_a_${index}" name="soal[${index}][pilihan_a]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label for="pilihan_b_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
-                                                                    <input type="text" id="pilihan_b_${index}" name="soal[${index}][pilihan_b]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                </div>
+                                                                    <div>
+                                                                        <label for="pilihan_b_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
+                                                                        <input type="text" id="pilihan_b_${index}" name="soal[${index}][pilihan_b]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label for="pilihan_c_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
-                                                                    <input type="text" id="pilihan_c_${index}" name="soal[${index}][pilihan_c]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                </div>
+                                                                    <div>
+                                                                        <label for="pilihan_c_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
+                                                                        <input type="text" id="pilihan_c_${index}" name="soal[${index}][pilihan_c]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label for="pilihan_d_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
-                                                                    <input type="text" id="pilihan_d_${index}" name="soal[${index}][pilihan_d]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                </div>
+                                                                    <div>
+                                                                        <label for="pilihan_d_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
+                                                                        <input type="text" id="pilihan_d_${index}" name="soal[${index}][pilihan_d]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label for="pilihan_e_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
-                                                                    <input type="text" id="pilihan_e_${index}" name="soal[${index}][pilihan_e]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                </div>
+                                                                    <div>
+                                                                        <label for="pilihan_e_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
+                                                                        <input type="text" id="pilihan_e_${index}" name="soal[${index}][pilihan_e]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label for="jawaban_benar_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
-                                                                    <select id="jawaban_benar_${index}" name="soal[${index}][jawaban_benar]"
-                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                        <option value="">Pilih Jawaban Benar</option>
-                                                                        <option value="a">A</option>
-                                                                        <option value="b">B</option>
-                                                                        <option value="c">C</option>
-                                                                        <option value="d">D</option>
-                                                                        <option value="e">E</option>
-                                                                    </select>
+                                                                    <div>
+                                                                        <label for="jawaban_benar_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
+                                                                        <select id="jawaban_benar_${index}" name="soal[${index}][jawaban_benar]"
+                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                            <option value="">Pilih Jawaban Benar</option>
+                                                                            <option value="a">A</option>
+                                                                            <option value="b">B</option>
+                                                                            <option value="c">C</option>
+                                                                            <option value="d">D</option>
+                                                                            <option value="e">E</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="mb-4">
-                                                            <label for="bobot_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
-                                                            <input type="number" id="bobot_${index}" name="soal[${index}][bobot]" value="1" min="1"
-                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                required>
-                                                        </div>
-                                                    `;
+                                                            <div class="mb-4">
+                                                                <label for="bobot_${index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
+                                                                <input type="number" id="bobot_${index}" name="soal[${index}][bobot]" value="1" min="1"
+                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                    required>
+                                                            </div>
+                                                        `;
             container.appendChild(soalDiv);
             soalIndex = index;
         }

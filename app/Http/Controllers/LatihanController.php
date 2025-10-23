@@ -9,6 +9,7 @@ use App\Kelas;
 use App\Mapel;
 use App\Latihan;
 use App\SoalLatihan;
+use App\JawabanLatihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -240,6 +241,111 @@ class LatihanController extends Controller
         $latihan->delete();
 
         return redirect()->route('latihan.index')->with('success', 'Latihan berhasil dihapus!');
+    }
+
+    public function nilai(string $id)
+    {
+        $id = Crypt::decrypt($id);
+        $latihan = Latihan::findOrFail($id);
+
+        // Get all student answers for this latihan with student info
+        $jawabanSiswa = JawabanLatihan::where('latihan_id', $id)
+            ->with(['siswa', 'soalLatihan'])
+            ->get()
+            ->groupBy('siswa_id');
+
+        // Calculate scores for each student
+        $nilaiSiswa = collect([]);
+        $nilaiArray = [];
+        $lulusCount = 0;
+        $remedialCount = 0;
+        $tidakLulusCount = 0;
+
+        foreach ($jawabanSiswa as $siswaId => $jawaban) {
+            $siswa = $jawaban->first()->siswa;
+            $nilaiAkhir = $jawaban->first()->nilai_akhir ?? 0;
+
+            $nilaiArray[] = $nilaiAkhir;
+
+            if ($nilaiAkhir >= 70) {
+                $lulusCount++;
+            } elseif ($nilaiAkhir >= 50) {
+                $remedialCount++;
+            } else {
+                $tidakLulusCount++;
+            }
+
+            $nilaiSiswa->push([
+                'siswa' => $siswa,
+                'nilai_akhir' => $nilaiAkhir,
+                'jumlah_soal' => $jawaban->count(),
+                'jawaban' => $jawaban
+            ]);
+        }
+
+        // Calculate statistics for charts
+        $totalSiswa = count($nilaiArray);
+        $rataRata = $totalSiswa > 0 ? array_sum($nilaiArray) / $totalSiswa : 0;
+        $nilaiTertinggi = $totalSiswa > 0 ? max($nilaiArray) : 0;
+        $nilaiTerendah = $totalSiswa > 0 ? min($nilaiArray) : 0;
+
+        // Prepare chart data
+        $chartData = [
+            'labels' => ['Lulus (≥70)', 'Remedial (50-69)', 'Tidak Lulus (<50)'],
+            'data' => [$lulusCount, $remedialCount, $tidakLulusCount],
+            'backgroundColor' => ['#10B981', '#F59E0B', '#EF4444'],
+            'borderColor' => ['#059669', '#D97706', '#DC2626'],
+        ];
+
+        // Score distribution for histogram (group by ranges)
+        $scoreRanges = ['0-19', '20-39', '40-59', '60-69', '70-79', '80-89', '90-100'];
+        $scoreDistribution = array_fill(0, 7, 0);
+
+        foreach ($nilaiArray as $nilai) {
+            if ($nilai < 20)
+                $scoreDistribution[0]++;
+            elseif ($nilai < 40)
+                $scoreDistribution[1]++;
+            elseif ($nilai < 60)
+                $scoreDistribution[2]++;
+            elseif ($nilai < 70)
+                $scoreDistribution[3]++;
+            elseif ($nilai < 80)
+                $scoreDistribution[4]++;
+            elseif ($nilai < 90)
+                $scoreDistribution[5]++;
+            else
+                $scoreDistribution[6]++;
+        }
+
+        $histogramData = [
+            'labels' => $scoreRanges,
+            'data' => $scoreDistribution,
+        ];
+
+        return view('guru.latihan.nilai', compact(
+            'latihan',
+            'nilaiSiswa',
+            'chartData',
+            'histogramData',
+            'rataRata',
+            'nilaiTertinggi',
+            'nilaiTerendah',
+            'totalSiswa'
+        ));
+    }
+
+    public function toggleNilaiVisibility(Request $request, string $id)
+    {
+        $id = Crypt::decrypt($id);
+        $latihan = Latihan::findOrFail($id);
+
+        // Toggle the show_nilai field
+        $latihan->update([
+            'show_nilai' => !$latihan->show_nilai
+        ]);
+
+        return redirect()->route('latihan.nilai', Crypt::encrypt($id))->with('success', 'Visibilitas nilai berhasil diubah!');
     }
 
     public function createSoal($id)

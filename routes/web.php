@@ -54,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal/siswa', 'JadwalController@siswa')->name('jadwal.siswa');
     Route::get('/materi/siswa', 'SiswaMateriController@index')->name('materi.siswa');
     Route::get('/materi/siswa/{id}', 'SiswaMateriController@show')->name('materi.siswa.show');
+    Route::get('/latihan/siswa', 'SiswaLatihanController@index')->name('latihan.siswa');
+    Route::get('/latihan/siswa/{id}', 'SiswaLatihanController@show')->name('latihan.siswa.show');
+    Route::get('/latihan/siswa/kerjakan/{id}', 'SiswaLatihanController@kerjakan')->name('latihan.siswa.kerjakan');
+    Route::post('/latihan/siswa/simpan-jawaban/{id}', 'SiswaLatihanController@simpanJawaban')->name('latihan.siswa.simpan-jawaban');
     Route::get('/ulangan/siswa', 'UlanganController@siswa')->name('ulangan.siswa');
     Route::get('/sikap/siswa', 'SikapController@siswa')->name('sikap.siswa');
     Route::get('/rapot/siswa', 'RapotController@siswa')->name('rapot.siswa');
@@ -70,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rapot/predikat', 'RapotController@predikat');
     Route::resource('/rapot', 'RapotController');
     Route::resource('/latihan', 'LatihanController');
+    Route::get('/latihan/nilai/{id}', 'LatihanController@nilai')->name('latihan.nilai');
+    Route::post('/latihan/toggle-nilai-visibility/{id}', 'LatihanController@toggleNilaiVisibility')->name('latihan.toggle-nilai-visibility');
     Route::get('/latihan/create-soal/{id}', 'LatihanController@createSoal')->name('latihan.create-soal');
     Route::post('/latihan/store-soal/{id}', 'LatihanController@storeSoal')->name('latihan.store-soal');
     Route::post('/guru/latihan/generate-soal-excel', 'LatihanController@generateSoalFromExcel')->name('latihan.generate-soal-excel');
