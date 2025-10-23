@@ -69,6 +69,22 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/sikap', 'SikapController');
     Route::get('/rapot/predikat', 'RapotController@predikat');
     Route::resource('/rapot', 'RapotController');
+    Route::resource('/quis', 'QuisController');
+    Route::get('/quis/create-soal/{id}', 'QuisController@createSoal')->name('quis.create-soal');
+    Route::post('/quis/store-soal/{id}', 'QuisController@storeSoal')->name('quis.store-soal');
+    Route::post('/guru/quis/generate-soal-pdf', 'QuisController@generateSoalFromPDF')->name('quis.generate-soal-pdf');
+    Route::post('/guru/quis/check-generate-status', 'QuisController@checkGenerateStatus')->name('quis.check-generate-status');
+    Route::get('/quis/edit-soal/{quis_id}/{soal_id}', 'QuisController@editSoal')->name('quis.edit-soal');
+    Route::patch('/quis/update-soal/{quis_id}/{soal_id}', 'QuisController@updateSoal')->name('quis.update-soal');
+    Route::delete('/quis/destroy-soal/{quis_id}/{soal_id}', 'QuisController@destroySoal')->name('quis.destroy-soal');
+    Route::resource('/ujian', 'UjianController');
+    Route::get('/ujian/create-soal/{id}', 'UjianController@createSoal')->name('ujian.create-soal');
+    Route::post('/ujian/store-soal/{id}', 'UjianController@storeSoal')->name('ujian.store-soal');
+    Route::post('/guru/ujian/generate-soal-pdf', 'UjianController@generateSoalFromPDF')->name('ujian.generate-soal-pdf');
+    Route::post('/guru/ujian/check-generate-status', 'UjianController@checkGenerateStatus')->name('ujian.check-generate-status');
+    Route::get('/ujian/edit-soal/{ujian_id}/{soal_id}', 'UjianController@editSoal')->name('ujian.edit-soal');
+    Route::patch('/ujian/update-soal/{ujian_id}/{soal_id}', 'UjianController@updateSoal')->name('ujian.update-soal');
+    Route::delete('/ujian/destroy-soal/{ujian_id}/{soal_id}', 'UjianController@destroySoal')->name('ujian.destroy-soal');
   });
 
   Route::middleware(['admin'])->group(function () {

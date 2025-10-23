@@ -2,8 +2,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="" class="brand-link" style="">
-        <img src="{{ asset('img/favicon.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
-        <span class="brand-text font-weight-light">SIAKAD</span>
+        <img src="{{ asset('img/logo2.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+        <span class="brand-text font-weight-light">ELSDUMI</span>
     </a>
 
     <!-- Sidebar -->
@@ -191,12 +191,6 @@
                         <a href="{{ route('absen.harian') }}" class="nav-link" id="AbsenGuru">
                             <i class="fas fa-calendar-check nav-icon"></i>
                             <p>Absen</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('jadwal.guru') }}" class="nav-link" id="JadwalGuru">
-                            <i class="fas fa-calendar-alt nav-icon"></i>
-                            <p>Jadwal</p>
                         </a>
                     </li>
                     <li class="nav-item">
