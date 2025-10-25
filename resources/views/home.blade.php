@@ -9,8 +9,8 @@
             <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
             <div class="relative z-10 flex items-center justify-between">
                 <div class="animate-fade-in">
-                    <h1 class="text-4xl font-extrabold mb-3 bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">Dashboard Siswa</h1>
-                    <p class="text-red-100 text-xl font-medium">Selamat datang di sistem informasi akademik sekolah</p>
+                    <h1 class="text-4xl font-extrabold mb-3 bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">ELSDUMI</h1>
+                    <p class="text-red-100 text-xl font-medium">Selamat datang di sistem E-Learning SMP Negeri 2 Mlati</p>
                     <div class="mt-4 flex items-center space-x-4">
                         <div class="flex items-center bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

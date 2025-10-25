@@ -8,7 +8,8 @@
             <h3 class="text-lg font-semibold">Nilai Rapot</h3>
         </div>
 
-        <form class="bg-white dark:bg-gray-900 shadow rounded-b-xl p-6 space-y-6" action="{{ route('nilai.store') }}" method="post">
+        <form class="bg-white dark:bg-gray-900 shadow rounded-b-xl p-6 space-y-6" action="{{ route('nilai.store') }}"
+            method="post">
             @csrf
             <input type="hidden" name="id" value="{{ $nilai->id }}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -43,7 +44,8 @@
                     <div class="mb-4">
                         <label for="mapel" class="block text-sm font-medium text-gray-700 dark:text-white">Mata
                             Pelajaran</label>
-                        <input type="text" id="mapel" name="mapel" value="{{ $guru->mapel->nama_mapel }}" readonly
+                        <input type="text" id="mapel" name="mapel"
+                            value="{{ $guru->mapel->pluck('nama_mapel')->join(', ') }}" readonly
                             class="w-full mt-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-4 py-2.5 text-sm text-gray-700 dark:text-white/90 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                     <div class="mb-4">
@@ -80,7 +82,7 @@
 {{-- @extends('template_backend.home')
 @section('heading', 'Deskripsi Nilai')
 @section('page')
-  <li class="breadcrumb-item active">Deskripsi Nilai</li>
+<li class="breadcrumb-item active">Deskripsi Nilai</li>
 @endsection
 @section('content')
 <div class="col-md-12">
@@ -99,37 +101,46 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="nama_gur">Nama Guru</label>
-                            <input type="text" id="nama_gur" name="nama_gur" value="{{ $guru->nama_guru }}" class="form-control" readonly>
+                            <input type="text" id="nama_gur" name="nama_gur" value="{{ $guru->nama_guru }}"
+                                class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label for="guru_id">Kode Mapel</label>
-                            <input type="text" id="guru_id" name="guru_id" value="{{ $guru->kode }}" class="form-control" readonly>
+                            <input type="text" id="guru_id" name="guru_id" value="{{ $guru->kode }}"
+                                class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label for="predikat_a">Predikat A</label>
-                            <textarea class="form-control" required name="predikat_a" id="predikat_a" rows="4">{{ $nilai->deskripsi_a }}</textarea>
+                            <textarea class="form-control" required name="predikat_a" id="predikat_a"
+                                rows="4">{{ $nilai->deskripsi_a }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="predikat_c">Predikat C</label>
-                            <textarea class="form-control" required name="predikat_c" id="predikat_c" rows="4">{{ $nilai->deskripsi_c }}</textarea>
+                            <textarea class="form-control" required name="predikat_c" id="predikat_c"
+                                rows="4">{{ $nilai->deskripsi_c }}</textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="mapel">Mata Pelajaran</label>
-                            <input type="text" id="mapel" name="mapel" value="{{ $guru->mapel->nama_mapel }}" class="form-control" readonly>
+                            <input type="text" id="mapel" name="mapel"
+                                value="{{ $guru->mapel->pluck('nama_mapel')->join(', ') }}" class="form-control"
+                                readonly>
                         </div>
                         <div class="form-group">
                             <label for="kkm">KKM</label>
-                            <input type="text" onkeypress="return inputAngka(event)" maxlength="2" value="{{ $nilai->kkm }}" id="kkm" name="kkm" class="form-control" required>
+                            <input type="text" onkeypress="return inputAngka(event)" maxlength="2"
+                                value="{{ $nilai->kkm }}" id="kkm" name="kkm" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="predikat_b">Predikat B</label>
-                            <textarea class="form-control" required name="predikat_b" id="predikat_b" rows="4">{{ $nilai->deskripsi_b }}</textarea>
+                            <textarea class="form-control" required name="predikat_b" id="predikat_b"
+                                rows="4">{{ $nilai->deskripsi_b }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="predikat_d">Predikat D</label>
-                            <textarea class="form-control" required name="predikat_d" id="predikat_d" rows="4">{{ $nilai->deskripsi_d }}</textarea>
+                            <textarea class="form-control" required name="predikat_d" id="predikat_d"
+                                rows="4">{{ $nilai->deskripsi_d }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -137,8 +148,10 @@
             <!-- /.card-body -->
 
             <div class="card-footer">
-                <a href="#" name="kembali" class="btn btn-default" id="back"><i class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</a> &nbsp;
-                <button name="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp; Simpan</button>
+                <a href="#" name="kembali" class="btn btn-default" id="back"><i class='nav-icon fas fa-arrow-left'></i>
+                    &nbsp; Kembali</a> &nbsp;
+                <button name="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
+                    Simpan</button>
             </div>
         </form>
     </div>
@@ -147,9 +160,9 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#back').click(function() {
-        window.location="{{ url('/') }}";
+    $(document).ready(function () {
+        $('#back').click(function () {
+            window.location = "{{ url('/') }}";
         });
     });
     $("#NilaiGuru").addClass("active");

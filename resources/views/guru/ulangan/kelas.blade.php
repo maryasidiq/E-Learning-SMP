@@ -8,8 +8,7 @@
             <div class="p-4 bg-white dark:bg-gray-900 shadow space-y-4">
                 <!-- Identitas Guru -->
                 <div class="mb-4">
-                    <table
-                        class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:border-gray-700 text-sm">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:border-gray-700 text-sm">
                         <tbody
                             class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800 dark:text-gray-300">
                             <tr>
@@ -20,7 +19,7 @@
                             <tr>
                                 <td class="px-6 py-3 font-medium">Mata Pelajaran</td>
                                 <td class="px-6 py-3">:</td>
-                                <td class="px-6 py-3">{{ $guru->mapel->nama_mapel }}</td>
+                                <td class="px-6 py-3">{{ $guru->mapel->pluck('nama_mapel')->join(', ') }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -48,10 +47,9 @@
                                         <a href="{{ route('ulangan.show', Crypt::encrypt($val)) }}"
                                             class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 dark:bg-brand-800 dark:hover:bg-brand-700">
                                             Entry Nilai
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-pen-icon lucide-pen">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" class="lucide lucide-pen-icon lucide-pen">
                                                 <path
                                                     d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
                                             </svg>
@@ -70,56 +68,58 @@
 {{-- @extends('template_backend.home')
 @section('heading', 'Entry Nilai Ulangan')
 @section('page')
-  <li class="breadcrumb-item active">Entry Nilai Ulangan</li>
+<li class="breadcrumb-item active">Entry Nilai Ulangan</li>
 @endsection
 @section('content')
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-          <div class="row">
-            <div class="col-md-12" style="margin-top: -21px;">
-                <table class="table">
-                    <tr>
-                        <td>Nama Guru</td>
-                        <td>:</td>
-                        <td>{{ $guru->nama_guru }}</td>
-                    </tr>
-                    <tr>
-                        <td>Mata Pelajaran</td>
-                        <td>:</td>
-                        <td>{{ $guru->mapel->nama_mapel }}</td>
-                    </tr>
-                </table>
-                <hr>
+            <div class="row">
+                <div class="col-md-12" style="margin-top: -21px;">
+                    <table class="table">
+                        <tr>
+                            <td>Nama Guru</td>
+                            <td>:</td>
+                            <td>{{ $guru->nama_guru }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mata Pelajaran</td>
+                            <td>:</td>
+                            <td>{{ $guru->mapel->pluck('nama_mapel')->join(', ') }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+                <div class="col-md-12">
+                    <table id="example2" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama Kelas</th>
+                                <th>Aksi</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($kelas as $val => $data)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $data[0]->rapot($val)->nama_kelas }}</td>
+                                <td><a href="{{ route('ulangan.show', Crypt::encrypt($val)) }}"
+                                        class="btn btn-primary btn-sm"><i class="nav-icon fas fa-pen"></i> &nbsp; Entry
+                                        Nilai</a></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-md-12">
-              <table id="example2" class="table table-bordered table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Nama Kelas</th>
-                    <th>Aksi</th>
-                </thead>
-                <tbody>
-                  @foreach ($kelas as $val => $data)
-                    <tr>
-                      <td>{{ $loop->iteration }}</td>
-                      <td>{{ $data[0]->rapot($val)->nama_kelas }}</td>
-                      <td><a href="{{ route('ulangan.show', Crypt::encrypt($val)) }}" class="btn btn-primary btn-sm"><i class="nav-icon fas fa-pen"></i> &nbsp; Entry Nilai</a></td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
     </div>
 </div>
 @endsection
 @section('script')
-  <script>
+<script>
     $("#NilaiGuru").addClass("active");
     $("#liNilaiGuru").addClass("menu-open");
     $("#UlanganGuru").addClass("active");
-  </script>
+</script>
 @endsection --}}
