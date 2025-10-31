@@ -1,16 +1,16 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Latihan')
-@section('title', 'Latihan')
+@section('pageTitle', 'Soal')
+@section('title', 'Soal')
 @section('content')
-    <h1 class="text-2xl mb-4 dark:text-gray-300">Daftar Latihan</h1>
+    <h1 class="text-2xl mb-4 dark:text-gray-300">Daftar Soal</h1>
     <div class="mb-4">
-        <a href="{{ route('latihan.create') }}"
+        <a href="{{ route('soal.create') }}"
             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-            Tambah Latihan
+            Tambah Soal
         </a>
     </div>
 
-    @if($latihan->count() > 0)
+    @if($soal->count() > 0)
         <!-- Desktop Table View -->
         <div
             class="hidden md:block overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
@@ -29,7 +29,7 @@
                             <th class="px-5 py-3 sm:px-6">
                                 <div class="flex items-center">
                                     <p class="font-bold text-theme-sm dark:text-gray-300">
-                                        Judul Latihan
+                                        Judul Soal
                                     </p>
                                 </div>
                             </th>
@@ -59,7 +59,7 @@
                     <!-- table header end -->
                     <!-- table body start -->
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                        @foreach($latihan as $index => $item)
+                        @foreach($soal as $index => $item)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30">
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="text-gray-800 text-theme-sm dark:text-gray-400">
@@ -89,8 +89,9 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <a href="{{ route('latihan.show', Crypt::encrypt($item->id)) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors">
+                                        <a href="{{ route('soal.show', Crypt::encrypt($item->id)) }}"
+                                            class=" inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800
+                                                                    text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -100,8 +101,9 @@
                                             </svg>
                                             Lihat
                                         </a>
-                                        <a href="{{ route('latihan.edit', Crypt::encrypt($item->id)) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-lg hover:bg-yellow-200 transition-colors">
+                                        <a href="{{ route('soal.edit', Crypt::encrypt($item->id)) }}"
+                                            class=" inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800
+                                                                    text-sm font-medium rounded-lg hover:bg-yellow-200 transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -109,8 +111,9 @@
                                             </svg>
                                             Edit
                                         </a>
-                                        <a href="{{ route('latihan.nilai', Crypt::encrypt($item->id)) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800 text-sm font-medium rounded-lg hover:bg-purple-200 transition-colors">
+                                        <a href="{{ route('soal.nilai', Crypt::encrypt($item->id)) }}"
+                                            class=" inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800
+                                                                    text-sm font-medium rounded-lg hover:bg-purple-200 transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
@@ -118,13 +121,13 @@
                                             </svg>
                                             Nilai
                                         </a>
-                                        <form action="{{ route('latihan.destroy', Crypt::encrypt($item->id)) }}" method="POST"
+                                        <form action="{{ route('soal.destroy', Crypt::encrypt($item->id)) }}" method="POST"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
                                                 class="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-lg hover:bg-red-200 transition-colors"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus latihan ini?')">
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus soal ini?')">
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -144,14 +147,15 @@
 
         <!-- Mobile Card View -->
         <div class="md:hidden space-y-4">
-            @foreach($latihan as $index => $item)
+            @foreach($soal as $index => $item)
                 <div class="bg-white dark:bg-white/[0.03] rounded-xl border border-gray-200 dark:border-gray-800 p-4">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <h3 class="text-lg font-semibold dark:text-gray-300">{{ $item->judul }}</h3>
                             @if($item->deskripsi)
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    {!! Str::limit(strip_tags($item->deskripsi), 100) !!}</p>
+                                    {!! Str::limit(strip_tags($item->deskripsi), 100) !!}
+                                </p>
                             @endif
                         </div>
                         <span class="text-sm text-gray-500 dark:text-gray-400">#{{ $index + 1 }}</span>
@@ -169,8 +173,8 @@
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('latihan.show', Crypt::encrypt($item->id)) }}"
-                            class="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-800 text-xs font-medium rounded-lg hover:bg-blue-200 transition-colors">
+                        <a href="{{ route('soal.show', Crypt::encrypt($item->id)) }}" class=" inline-flex items-center px-3 py-2 bg-blue-100 text-blue-800 text-xs font-medium
+                                                    rounded-lg hover:bg-blue-200 transition-colors">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -180,8 +184,8 @@
                             </svg>
                             Lihat
                         </a>
-                        <a href="{{ route('latihan.edit', Crypt::encrypt($item->id)) }}"
-                            class="inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-lg hover:bg-yellow-200 transition-colors">
+                        <a href="{{ route('soal.edit', Crypt::encrypt($item->id)) }}" class=" inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 text-xs
+                                                    font-medium rounded-lg hover:bg-yellow-200 transition-colors">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -189,8 +193,8 @@
                             </svg>
                             Edit
                         </a>
-                        <a href="{{ route('latihan.nilai', Crypt::encrypt($item->id)) }}"
-                            class="inline-flex items-center px-3 py-2 bg-purple-100 text-purple-800 text-xs font-medium rounded-lg hover:bg-purple-200 transition-colors">
+                        <a href="{{ route('soal.nilai', Crypt::encrypt($item->id)) }}" class=" inline-flex items-center px-3 py-2 bg-purple-100 text-purple-800 text-xs
+                                                    font-medium rounded-lg hover:bg-purple-200 transition-colors">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
@@ -198,12 +202,12 @@
                             </svg>
                             Nilai
                         </a>
-                        <form action="{{ route('latihan.destroy', Crypt::encrypt($item->id)) }}" method="POST" class="inline">
+                        <form action="{{ route('soal.destroy', Crypt::encrypt($item->id)) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
                                 class="inline-flex items-center px-3 py-2 bg-red-100 text-red-800 text-xs font-medium rounded-lg hover:bg-red-200 transition-colors"
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus latihan ini?')">
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus soal ini?')">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -223,8 +227,8 @@
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                 </path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada latihan</h3>
-            <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan latihan pertama Anda.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada soal</h3>
+            <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan soal pertama Anda.</p>
         </div>
     @endif
 @endsection

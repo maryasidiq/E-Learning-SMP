@@ -1,28 +1,28 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Detail Latihan')
-@section('title', 'Detail Latihan')
+@section('pageTitle', 'Detail Soal')
+@section('title', 'Detail Soal')
 @section('content')
     <div class="max-w-6xl mx-auto bg-white dark:bg-white/[0.03] rounded-xl border border-gray-200 dark:border-gray-800 p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl font-bold dark:text-gray-300">{{ $latihan->judul }}</h1>
-                @if($latihan->deskripsi)
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">{!! $latihan->deskripsi !!}</p>
+                <h1 class="text-2xl font-bold dark:text-gray-300">{{ $soal->judul }}</h1>
+                @if($soal->deskripsi)
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{!! $soal->deskripsi !!}</p>
                 @endif
             </div>
             <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                <a href="{{ route('latihan.edit', Crypt::encrypt($latihan->id)) }}"
+                <a href="{{ route('soal.edit', Crypt::encrypt($soal->id)) }}"
                     class="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                         </path>
                     </svg>
-                    Edit Latihan
+                    Edit Soal
                 </a>
-                <a href="{{ route('latihan.create-soal', Crypt::encrypt($latihan->id)) }}"
+                <a href="{{ route('soal.create-soal', Crypt::encrypt($soal->id)) }}"
                     class="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -31,46 +31,46 @@
             </div>
         </div>
 
-        <!-- Info Latihan -->
+        <!-- Info Soal -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Mata Pelajaran</h3>
-                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $latihan->mapel->nama_mapel }}</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $soal->mapel->nama_mapel }}</p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Kelas</h3>
-                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $latihan->kelas->nama_kelas }}</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $soal->kelas->nama_kelas }}</p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Waktu Mulai</h3>
                 <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">
-                    {{ \Carbon\Carbon::parse($latihan->waktu_mulai)->format('d/m/Y H:i') }}
+                    {{ \Carbon\Carbon::parse($soal->waktu_mulai)->format('d/m/Y H:i') }}
                 </p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Durasi</h3>
-                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $latihan->durasi }} menit</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $soal->durasi }} menit</p>
             </div>
         </div>
 
         <!-- Daftar Soal -->
         <div class="mb-6">
-            <h2 class="text-xl font-bold mb-4 dark:text-gray-300">Daftar Soal ({{ $soal->count() }})</h2>
+            <h2 class="text-xl font-bold mb-4 dark:text-gray-300">Daftar Soal ({{ $soalDetail->count() }})</h2>
 
-            @if($soal->count() > 0)
+            @if($soalDetail->count() > 0)
                 <div class="space-y-4">
-                    @foreach($soal as $index => $item)
+                    @foreach($soalDetail as $index => $item)
                         <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="text-lg font-semibold dark:text-gray-300">Soal {{ $index + 1 }}</h3>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('latihan.edit-soal', [Crypt::encrypt($latihan->id), Crypt::encrypt($item->id)]) }}"
+                                    <a href="{{ route('soal.edit-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}"
                                         class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full hover:bg-yellow-200 transition-colors">
                                         Edit
                                     </a>
                                     <form
-                                        action="{{ route('latihan.destroy-soal', [Crypt::encrypt($latihan->id), Crypt::encrypt($item->id)]) }}"
-                                        method="POST" class="inline">
+                                        action="{{ route('soal.destroy-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}"
+                                        method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -88,6 +88,19 @@
                                 </span>
                                 <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Bobot: {{ $item->bobot }}</span>
                             </div>
+                            @if($item->gambar && is_array($item->gambar))
+                                <div class="mb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 justify-items-center">
+                                    @foreach($item->gambar as $gambar)
+                                        <img src="{{ asset('storage/' . $gambar) }}" alt="Gambar Soal"
+                                            class="max-w-full max-h-32 w-auto h-auto rounded-lg shadow-md object-contain">
+                                    @endforeach
+                                </div>
+                            @elseif($item->gambar)
+                                <div class="mb-3 flex justify-center">
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="Gambar Soal"
+                                        class="max-w-xs max-h-32 w-auto h-auto rounded-lg shadow-md object-contain">
+                                </div>
+                            @endif
                             <div class="prose dark:prose-invert max-w-none mb-3">
                                 {!! $item->pertanyaan !!}
                             </div>
@@ -155,9 +168,9 @@
                         </path>
                     </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada soal</h3>
-                    <p class="mt-1 text-sm text-gray-500">Tambahkan soal pertama untuk latihan ini.</p>
+                    <p class="mt-1 text-sm text-gray-500">Tambahkan soal pertama.</p>
                     <div class="mt-6">
-                        <a href="{{ route('latihan.create-soal', Crypt::encrypt($latihan->id)) }}"
+                        <a href="{{ route('soal.create-soal', Crypt::encrypt($soal->id)) }}"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Tambah Soal Pertama
                         </a>
@@ -167,9 +180,9 @@
         </div>
 
         <div class="flex items-center justify-between">
-            <a href="{{ route('latihan.index') }}"
+            <a href="{{ route('soal.index') }}"
                 class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                Kembali ke Daftar Latihan
+                Kembali ke Daftar Soal
             </a>
         </div>
     </div>

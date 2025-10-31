@@ -7,13 +7,13 @@ use App\Guru;
 use App\Jadwal;
 use App\Kelas;
 use App\Mapel;
-use App\Latihan;
-use App\SoalLatihan;
-use App\JawabanLatihan;
+use App\Soal;
+use App\SoalDetail;
+use App\JawabanSoal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
-class LatihanController extends Controller
+class SoalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,8 +21,8 @@ class LatihanController extends Controller
     public function index()
     {
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
-        $latihan = Latihan::where('guru_id', $guru->id)->orderBy('created_at', 'desc')->get();
-        return view('guru.latihan.index', compact('latihan', 'guru'));
+        $soal = Soal::where('guru_id', $guru->id)->orderBy('created_at', 'desc')->get();
+        return view('guru.soal.index', compact('soal', 'guru'));
     }
 
     /**
@@ -40,7 +40,7 @@ class LatihanController extends Controller
                 'nama_kelas' => $j->kelas->nama_kelas,
             ];
         });
-        return view('guru.latihan.create', compact('guru', 'mapelKelas'));
+        return view('guru.soal.create', compact('guru', 'mapelKelas'));
     }
 
     /**
@@ -58,6 +58,8 @@ class LatihanController extends Controller
             'soal' => 'nullable|array',
             'soal.*.tipe' => 'required_with:soal|in:pilihan_ganda,essay',
             'soal.*.pertanyaan' => 'required_with:soal|string',
+            'soal.*.gambar' => 'nullable|array|max:4',
+            'soal.*.gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'soal.*.pilihan_a' => 'nullable|string',
             'soal.*.pilihan_b' => 'nullable|string',
             'soal.*.pilihan_c' => 'nullable|string',
@@ -70,7 +72,7 @@ class LatihanController extends Controller
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         list($mapel_id, $kelas_id) = explode('-', $request->mapel_kelas);
 
-        $latihan = Latihan::create([
+        $soal = Soal::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'guru_id' => $guru->id,
@@ -84,10 +86,20 @@ class LatihanController extends Controller
         // Save soal if provided
         if ($request->has('soal') && is_array($request->soal)) {
             foreach ($request->soal as $soalData) {
-                SoalLatihan::create([
-                    'latihan_id' => $latihan->id,
+                $gambarPaths = [];
+                if (isset($soalData['gambar']) && is_array($soalData['gambar'])) {
+                    foreach ($soalData['gambar'] as $gambar) {
+                        if ($gambar) {
+                            $gambarPaths[] = $gambar->store('soal', 'public');
+                        }
+                    }
+                }
+
+                SoalDetail::create([
+                    'soal_id' => $soal->id,
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
+                    'gambar' => $gambarPaths,
                     'pilihan_a' => $soalData['pilihan_a'] ?? null,
                     'pilihan_b' => $soalData['pilihan_b'] ?? null,
                     'pilihan_c' => $soalData['pilihan_c'] ?? null,
@@ -99,7 +111,7 @@ class LatihanController extends Controller
             }
         }
 
-        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil dibuat!');
+        return redirect()->route('soal.index')->with('success', 'Soal berhasil dibuat!');
     }
 
     /**
@@ -108,9 +120,9 @@ class LatihanController extends Controller
     public function show(string $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
-        $soal = SoalLatihan::where('latihan_id', $id)->get();
-        return view('guru.latihan.show', compact('latihan', 'soal'));
+        $soal = Soal::findOrFail($id);
+        $soalDetail = SoalDetail::where('soal_id', $id)->get();
+        return view('guru.soal.show', compact('soal', 'soalDetail'));
     }
 
     /**
@@ -119,8 +131,8 @@ class LatihanController extends Controller
     public function edit(string $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
-        $soal = SoalLatihan::where('latihan_id', $id)->get();
+        $soal = Soal::findOrFail($id);
+        $soalDetail = SoalDetail::where('soal_id', $id)->get();
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $jadwal = Jadwal::where('guru_id', $guru->id)->with('mapel', 'kelas')->get();
         $mapelKelas = $jadwal->map(function ($j) {
@@ -131,7 +143,7 @@ class LatihanController extends Controller
                 'nama_kelas' => $j->kelas->nama_kelas,
             ];
         });
-        return view('guru.latihan.edit', compact('latihan', 'soal', 'guru', 'mapelKelas'));
+        return view('guru.soal.edit', compact('soal', 'soalDetail', 'guru', 'mapelKelas'));
     }
 
     /**
@@ -158,9 +170,11 @@ class LatihanController extends Controller
             'soal.*.jawaban_benar' => 'nullable|string',
             'soal.*.bobot' => 'required_with:soal|integer|min:1',
             'existing_soal' => 'nullable|array',
-            'existing_soal.*.id' => 'required_with:existing_soal|integer|exists:soal_latihan,id',
+            'existing_soal.*.id' => 'required_with:existing_soal|integer|exists:soal_detail,id',
             'existing_soal.*.tipe' => 'required_with:existing_soal|in:pilihan_ganda,essay',
             'existing_soal.*.pertanyaan' => 'required_with:existing_soal|string',
+            'existing_soal.*.gambar' => 'nullable|array|max:4',
+            'existing_soal.*.gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'existing_soal.*.pilihan_a' => 'nullable|string',
             'existing_soal.*.pilihan_b' => 'nullable|string',
             'existing_soal.*.pilihan_c' => 'nullable|string',
@@ -169,12 +183,12 @@ class LatihanController extends Controller
             'existing_soal.*.jawaban_benar' => 'nullable|string',
             'existing_soal.*.bobot' => 'required_with:existing_soal|integer|min:1',
             'delete_soal' => 'nullable|array',
-            'delete_soal.*' => 'integer|exists:soal_latihan,id',
+            'delete_soal.*' => 'integer|exists:soal_detail,id',
         ]);
 
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
         list($mapel_id, $kelas_id) = explode('-', $request->mapel_kelas);
-        $latihan->update([
+        $soal->update([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'kelas_id' => $kelas_id,
@@ -187,10 +201,38 @@ class LatihanController extends Controller
         // Handle existing soal updates
         if ($request->has('existing_soal') && is_array($request->existing_soal)) {
             foreach ($request->existing_soal as $soalData) {
-                $soal = SoalLatihan::findOrFail($soalData['id']);
-                $soal->update([
+                $soalDetail = SoalDetail::findOrFail($soalData['id']);
+
+                $gambarPaths = $soalDetail->gambar ?? []; // Keep existing images
+
+                // Handle deletion of existing images
+                if (isset($soalData['delete_gambar'])) {
+                    // dd($soalData['delete_gambar']); // Debug: check if delete data is received
+                    foreach ($soalData['delete_gambar'] as $deleteIndex) {
+                        $deleteIndex = (int) $deleteIndex;
+                        if (isset($gambarPaths[$deleteIndex])) {
+                            // Remove from storage if needed
+                            \Storage::disk('public')->delete($gambarPaths[$deleteIndex]);
+                            unset($gambarPaths[$deleteIndex]);
+                        }
+                    }
+                    $gambarPaths = array_values($gambarPaths); // Reindex array
+                    // dd($gambarPaths); // Debug: check if array is updated correctly
+                }
+
+                // Handle new images
+                if (isset($soalData['gambar']) && is_array($soalData['gambar'])) {
+                    foreach ($soalData['gambar'] as $gambar) {
+                        if ($gambar) {
+                            $gambarPaths[] = $gambar->store('soal', 'public');
+                        }
+                    }
+                }
+
+                $soalDetail->update([
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
+                    'gambar' => $gambarPaths,
                     'pilihan_a' => $soalData['pilihan_a'] ?? null,
                     'pilihan_b' => $soalData['pilihan_b'] ?? null,
                     'pilihan_c' => $soalData['pilihan_c'] ?? null,
@@ -205,8 +247,8 @@ class LatihanController extends Controller
         // Handle new soal
         if ($request->has('soal') && is_array($request->soal)) {
             foreach ($request->soal as $soalData) {
-                SoalLatihan::create([
-                    'latihan_id' => $id,
+                SoalDetail::create([
+                    'soal_id' => $id,
                     'tipe' => $soalData['tipe'],
                     'pertanyaan' => $soalData['pertanyaan'],
                     'pilihan_a' => $soalData['pilihan_a'] ?? null,
@@ -223,12 +265,12 @@ class LatihanController extends Controller
         // Handle soal deletion
         if ($request->has('delete_soal') && is_array($request->delete_soal)) {
             foreach ($request->delete_soal as $soalId) {
-                $soal = SoalLatihan::findOrFail($soalId);
-                $soal->delete();
+                $soalDetail = SoalDetail::findOrFail($soalId);
+                $soalDetail->delete();
             }
         }
 
-        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil diperbarui!');
+        return redirect()->route('soal.show', Crypt::encrypt($id))->with('success', 'Soal berhasil diperbarui!');
     }
 
     /**
@@ -237,20 +279,20 @@ class LatihanController extends Controller
     public function destroy(string $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
-        $latihan->delete();
+        $soal = Soal::findOrFail($id);
+        $soal->delete();
 
-        return redirect()->route('latihan.index')->with('success', 'Latihan berhasil dihapus!');
+        return redirect()->route('soal.index')->with('success', 'Soal berhasil dihapus!');
     }
 
     public function nilai(string $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
 
-        // Get all student answers for this latihan with student info
-        $jawabanSiswa = JawabanLatihan::where('latihan_id', $id)
-            ->with(['siswa', 'soalLatihan'])
+        // Get all student answers for this soal with student info
+        $jawabanSiswa = JawabanSoal::where('soal_id', $id)
+            ->with(['siswa', 'soalDetail'])
             ->get()
             ->groupBy('siswa_id');
 
@@ -323,8 +365,8 @@ class LatihanController extends Controller
             'data' => $scoreDistribution,
         ];
 
-        return view('guru.latihan.nilai', compact(
-            'latihan',
+        return view('guru.soal.nilai', compact(
+            'soal',
             'nilaiSiswa',
             'chartData',
             'histogramData',
@@ -338,22 +380,22 @@ class LatihanController extends Controller
     public function toggleNilaiVisibility(Request $request, string $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
 
         // Toggle the show_nilai field
-        $latihan->update([
-            'show_nilai' => !$latihan->show_nilai
+        $soal->update([
+            'show_nilai' => !$soal->show_nilai
         ]);
 
-        return redirect()->route('latihan.nilai', Crypt::encrypt($id))->with('success', 'Visibilitas nilai berhasil diubah!');
+        return redirect()->route('soal.nilai', Crypt::encrypt($id))->with('success', 'Visibilitas nilai berhasil diubah!');
     }
 
     public function createSoal($id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
         $csrf = csrf_token();
-        return view('guru.latihan.create_soal', compact('latihan', 'csrf'));
+        return view('guru.soal.create_soal', compact('soal', 'csrf'));
     }
 
     public function storeSoal(Request $request, $id)
@@ -363,6 +405,8 @@ class LatihanController extends Controller
             'soal' => 'required|array|min:1',
             'soal.*.tipe' => 'required|in:pilihan_ganda,essay',
             'soal.*.pertanyaan' => 'required|string',
+            'soal.*.gambar' => 'nullable|array|max:4',
+            'soal.*.gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'soal.*.pilihan_a' => 'nullable|string',
             'soal.*.pilihan_b' => 'nullable|string',
             'soal.*.pilihan_c' => 'nullable|string',
@@ -373,10 +417,20 @@ class LatihanController extends Controller
         ]);
 
         foreach ($request->soal as $soalData) {
-            SoalLatihan::create([
-                'latihan_id' => $id,
+            $gambarPaths = [];
+            if (isset($soalData['gambar']) && is_array($soalData['gambar'])) {
+                foreach ($soalData['gambar'] as $gambar) {
+                    if ($gambar) {
+                        $gambarPaths[] = $gambar->store('soal', 'public');
+                    }
+                }
+            }
+
+            SoalDetail::create([
+                'soal_id' => $id,
                 'tipe' => $soalData['tipe'],
                 'pertanyaan' => $soalData['pertanyaan'],
+                'gambar' => $gambarPaths,
                 'pilihan_a' => $soalData['pilihan_a'] ?? null,
                 'pilihan_b' => $soalData['pilihan_b'] ?? null,
                 'pilihan_c' => $soalData['pilihan_c'] ?? null,
@@ -387,25 +441,27 @@ class LatihanController extends Controller
             ]);
         }
 
-        return redirect()->route('latihan.show', Crypt::encrypt($id))->with('success', 'Soal berhasil ditambahkan!');
+        return redirect()->route('soal.show', Crypt::encrypt($id))->with('success', 'Soal berhasil ditambahkan!');
     }
 
-    public function editSoal($latihan_id, $soal_id)
+    public function editSoal($soal_id, $soal_detail_id)
     {
-        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
-        $latihan = Latihan::findOrFail($latihan_id);
-        $soal = SoalLatihan::findOrFail($soal_id);
-        return view('guru.latihan.edit_soal', compact('latihan', 'soal'));
+        $soal_detail_id = Crypt::decrypt($soal_detail_id);
+        $soal = Soal::findOrFail($soal_id);
+        $soalDetail = SoalDetail::findOrFail($soal_detail_id);
+        return view('guru.soal.edit_soal', compact('soal', 'soalDetail'));
     }
 
-    public function updateSoal(Request $request, $latihan_id, $soal_id)
+    public function updateSoal(Request $request, $soal_id, $soal_detail_id)
     {
-        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
+        $soal_detail_id = Crypt::decrypt($soal_detail_id);
         $request->validate([
             'tipe' => 'required|in:pilihan_ganda,essay',
             'pertanyaan' => 'required|string',
+            'gambar' => 'nullable|array|max:4',
+            'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'pilihan_a' => 'nullable|string',
             'pilihan_b' => 'nullable|string',
             'pilihan_c' => 'nullable|string',
@@ -415,20 +471,55 @@ class LatihanController extends Controller
             'bobot' => 'required|integer|min:1',
         ]);
 
-        $soal = SoalLatihan::findOrFail($soal_id);
-        $soal->update($request->all());
+        $soalDetail = SoalDetail::findOrFail($soal_detail_id);
 
-        return redirect()->route('latihan.show', Crypt::encrypt($latihan_id))->with('success', 'Soal berhasil diperbarui!');
+        $gambarPaths = $soalDetail->gambar ?? []; // Keep existing images
+
+        // Handle deletion of existing images
+        if ($request->has('delete_gambar')) {
+            foreach ($request->delete_gambar as $index => $delete) {
+                if ($delete && isset($gambarPaths[$index])) {
+                    // Remove from storage if needed
+                    \Storage::disk('public')->delete($gambarPaths[$index]);
+                    unset($gambarPaths[$index]);
+                }
+            }
+            $gambarPaths = array_values($gambarPaths); // Reindex array
+        }
+
+        if ($request->hasFile('gambar')) {
+            $gambarPaths = []; // Reset if new images uploaded
+            foreach ($request->file('gambar') as $gambar) {
+                if ($gambar) {
+                    $gambarPaths[] = $gambar->store('soal', 'public');
+                }
+            }
+        }
+
+        $soalDetail->update([
+            'tipe' => $request->tipe,
+            'pertanyaan' => $request->pertanyaan,
+            'gambar' => $gambarPaths,
+            'pilihan_a' => $request->pilihan_a,
+            'pilihan_b' => $request->pilihan_b,
+            'pilihan_c' => $request->pilihan_c,
+            'pilihan_d' => $request->pilihan_d,
+            'pilihan_e' => $request->pilihan_e,
+            'jawaban_benar' => $request->jawaban_benar,
+            'bobot' => $request->bobot,
+        ]);
+
+        return redirect()->route('soal.show', Crypt::encrypt($soal_id))->with('success', 'Soal berhasil diperbarui!');
     }
 
-    public function destroySoal($latihan_id, $soal_id)
+    public function destroySoal($soal_id, $soal_detail_id)
     {
-        $latihan_id = Crypt::decrypt($latihan_id);
         $soal_id = Crypt::decrypt($soal_id);
-        $soal = SoalLatihan::findOrFail($soal_id);
-        $soal->delete();
+        $soal_detail_id = Crypt::decrypt($soal_detail_id);
+        $soalDetail = SoalDetail::findOrFail($soal_detail_id);
+        $soalDetail->delete();
 
-        return redirect()->route('latihan.show', Crypt::encrypt($latihan_id))->with('success', 'Soal berhasil dihapus!');
+        return redirect()->route('soal.show', Crypt::encrypt($soal_id))->with('success', 'Soal berhasil dihapus!');
     }
 
     public function generateSoalFromExcel(Request $request)

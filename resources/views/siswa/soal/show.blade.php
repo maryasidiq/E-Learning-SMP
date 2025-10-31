@@ -1,6 +1,6 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Detail Latihan')
-@section('title', 'Detail Latihan')
+@section('pageTitle', 'Detail Soal')
+@section('title', 'Detail Soal')
 @section('content')
     <div class="max-w-7xl mx-auto">
         <!-- Header Section -->
@@ -19,13 +19,13 @@
                                 </svg>
                             </div>
                             <div>
-                                <h1 class="text-3xl font-bold">{{ $latihan->judul }}</h1>
-                                <p class="text-indigo-100 text-lg">Detail Latihan</p>
+                                <h1 class="text-3xl font-bold">{{ $soal->judul }}</h1>
+                                <p class="text-indigo-100 text-lg">Detail Soal</p>
                             </div>
                         </div>
-                        @if($latihan->deskripsi)
+                        @if($soal->deskripsi)
                             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                                <p class="text-indigo-50 leading-relaxed">{!! $latihan->deskripsi !!}</p>
+                                <p class="text-indigo-50 leading-relaxed">{!! $soal->deskripsi !!}</p>
                             </div>
                         @endif
                     </div>
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <!-- Info Latihan Cards -->
+        <!-- Info Soal Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
             <div
                 class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all duration-300">
@@ -48,7 +48,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-medium text-blue-700 dark:text-white">Mata Pelajaran</h3>
-                        <p class="text-lg font-bold text-blue-900 dark:text-white">{{ $latihan->mapel->nama_mapel }}</p>
+                        <p class="text-lg font-bold text-blue-900 dark:text-white">{{ $soal->mapel->nama_mapel }}</p>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-medium text-green-700 dark:text-white">Kelas</h3>
-                        <p class="text-lg font-bold text-green-900 dark:text-white">{{ $latihan->kelas->nama_kelas }}</p>
+                        <p class="text-lg font-bold text-green-900 dark:text-white">{{ $soal->kelas->nama_kelas }}</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     <div>
                         <h3 class="text-sm font-medium text-purple-700 dark:text-white">Waktu Mulai</h3>
                         <p class="text-lg font-bold text-purple-900 dark:text-white">
-                            {{ \Carbon\Carbon::parse($latihan->waktu_mulai)->format('d/m/Y H:i') }}
+                            {{ \Carbon\Carbon::parse($soal->waktu_mulai)->format('d/m/Y H:i') }}
                         </p>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <div>
                         <h3 class="text-sm font-medium text-orange-700 dark:text-white">Waktu Selesai</h3>
                         <p class="text-lg font-bold text-orange-900 dark:text-white">
-                            {{ \Carbon\Carbon::parse($latihan->waktu_selesai)->format('d/m/Y H:i') }}
+                            {{ \Carbon\Carbon::parse($soal->waktu_selesai)->format('d/m/Y H:i') }}
                         </p>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-medium text-red-700 dark:text-white">Durasi</h3>
-                        <p class="text-lg font-bold text-red-900 dark:text-white">{{ $latihan->durasi }} menit</p>
+                        <p class="text-lg font-bold text-red-900 dark:text-white">{{ $soal->durasi }} menit</p>
                     </div>
                 </div>
             </div>
@@ -141,17 +141,17 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-green-800 dark:text-green-200">Latihan Selesai</h3>
-                            <p class="text-green-600 dark:text-green-400">Anda sudah mengerjakan latihan ini</p>
+                            <h3 class="text-lg font-bold text-green-800 dark:text-green-200">Soal Selesai</h3>
+                            <p class="text-green-600 dark:text-green-400">Anda sudah mengerjakan Soal ini</p>
                         </div>
                     </div>
                     @php
                         $siswa = Auth::user()->siswa(Auth::user()->no_induk);
-                        $nilaiAkhir = \App\JawabanLatihan::where('latihan_id', $latihan->id)
+                        $nilaiAkhir = \App\JawabanSoal::where('Soal_id', $soal->id)
                             ->where('siswa_id', $siswa->id)
                             ->first()->nilai_akhir ?? 0;
                     @endphp
-                    @if($latihan->show_nilai ?? false)
+                    @if($soal->show_nilai ?? false)
                         <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-200 dark:border-green-700">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
@@ -182,7 +182,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold text-yellow-800 dark:text-yellow-200">Belum Dikerjakan</h3>
-                            <p class="text-yellow-600 dark:text-yellow-400">Anda belum mengerjakan latihan ini</p>
+                            <p class="text-yellow-600 dark:text-yellow-400">Anda belum mengerjakan Soal ini</p>
                         </div>
                     </div>
                 </div>
@@ -191,19 +191,19 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <a href="{{ route('latihan.siswa') }}"
+            <a href="{{ route('soal.siswa') }}"
                 class="inline-flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
                     </path>
                 </svg>
-                Kembali ke Daftar Latihan
+                Kembali ke Daftar Soal
             </a>
 
             @if(!$sudahMengerjakan)
-                <a href="{{ route('latihan.siswa.kerjakan', Crypt::encrypt($latihan->id)) }}"
+                <a href="{{ route('soal.siswa.kerjakan', Crypt::encrypt($soal->id)) }}"
                     class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 border border-transparent rounded-xl font-semibold text-sm text-white uppercase tracking-widest hover:from-green-700 hover:to-emerald-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
-                    onclick="return confirm('Apakah Anda yakin ingin memulai latihan? Setelah memulai, Anda akan memiliki waktu {{ $latihan->durasi }} menit untuk menyelesaikan latihan ini. Pastikan koneksi internet Anda stabil dan jangan refresh halaman selama mengerjakan latihan.')">
+                    onclick="return confirm('Apakah Anda yakin ingin memulai Soal? Setelah memulai, Anda akan memiliki waktu {{ $soal->durasi }} menit untuk menyelesaikan Soal ini. Pastikan koneksi internet Anda stabil dan jangan refresh halaman selama mengerjakan Soal.')">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l.707.707A1 1 0 0012.414 11H13m-3 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">

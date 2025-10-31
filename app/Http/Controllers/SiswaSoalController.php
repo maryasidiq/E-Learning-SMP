@@ -2,124 +2,124 @@
 
 namespace App\Http\Controllers;
 
-use App\Latihan;
-use App\SoalLatihan;
-use App\JawabanLatihan;
+use App\Soal;
+use App\SoalDetail;
+use App\JawabanSoal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
-class SiswaLatihanController extends Controller
+class SiswaSoalController extends Controller
 {
     public function index()
     {
         $siswa = Auth::user()->siswa(Auth::user()->no_induk);
-        $latihan = Latihan::where('kelas_id', $siswa->kelas_id)
+        $soal = Soal::where('kelas_id', $siswa->kelas_id)
             ->where('waktu_mulai', '<=', now())
             ->orderBy('waktu_mulai', 'desc')
             ->get();
 
-        return view('siswa.latihan.index', compact('latihan'));
+        return view('siswa.soal.index', compact('soal'));
     }
 
     public function show($id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
         $siswa = Auth::user()->siswa(Auth::user()->no_induk);
 
-        // Cek apakah latihan untuk kelas siswa
-        if ($latihan->kelas_id != $siswa->kelas_id) {
+        // Cek apakah soal untuk kelas siswa
+        if ($soal->kelas_id != $siswa->kelas_id) {
             abort(403);
         }
 
         // Cek apakah sudah mengerjakan
-        $sudahMengerjakan = JawabanLatihan::where('latihan_id', $id)
+        $sudahMengerjakan = JawabanSoal::where('soal_id', $id)
             ->where('siswa_id', $siswa->id)
             ->exists();
 
-        return view('siswa.latihan.show', compact('latihan', 'sudahMengerjakan'));
+        return view('siswa.soal.show', compact('soal', 'sudahMengerjakan'));
     }
 
     public function kerjakan($id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
         $siswa = Auth::user()->siswa(Auth::user()->no_induk);
 
-        // Cek apakah latihan untuk kelas siswa
-        if ($latihan->kelas_id != $siswa->kelas_id) {
+        // Cek apakah soal untuk kelas siswa
+        if ($soal->kelas_id != $siswa->kelas_id) {
             abort(403);
         }
 
         // Cek waktu mulai dan selesai
-        $waktuMulai = \Carbon\Carbon::parse($latihan->waktu_mulai);
-        $waktuSelesai = \Carbon\Carbon::parse($latihan->waktu_selesai);
+        $waktuMulai = \Carbon\Carbon::parse($soal->waktu_mulai);
+        $waktuSelesai = \Carbon\Carbon::parse($soal->waktu_selesai);
         $waktuSekarang = now();
 
         if ($waktuSekarang->lt($waktuMulai)) {
-            return redirect()->back()->with('error', 'Latihan belum dimulai.');
+            return redirect()->back()->with('error', 'Soal belum dimulai.');
         }
 
         if ($waktuSekarang->gt($waktuSelesai)) {
-            return redirect()->back()->with('error', 'Waktu latihan telah berakhir.');
+            return redirect()->back()->with('error', 'Waktu soal telah berakhir.');
         }
 
         // Cek apakah sudah mengerjakan
-        $sudahMengerjakan = JawabanLatihan::where('latihan_id', $id)
+        $sudahMengerjakan = JawabanSoal::where('soal_id', $id)
             ->where('siswa_id', $siswa->id)
             ->exists();
 
         if ($sudahMengerjakan) {
-            return redirect()->back()->with('error', 'Anda sudah mengerjakan latihan ini.');
+            return redirect()->back()->with('error', 'Anda sudah mengerjakan soal ini.');
         }
 
-        $soal = SoalLatihan::where('latihan_id', $id)->orderBy('id')->get();
+        $soalDetail = SoalDetail::where('soal_id', $id)->orderBy('id')->get();
 
         // Hitung waktu selesai berdasarkan durasi dari waktu sekarang (saat mulai mengerjakan)
-        $waktuSelesaiDurasi = now()->addMinutes($latihan->durasi);
+        $waktuSelesaiDurasi = now()->addMinutes($soal->durasi);
 
         // Gunakan waktu selesai yang lebih awal antara waktu_selesai field dan durasi
         $waktuBerakhir = min($waktuSelesai, $waktuSelesaiDurasi);
 
-        return view('siswa.latihan.kerjakan', compact('latihan', 'soal', 'waktuBerakhir'));
+        return view('siswa.soal.kerjakan', compact('soal', 'soalDetail', 'waktuBerakhir'));
     }
 
     public function simpanJawaban(Request $request, $id)
     {
         $id = Crypt::decrypt($id);
-        $latihan = Latihan::findOrFail($id);
+        $soal = Soal::findOrFail($id);
         $siswa = Auth::user()->siswa(Auth::user()->no_induk);
 
-        // Cek apakah latihan untuk kelas siswa
-        if ($latihan->kelas_id != $siswa->kelas_id) {
+        // Cek apakah soal untuk kelas siswa
+        if ($soal->kelas_id != $siswa->kelas_id) {
             abort(403);
         }
 
         // Cek waktu - gunakan waktu berakhir yang sama dengan yang digunakan di kerjakan()
-        $waktuSelesai = \Carbon\Carbon::parse($latihan->waktu_selesai);
-        $waktuSelesaiDurasi = now()->addMinutes($latihan->durasi);
+        $waktuSelesai = \Carbon\Carbon::parse($soal->waktu_selesai);
+        $waktuSelesaiDurasi = now()->addMinutes($soal->durasi);
         $waktuBerakhir = min($waktuSelesai, $waktuSelesaiDurasi);
         $waktuSekarang = now();
 
         if ($waktuSekarang->gt($waktuBerakhir)) {
-            return redirect()->route('latihan.siswa')->with('error', 'Waktu latihan telah berakhir.');
+            return redirect()->route('soal.siswa')->with('error', 'Waktu soal telah berakhir.');
         }
 
         // Cek apakah sudah mengerjakan
-        $sudahMengerjakan = JawabanLatihan::where('latihan_id', $id)
+        $sudahMengerjakan = JawabanSoal::where('soal_id', $id)
             ->where('siswa_id', $siswa->id)
             ->exists();
 
         if ($sudahMengerjakan) {
-            return redirect()->route('latihan.siswa')->with('error', 'Anda sudah mengerjakan latihan ini.');
+            return redirect()->route('soal.siswa')->with('error', 'Anda sudah mengerjakan soal ini.');
         }
 
-        $soal = SoalLatihan::where('latihan_id', $id)->get();
+        $soalDetail = SoalDetail::where('soal_id', $id)->get();
         $totalSkor = 0;
         $totalBobot = 0;
 
-        foreach ($soal as $item) {
+        foreach ($soalDetail as $item) {
             $jawaban = $request->input('jawaban.' . $item->id);
             $isCorrect = false;
 
@@ -130,9 +130,9 @@ class SiswaLatihanController extends Controller
                 $isCorrect = false;
             }
 
-            JawabanLatihan::create([
-                'latihan_id' => $id,
-                'soal_latihan_id' => $item->id,
+            JawabanSoal::create([
+                'soal_id' => $id,
+                'soal_detail_id' => $item->id,
                 'siswa_id' => $siswa->id,
                 'jawaban' => $jawaban,
                 'is_correct' => $isCorrect,
@@ -148,11 +148,11 @@ class SiswaLatihanController extends Controller
         // Hitung nilai akhir (0-100)
         $nilaiAkhir = $totalBobot > 0 ? round(($totalSkor / $totalBobot) * 100, 2) : 0;
 
-        // Update nilai akhir untuk semua jawaban siswa di latihan ini
-        JawabanLatihan::where('latihan_id', $id)
+        // Update nilai akhir untuk semua jawaban siswa di soal ini
+        JawabanSoal::where('soal_id', $id)
             ->where('siswa_id', $siswa->id)
             ->update(['nilai_akhir' => $nilaiAkhir]);
 
-        return redirect()->route('latihan.siswa')->with('success', 'Latihan berhasil diselesaikan. Nilai Anda: ' . $nilaiAkhir);
+        return redirect()->route('soal.siswa')->with('success', 'Soal berhasil diselesaikan. Nilai Anda: ' . $nilaiAkhir);
     }
 }

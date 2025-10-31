@@ -54,10 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal/siswa', 'JadwalController@siswa')->name('jadwal.siswa');
     Route::get('/materi/siswa', 'SiswaMateriController@index')->name('materi.siswa');
     Route::get('/materi/siswa/{id}', 'SiswaMateriController@show')->name('materi.siswa.show');
-    Route::get('/latihan/siswa', 'SiswaLatihanController@index')->name('latihan.siswa');
-    Route::get('/latihan/siswa/{id}', 'SiswaLatihanController@show')->name('latihan.siswa.show');
-    Route::get('/latihan/siswa/kerjakan/{id}', 'SiswaLatihanController@kerjakan')->name('latihan.siswa.kerjakan');
-    Route::post('/latihan/siswa/simpan-jawaban/{id}', 'SiswaLatihanController@simpanJawaban')->name('latihan.siswa.simpan-jawaban');
+    Route::get('/soal/siswa', 'SiswaSoalController@index')->name('soal.siswa');
+    Route::get('/soal/siswa/{id}', 'SiswaSoalController@show')->name('soal.siswa.show');
+    Route::get('/soal/siswa/kerjakan/{id}', 'SiswaSoalController@kerjakan')->name('soal.siswa.kerjakan');
+    Route::post('/soal/siswa/simpan-jawaban/{id}', 'SiswaSoalController@simpanJawaban')->name('soal.siswa.simpan-jawaban');
     Route::get('/ulangan/siswa', 'UlanganController@siswa')->name('ulangan.siswa');
     Route::get('/sikap/siswa', 'SikapController@siswa')->name('sikap.siswa');
     Route::get('/rapot/siswa', 'RapotController@siswa')->name('rapot.siswa');
@@ -73,16 +73,16 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/sikap', 'SikapController');
     Route::get('/rapot/predikat', 'RapotController@predikat');
     Route::resource('/rapot', 'RapotController');
-    Route::resource('/latihan', 'LatihanController');
-    Route::get('/latihan/nilai/{id}', 'LatihanController@nilai')->name('latihan.nilai');
-    Route::post('/latihan/toggle-nilai-visibility/{id}', 'LatihanController@toggleNilaiVisibility')->name('latihan.toggle-nilai-visibility');
-    Route::get('/latihan/create-soal/{id}', 'LatihanController@createSoal')->name('latihan.create-soal');
-    Route::post('/latihan/store-soal/{id}', 'LatihanController@storeSoal')->name('latihan.store-soal');
-    Route::post('/guru/latihan/generate-soal-excel', 'LatihanController@generateSoalFromExcel')->name('latihan.generate-soal-excel');
-    Route::post('/guru/latihan/check-generate-status', 'LatihanController@checkGenerateStatus')->name('latihan.check-generate-status');
-    Route::get('/latihan/edit-soal/{latihan_id}/{soal_id}', 'LatihanController@editSoal')->name('latihan.edit-soal');
-    Route::patch('/latihan/update-soal/{latihan_id}/{soal_id}', 'LatihanController@updateSoal')->name('latihan.update-soal');
-    Route::delete('/latihan/destroy-soal/{latihan_id}/{soal_id}', 'LatihanController@destroySoal')->name('latihan.destroy-soal');
+    Route::resource('/soal', 'SoalController');
+    Route::get('/soal/nilai/{id}', 'SoalController@nilai')->name('soal.nilai');
+    Route::post('/soal/toggle-nilai-visibility/{id}', 'SoalController@toggleNilaiVisibility')->name('soal.toggle-nilai-visibility');
+    Route::get('/soal/create-soal/{id}', 'SoalController@createSoal')->name('soal.create-soal');
+    Route::post('/soal/store-soal/{id}', 'SoalController@storeSoal')->name('soal.store-soal');
+    Route::post('/guru/soal/generate-soal-excel', 'SoalController@generateSoalFromExcel')->name('soal.generate-soal-excel');
+    Route::post('/guru/soal/check-generate-status', 'SoalController@checkGenerateStatus')->name('soal.check-generate-status');
+    Route::get('/soal/edit-soal/{soal_id}/{soal_detail_id}', 'SoalController@editSoal')->name('soal.edit-soal');
+    Route::patch('/soal/update-soal/{soal_id}/{soal_detail_id}', 'SoalController@updateSoal')->name('soal.update-soal');
+    Route::delete('/soal/destroy-soal/{soal_id}/{soal_detail_id}', 'SoalController@destroySoal')->name('soal.destroy-soal');
   });
 
   Route::middleware(['admin'])->group(function () {

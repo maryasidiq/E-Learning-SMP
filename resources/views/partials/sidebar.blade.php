@@ -43,9 +43,9 @@
                         <li>
                             <a href="{{ route('home') }}" class="menu-item group menu-dashboard"
                                 :class="@json(Route::is('home')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg :class="@json(Route::is('home')) ?
-                                                                                    'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                                                                                                            'menu-item-icon-active' : 'menu-item-icon-inactive'"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -64,11 +64,11 @@
                         <li>
                             <a href="{{ route('absen.harian') }}" class="menu-item group"
                                 :class="@json(Route::is('absen.harian')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('absen.harian')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-calendar-check-icon lucide-calendar-check">
@@ -90,11 +90,11 @@
                         <li>
                             <a href="{{ route('jadwal.guru') }}" class="menu-item group"
                                 :class="@json(Route::is('jadwal.guru')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('jadwal.guru')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     class="lucide lucide-calendar-days-icon lucide-calendar-days">
@@ -121,13 +121,13 @@
                         <li>
                             <a href="{{ route('materi.index') }}" class="menu-item group"
                                 :class="@json(Route::is('materi.index')) || @json(Route::is('materi.create')) ||
-                                                                                    @json(Route::is('materi.show')) || @json(Route::is('materi.edit')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                                                                                                            @json(Route::is('materi.show')) || @json(Route::is('materi.edit')) ?
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('materi.index')) || @json(Route::is('materi.create')) ||
-                                                                                        @json(Route::is('materi.show')) || @json(Route::is('materi.edit')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                @json(Route::is('materi.show')) || @json(Route::is('materi.edit')) ?
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-book-open-icon lucide-book-open">
@@ -142,19 +142,19 @@
                         </li>
                         <!-- Menu Item Materi Mapel -->
 
-                        <!-- Menu Item Latihan -->
+                        <!-- Menu Item Soal -->
                         <li>
-                            <a href="{{ route('latihan.index') }}" class="menu-item group"
-                                :class="@json(Route::is('latihan.index')) || @json(Route::is('latihan.create')) ||
-                                                                                    @json(Route::is('latihan.show')) || @json(Route::is('latihan.edit')) ||
-                                                                                    @json(Route::is('latihan.create-soal')) || @json(Route::is('latihan.edit-soal')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                            <a href="{{ route('soal.index') }}" class="menu-item group"
+                                :class="@json(Route::is('soal.index')) || @json(Route::is('soal.create')) ||
+                                                                                                            @json(Route::is('soal.show')) || @json(Route::is('soal.edit')) ||
+                                                                                                            @json(Route::is('soal.create-soal')) || @json(Route::is('soal.edit-soal')) ?
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg class="fill-none"
-                                    :class="@json(Route::is('latihan.index')) || @json(Route::is('latihan.create')) ||
-                                                                                        @json(Route::is('latihan.show')) || @json(Route::is('latihan.edit')) ||
-                                                                                        @json(Route::is('latihan.create-soal')) || @json(Route::is('latihan.edit-soal')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                    :class="@json(Route::is('soal.index')) || @json(Route::is('soal.create')) ||
+                                                                                                                @json(Route::is('soal.show')) || @json(Route::is('soal.edit')) ||
+                                                                                                                @json(Route::is('soal.create-soal')) || @json(Route::is('soal.edit-soal')) ?
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-file-question-icon lucide-file-question">
@@ -164,27 +164,25 @@
                                 </svg>
 
                                 <span class="menu-item-text" :class="sidebarToggle ? 'lg:hidden' : ''">
-                                    Latihan
+                                    Soal
                                 </span>
                             </a>
                         </li>
-                        <!-- Menu Item Latihan -->
-
-
+                        <!-- Menu Item Soal -->
 
                         <!-- Menu Item Nilai -->
                         <li>
                             <a href="#" @click.prevent="selected = (selected === 'Nilai' ? '':'Nilai')"
                                 class="menu-item group"
                                 :class="@json(Route::is('ulangan.index')) || @json(Route::is('ulangan.show')) ||
-                                                                                    @json(Route::is('rapot.index')) || @json(Route::is('rapot.show')) ||
-                                                                                    @json(Route::is('nilai.index')) ?
-                                                                                    'menu-item-active' : 'menu-item-inactive'">
+                                                                                                            @json(Route::is('rapot.index')) || @json(Route::is('rapot.show')) ||
+                                                                                                            @json(Route::is('nilai.index')) ?
+                                                                                                            'menu-item-active' : 'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('ulangan.index')) || @json(Route::is('rapot.index')) ||
-                                                                                        @json(Route::is('nilai.index')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                @json(Route::is('nilai.index')) ?
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-file-pen-line-icon lucide-file-pen-line">
@@ -200,10 +198,10 @@
                                 </span>
 
                                 <svg class="menu-item-arrow" :class="[(selected === 'Nilai') ? 'menu-item-arrow-active' :
-                                                                                        'menu-item-arrow-inactive',
-                                                                                        sidebarToggle ? 'lg:hidden' : ''
-                                                                                    ]" width="20" height="20"
-                                    viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                                                'menu-item-arrow-inactive',
+                                                                                                                sidebarToggle ? 'lg:hidden' : ''
+                                                                                                            ]" width="20"
+                                    height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585" stroke="" ~stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
@@ -217,8 +215,8 @@
                                         <a href="{{ route('ulangan.index') }}"
                                             class="menu-dropdown-item group flex-row-reverse justify-end"
                                             :class="@json(Route::is('ulangan.index')) || @json(Route::is('ulangan.show')) ?
-                                                                                                'menu-dropdown-item-active' :
-                                                                                                'menu-dropdown-item-inactive'">
+                                                                                                                        'menu-dropdown-item-active' :
+                                                                                                                        'menu-dropdown-item-inactive'">
                                             Entry Nilai Ulangan
 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -237,8 +235,8 @@
                                         <a href="{{ route('rapot.index') }}"
                                             class="menu-dropdown-item group flex-row-reverse justify-end"
                                             :class="@json(Route::is('rapot.index')) || @json(Route::is('rapot.show')) ?
-                                                                                                'menu-dropdown-item-active' :
-                                                                                                'menu-dropdown-item-inactive'">
+                                                                                                                        'menu-dropdown-item-active' :
+                                                                                                                        'menu-dropdown-item-inactive'">
                                             Entry Nilai Rapot
 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -257,7 +255,7 @@
                                         <a href="{{ route('nilai.index') }}"
                                             class="menu-dropdown-item group flex-row-reverse justify-end"
                                             :class="@json(Route::is('nilai.index')) ? 'menu-dropdown-item-active' :
-                                                                                                'menu-dropdown-item-inactive'">
+                                                                                                                        'menu-dropdown-item-inactive'">
                                             Deskripsi Predikat
 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -282,10 +280,11 @@
                     <ul class="flex flex-col gap-4 mb-6">
                         <!-- Menu Item Dashboard -->
                         <li>
-                            <a href="{{ route('home') }}" class="menu-item group menu-dashboard" :class="@json(Route::is('home')) ?
-                                                                                'menu-item-active' : 'menu-item-inactive'">
+                            <a href="{{ route('home') }}" class="menu-item group menu-dashboard"
+                                :class="@json(Route::is('home')) ?
+                                                                                                        'menu-item-active' : 'menu-item-inactive'">
                                 <svg :class="@json(Route::is('home')) ?
-                                                                                'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                                                                                                        'menu-item-icon-active' : 'menu-item-icon-inactive'"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -302,11 +301,13 @@
 
                         <!-- Menu Item Jadwal -->
                         <li>
-                            <a href="{{ route('jadwal.siswa') }}" class="menu-item group" :class="@json(Route::is('jadwal.siswa')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('jadwal.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('jadwal.siswa')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg :class="@json(Route::is('jadwal.siswa')) ? 'menu-item-icon-active' :
-                                                                                    'menu-item-icon-inactive'" width="24"
-                                    height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                                            'menu-item-icon-inactive'"
+                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                         d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z"
                                         fill="" />
@@ -321,11 +322,13 @@
 
                         <!-- Menu Item Ulangan -->
                         <li>
-                            <a href="{{ route('ulangan.siswa') }}" class="menu-item group" :class="@json(Route::is('ulangan.siswa')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('ulangan.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('ulangan.siswa')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg :class="@json(Route::is('ulangan.siswa')) ? 'menu-item-icon-active' :
-                                                                                    'menu-item-icon-inactive'" width="24"
-                                    height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                                            'menu-item-icon-inactive'"
+                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                         d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z"
                                         fill="" />
@@ -340,11 +343,13 @@
 
                         {{-- <!-- Menu Item Sikap -->
                         <li>
-                            <a href="{{ route('sikap.siswa') }}" class="menu-item group" :class="@json(Route::is('sikap.siswa')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('sikap.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('sikap.siswa')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg :class="@json(Route::is('sikap.siswa')) ? 'menu-item-icon-active' :
-                                                                                    'menu-item-icon-inactive'" width="24"
-                                    height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                                            'menu-item-icon-inactive'"
+                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                         d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z"
                                         fill="" />
@@ -359,12 +364,13 @@
 
                         <!-- Menu Item Materi -->
                         <li>
-                            <a href="{{ route('materi.siswa') }}" class="menu-item group" :class="@json(Route::is('materi.siswa')) || @json(Route::is('materi.siswa.show')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('materi.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('materi.siswa')) || @json(Route::is('materi.siswa.show')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('materi.siswa')) || @json(Route::is('materi.siswa.show')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-book-open-icon lucide-book-open">
@@ -379,14 +385,15 @@
                         </li>
                         <!-- Menu Item Materi -->
 
-                        <!-- Menu Item Latihan -->
+                        <!-- Menu Item Soal -->
                         <li>
-                            <a href="{{ route('latihan.siswa') }}" class="menu-item group" :class="@json(Route::is('latihan.siswa')) || @json(Route::is('latihan.siswa.show')) || @json(Route::is('latihan.siswa.kerjakan')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('soal.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('soal.siswa')) || @json(Route::is('soal.siswa.show')) || @json(Route::is('soal.siswa.kerjakan')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg class="fill-none"
-                                    :class="@json(Route::is('latihan.siswa')) || @json(Route::is('latihan.siswa.show')) || @json(Route::is('latihan.siswa.kerjakan')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                    :class="@json(Route::is('soal.siswa')) || @json(Route::is('soal.siswa.show')) || @json(Route::is('soal.siswa.kerjakan')) ?
+                                                                                                            '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                            'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-file-question-icon lucide-file-question">
@@ -396,21 +403,22 @@
                                 </svg>
 
                                 <span class="menu-item-text" :class="sidebarToggle ? 'lg:hidden' : ''">
-                                    Latihan
+                                    Soal
                                 </span>
                             </a>
                         </li>
-                        <!-- Menu Item Latihan -->
+                        <!-- Menu Item Soal -->
 
                         <!-- Menu Item Rapot -->
                         <li>
-                            <a href="{{ route('rapot.siswa') }}" class="menu-item group" :class="@json(Route::is('rapot.siswa')) ? 'menu-item-active' :
-                                                                                    'menu-item-inactive'">
+                            <a href="{{ route('rapot.siswa') }}" class="menu-item group"
+                                :class="@json(Route::is('rapot.siswa')) ? 'menu-item-active' :
+                                                                                                            'menu-item-inactive'">
                                 <svg class="fill-none"
                                     :class="@json(Route::is('ulangan.index')) || @json(Route::is('rapot.index')) ||
-                                                                                        @json(Route::is('nilai.index')) ?
-                                                                                        '!stroke-brand-400 !dark:stroke-brand-500' :
-                                                                                        'stroke-gray-500 dark:stroke-gray-400'"
+                                                                                                                @json(Route::is('nilai.index')) ?
+                                                                                                                '!stroke-brand-400 !dark:stroke-brand-500' :
+                                                                                                                'stroke-gray-500 dark:stroke-gray-400'"
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-file-text-icon lucide-file-text">

@@ -1,6 +1,6 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Kerjakan Latihan')
-@section('title', 'Kerjakan Latihan')
+@section('pageTitle', 'Kerjakan Soal')
+@section('title', 'Kerjakan Soal')
 @section('content')
     <div class="max-w-6xl mx-auto">
         <!-- Header Section -->
@@ -15,8 +15,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold">{{ $latihan->judul }}</h1>
-                        <p class="text-emerald-100">Kerjakan latihan dengan baik</p>
+                        <h1 class="text-2xl font-bold">{{ $soal->judul }}</h1>
+                        <p class="text-emerald-100">Kerjakan Soal dengan baik</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -29,8 +29,8 @@
         <!-- Progress Bar -->
         <div class="bg-white dark:bg-white/[0.03] rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-300">Progress Latihan</h3>
-                <span class="text-sm text-gray-500 dark:text-gray-400" id="progress-text">0 dari {{ count($soal) }}
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-300">Progress Soal</h3>
+                <span class="text-sm text-gray-500 dark:text-gray-400" id="progress-text">0 dari {{ count($soalDetail) }}
                     soal</span>
             </div>
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
@@ -39,11 +39,10 @@
             </div>
         </div>
 
-        <form id="latihanForm" action="{{ route('latihan.siswa.simpan-jawaban', Crypt::encrypt($latihan->id)) }}"
-            method="POST">
+        <form id="SoalForm" action="{{ route('soal.siswa.simpan-jawaban', Crypt::encrypt($soal->id)) }}" method="POST">
             @csrf
 
-            @foreach($soal as $index => $item)
+            @foreach($soalDetail as $index => $item)
                 <div
                     class="mb-8 bg-white dark:bg-white/[0.03] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-all duration-300">
                     <!-- Question Header -->
@@ -66,6 +65,19 @@
                     <!-- Question Content -->
                     <div class="p-6">
                         <div class="mb-6">
+                            @if($item->gambar && is_array($item->gambar))
+                                <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 justify-items-center">
+                                    @foreach($item->gambar as $gambar)
+                                        <img src="{{ asset('storage/' . $gambar) }}" alt="Gambar Soal"
+                                            class="max-w-full max-h-48 w-auto h-auto rounded-lg shadow-md object-contain">
+                                    @endforeach
+                                </div>
+                            @elseif($item->gambar)
+                                <div class="mb-4 flex justify-center">
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="Gambar Soal"
+                                        class="max-w-sm max-h-48 w-auto h-auto rounded-lg shadow-md object-contain">
+                                </div>
+                            @endif
                             <div class="prose prose-lg dark:prose-invert max-w-none">
                                 {!! $item->pertanyaan !!}
                             </div>
@@ -185,7 +197,7 @@
     <script>
         // Set waktu berakhir dari PHP
         const waktuBerakhir = new Date('{{ $waktuBerakhir->format('Y-m-d H:i:s') }}').getTime();
-        const totalSoal = {{ count($soal) }};
+        const totalSoal = {{ count($soalDetail) }};
 
         function updateCountdown() {
             const sekarang = new Date().getTime();
@@ -194,7 +206,7 @@
             if (selisih <= 0) {
                 document.getElementById('countdown').innerHTML = 'WAKTU HABIS!';
                 document.getElementById('countdown').style.color = '#ef4444';
-                document.getElementById('latihanForm').submit();
+                document.getElementById('SoalForm').submit();
                 return;
             }
 
@@ -254,7 +266,7 @@
 
         function confirmSubmit() {
             if (confirm('Apakah Anda yakin ingin mengirim jawaban? Pastikan semua jawaban sudah benar.')) {
-                document.getElementById('latihanForm').submit();
+                document.getElementById('SoalForm').submit();
             }
         }
 
@@ -275,7 +287,7 @@
 
         // Auto-submit saat waktu habis
         setTimeout(function () {
-            document.getElementById('latihanForm').submit();
+            document.getElementById('SoalForm').submit();
         }, waktuBerakhir - new Date().getTime());
     </script>
 @endsection

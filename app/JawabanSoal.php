@@ -4,13 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class JawabanLatihan extends Model
+class JawabanSoal extends Model
 {
-    protected $table = 'jawaban_latihan';
+    protected $table = 'jawaban_soal';
 
     protected $fillable = [
-        'latihan_id',
-        'soal_latihan_id',
+        'soal_id',
+        'soal_detail_id',
         'siswa_id',
         'jawaban',
         'is_correct',
@@ -18,14 +18,14 @@ class JawabanLatihan extends Model
         'nilai_akhir'
     ];
 
-    public function latihan()
+    public function soal()
     {
-        return $this->belongsTo(Latihan::class);
+        return $this->belongsTo(Soal::class);
     }
 
-    public function soalLatihan()
+    public function soalDetail()
     {
-        return $this->belongsTo(SoalLatihan::class);
+        return $this->belongsTo(SoalDetail::class);
     }
 
     public function siswa()

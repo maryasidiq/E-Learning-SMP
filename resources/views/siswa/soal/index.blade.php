@@ -1,6 +1,6 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Latihan')
-@section('title', 'Latihan')
+@section('pageTitle', 'Soal')
+@section('title', 'Soal')
 
 @section('content')
     <div class="max-w-7xl mx-auto">
@@ -9,14 +9,14 @@
             <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
             <div class="relative z-10 flex items-center justify-between">
                 <div class="animate-fade-in">
-                    <h1 class="text-4xl font-extrabold mb-3 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Daftar Latihan</h1>
-                    <p class="text-blue-100 text-xl font-medium">Latihan yang tersedia untuk kelas Anda</p>
+                    <h1 class="text-4xl font-extrabold mb-3 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Daftar Soal</h1>
+                    <p class="text-blue-100 text-xl font-medium">Soal yang tersedia untuk kelas Anda</p>
                     <div class="mt-4 flex items-center space-x-4">
                         <div class="flex items-center bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span class="text-sm font-medium">{{ $latihan->count() }} Latihan Tersedia</span>
+                            <span class="text-sm font-medium">{{ $soal->count() }} Soal Tersedia</span>
                         </div>
                     </div>
                 </div>
@@ -58,10 +58,10 @@
             </div>
         @endif
 
-        {{-- Daftar Latihan --}}
-        @if($latihan->count() > 0)
+        {{-- Daftar Soal --}}
+        @if($soal->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                @foreach($latihan as $index => $item)
+                @foreach($soal as $index => $item)
                     <div class="group bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-500 overflow-hidden relative">
                         <!-- Gradient Border Effect -->
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('latihan.siswa.show', Crypt::encrypt($item->id)) }}"
+                            <a href="{{ route('soal.siswa.show', Crypt::encrypt($item->id)) }}"
                                 class="group/btn w-full inline-flex items-center justify-center px-6 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
                                 <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"></div>
                                 <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,8 +185,8 @@
                             </svg>
                         </div>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Belum ada latihan</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-lg max-w-md mx-auto leading-relaxed">Belum ada latihan yang tersedia untuk kelas Anda saat ini. Silakan tunggu pengumuman dari guru Anda.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Belum ada Soal</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg max-w-md mx-auto leading-relaxed">Belum ada Soal yang tersedia untuk kelas Anda saat ini. Silakan tunggu pengumuman dari guru Anda.</p>
                     <div class="mt-8 flex justify-center">
                         <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

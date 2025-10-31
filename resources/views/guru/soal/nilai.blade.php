@@ -1,22 +1,22 @@
 @extends('layouts.app2')
-@section('pageTitle', 'Nilai Latihan')
-@section('title', 'Nilai Latihan')
+@section('pageTitle', 'Nilai Soal')
+@section('title', 'Nilai Soal')
 @section('content')
     <div class="max-w-7xl mx-auto bg-white dark:bg-white/[0.03] rounded-xl border border-gray-200 dark:border-gray-800 p-6">
         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 space-y-4 lg:space-y-0">
             <div>
-                <h1 class="text-xl sm:text-2xl font-bold dark:text-gray-300">Nilai Latihan: {{ $latihan->judul }}</h1>
-                @if($latihan->deskripsi)
-                    <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm sm:text-base">{!! $latihan->deskripsi !!}</p>
+                <h1 class="text-xl sm:text-2xl font-bold dark:text-gray-300">Nilai Soal: {{ $soal->judul }}</h1>
+                @if($soal->deskripsi)
+                    <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm sm:text-base">{!! $soal->deskripsi !!}</p>
                 @endif
             </div>
             <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                <form action="{{ route('latihan.toggle-nilai-visibility', Crypt::encrypt($latihan->id)) }}" method="POST" class="inline">
+                <form action="{{ route('soal.toggle-nilai-visibility', Crypt::encrypt($soal->id)) }}" method="POST" class="inline">
                     @csrf
                     @method('POST')
                     <button type="submit"
-                        class="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 {{ $latihan->show_nilai ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700' }} border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-offset-2 transition ease-in-out duration-150 {{ $latihan->show_nilai ? 'focus:ring-red-500' : 'focus:ring-green-500' }}">
-                        @if($latihan->show_nilai)
+                        class="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 {{ $soal->show_nilai ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700' }} border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-offset-2 transition ease-in-out duration-150 {{ $soal->show_nilai ? 'focus:ring-red-500' : 'focus:ring-green-500' }}">
+                        @if($soal->show_nilai)
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
                             </svg>
@@ -26,10 +26,10 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         @endif
-                        {{ $latihan->show_nilai ? 'Sembunyikan Nilai' : 'Tampilkan Nilai' }}
+                        {{ $soal->show_nilai ? 'Sembunyikan Nilai' : 'Tampilkan Nilai' }}
                     </button>
                 </form>
-                <a href="{{ route('latihan.index') }}"
+                <a href="{{ route('soal.index') }}"
                     class="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -39,15 +39,15 @@
             </div>
         </div>
 
-        <!-- Info Latihan -->
+        <!-- Info Soal -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Mata Pelajaran</h3>
-                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $latihan->mapel->nama_mapel }}</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $soal->mapel->nama_mapel }}</p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Kelas</h3>
-                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $latihan->kelas->nama_kelas }}</p>
+                <p class="text-lg font-semibold text-gray-900 dark:text-gray-300">{{ $soal->kelas->nama_kelas }}</p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Jumlah Siswa</h3>
@@ -309,8 +309,8 @@
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                     </path>
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada siswa yang mengerjakan latihan</h3>
-                <p class="mt-1 text-sm text-gray-500">Nilai akan muncul setelah siswa menyelesaikan latihan.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Belum ada siswa yang mengerjakan soal</h3>
+                <p class="mt-1 text-sm text-gray-500">Nilai akan muncul setelah siswa menyelesaikan soal.</p>
             </div>
         @endif
     </div>
