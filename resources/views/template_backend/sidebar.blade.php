@@ -223,8 +223,10 @@
                             </li>
                             @if (
                                     Auth::user()->guru(Auth::user()->id_card) && Auth::user()->guru(Auth::user()->id_card)->mapel && (
-                                        Auth::user()->guru(Auth::user()->id_card)->mapel->nama_mapel == "Pendidikan Agama dan Budi Pekerti" ||
-                                        Auth::user()->guru(Auth::user()->id_card)->mapel->nama_mapel == "Pendidikan Pancasila dan Kewarganegaraan"
+                                        Auth::user()->guru(Auth::user()->id_card)->mapel->contains(function ($mapel) {
+                                            return $mapel->nama_mapel == "Pendidikan Agama dan Budi Pekerti" ||
+                                                $mapel->nama_mapel == "Pendidikan Pancasila dan Kewarganegaraan";
+                                        })
                                     )
                                 )
                                 <li class="nav-item">

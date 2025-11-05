@@ -51,14 +51,22 @@ class GenerateSoalFromExcel
 
                 // Expected columns: tipe, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, pilihan_e, jawaban_benar, bobot
                 $tipe = trim($row[0] ?? '');
-                $pertanyaan = trim($row[1] ?? '');
-                $pilihan_a = trim($row[2] ?? '');
-                $pilihan_b = trim($row[3] ?? '');
-                $pilihan_c = trim($row[4] ?? '');
-                $pilihan_d = trim($row[5] ?? '');
-                $pilihan_e = trim($row[6] ?? '');
+                $pertanyaan = $row[1] ?? ''; // Don't trim to preserve line breaks
+                $pilihan_a = $row[2] ?? ''; // Don't trim to preserve line breaks
+                $pilihan_b = $row[3] ?? ''; // Don't trim to preserve line breaks
+                $pilihan_c = $row[4] ?? ''; // Don't trim to preserve line breaks
+                $pilihan_d = $row[5] ?? ''; // Don't trim to preserve line breaks
+                $pilihan_e = $row[6] ?? ''; // Don't trim to preserve line breaks
                 $jawaban_benar = trim($row[7] ?? '');
                 $bobot = intval($row[8] ?? 1);
+
+                // Convert line breaks to proper HTML paragraphs for story-type questions
+                $pertanyaan = $this->convertToParagraphs($pertanyaan);
+                $pilihan_a = $this->convertToParagraphs($pilihan_a);
+                $pilihan_b = $this->convertToParagraphs($pilihan_b);
+                $pilihan_c = $this->convertToParagraphs($pilihan_c);
+                $pilihan_d = $this->convertToParagraphs($pilihan_d);
+                $pilihan_e = $this->convertToParagraphs($pilihan_e);
 
                 // Validate required fields
                 if (empty($tipe) || empty($pertanyaan)) {
@@ -145,5 +153,30 @@ class GenerateSoalFromExcel
                 unlink($this->excelPath);
             }
         }
+    }
+
+    /**
+     * Convert text with line breaks to proper HTML paragraphs
+     */
+    private function convertToParagraphs($text)
+    {
+        if (empty($text)) {
+            return $text;
+        }
+
+        // Split by double line breaks (paragraphs) or single line breaks
+        $paragraphs = preg_split('/\n\s*\n/', $text);
+
+        $html = '';
+        foreach ($paragraphs as $paragraph) {
+            $paragraph = trim($paragraph);
+            if (!empty($paragraph)) {
+                // Convert single line breaks within paragraph to <br>
+                $paragraph = nl2br($paragraph);
+                $html .= '<p>' . $paragraph . '</p>';
+            }
+        }
+
+        return $html;
     }
 }

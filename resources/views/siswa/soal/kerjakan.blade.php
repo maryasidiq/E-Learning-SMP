@@ -78,7 +78,17 @@
                                         class="max-w-sm max-h-48 w-auto h-auto rounded-lg shadow-md object-contain">
                                 </div>
                             @endif
-                            <div class="prose prose-lg dark:prose-invert max-w-none">
+                            <style>
+                                .pertanyaan-content ul {
+                                    list-style-type: disc !important;
+                                    padding-left: 1.5rem !important;
+                                }
+
+                                .pertanyaan-content li {
+                                    margin-bottom: 0.25rem !important;
+                                }
+                            </style>
+                            <div class="prose prose-lg dark:prose-invert max-w-none pertanyaan-content">
                                 {!! $item->pertanyaan !!}
                             </div>
                         </div>
@@ -96,7 +106,10 @@
                                                     class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">A</span>
                                                 <span class="text-gray-700 dark:text-gray-300 font-medium">Pilihan A</span>
                                             </div>
-                                            <div class="text-gray-600 dark:text-gray-400 ml-9">{!! $item->pilihan_a !!}</div>
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 ml-9 prose prose-sm dark:prose-invert max-w-none">
+                                                {!! $item->pilihan_a !!}
+                                            </div>
                                         </div>
                                     </label>
                                 @endif
@@ -111,7 +124,10 @@
                                                     class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">B</span>
                                                 <span class="text-gray-700 dark:text-gray-300 font-medium">Pilihan B</span>
                                             </div>
-                                            <div class="text-gray-600 dark:text-gray-400 ml-9">{!! $item->pilihan_b !!}</div>
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 ml-9 prose prose-sm dark:prose-invert max-w-none">
+                                                {!! $item->pilihan_b !!}
+                                            </div>
                                         </div>
                                     </label>
                                 @endif
@@ -126,7 +142,10 @@
                                                     class="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">C</span>
                                                 <span class="text-gray-700 dark:text-gray-300 font-medium">Pilihan C</span>
                                             </div>
-                                            <div class="text-gray-600 dark:text-gray-400 ml-9">{!! $item->pilihan_c !!}</div>
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 ml-9 prose prose-sm dark:prose-invert max-w-none">
+                                                {!! $item->pilihan_c !!}
+                                            </div>
                                         </div>
                                     </label>
                                 @endif
@@ -141,7 +160,10 @@
                                                     class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">D</span>
                                                 <span class="text-gray-700 dark:text-gray-300 font-medium">Pilihan D</span>
                                             </div>
-                                            <div class="text-gray-600 dark:text-gray-400 ml-9">{!! $item->pilihan_d !!}</div>
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 ml-9 prose prose-sm dark:prose-invert max-w-none">
+                                                {!! $item->pilihan_d !!}
+                                            </div>
                                         </div>
                                     </label>
                                 @endif
@@ -156,7 +178,10 @@
                                                     class="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">E</span>
                                                 <span class="text-gray-700 dark:text-gray-300 font-medium">Pilihan E</span>
                                             </div>
-                                            <div class="text-gray-600 dark:text-gray-400 ml-9">{!! $item->pilihan_e !!}</div>
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 ml-9 prose prose-sm dark:prose-invert max-w-none">
+                                                {!! $item->pilihan_e !!}
+                                            </div>
                                         </div>
                                     </label>
                                 @endif

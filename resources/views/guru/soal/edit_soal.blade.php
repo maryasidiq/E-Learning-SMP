@@ -29,7 +29,7 @@
                 <label for="pertanyaan"
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
                 <textarea id="pertanyaan" name="pertanyaan" rows="4"
-                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"
                     required>{!! old('pertanyaan', $soalDetail->pertanyaan) !!}</textarea>
                 @error('pertanyaan')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -76,9 +76,8 @@
                     <div>
                         <label for="pilihan_a" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan
                             A</label>
-                        <input type="text" id="pilihan_a" name="pilihan_a"
-                            value="{{ old('pilihan_a', $soalDetail->pilihan_a) }}"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <textarea id="pilihan_a" name="pilihan_a" rows="2"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">{!! old('pilihan_a', $soalDetail->pilihan_a) !!}</textarea>
                         @error('pilihan_a')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -87,9 +86,8 @@
                     <div>
                         <label for="pilihan_b" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan
                             B</label>
-                        <input type="text" id="pilihan_b" name="pilihan_b"
-                            value="{{ old('pilihan_b', $soalDetail->pilihan_b) }}"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <textarea id="pilihan_b" name="pilihan_b" rows="2"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">{!! old('pilihan_b', $soalDetail->pilihan_b) !!}</textarea>
                         @error('pilihan_b')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -98,9 +96,8 @@
                     <div>
                         <label for="pilihan_c" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan
                             C</label>
-                        <input type="text" id="pilihan_c" name="pilihan_c"
-                            value="{{ old('pilihan_c', $soalDetail->pilihan_c) }}"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <textarea id="pilihan_c" name="pilihan_c" rows="2"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">{!! old('pilihan_c', $soalDetail->pilihan_c) !!}</textarea>
                         @error('pilihan_c')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -109,9 +106,8 @@
                     <div>
                         <label for="pilihan_d" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan
                             D</label>
-                        <input type="text" id="pilihan_d" name="pilihan_d"
-                            value="{{ old('pilihan_d', $soalDetail->pilihan_d) }}"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <textarea id="pilihan_d" name="pilihan_d" rows="2"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">{!! old('pilihan_d', $soalDetail->pilihan_d) !!}</textarea>
                         @error('pilihan_d')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -120,9 +116,8 @@
                     <div>
                         <label for="pilihan_e" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E
                             (Opsional)</label>
-                        <input type="text" id="pilihan_e" name="pilihan_e"
-                            value="{{ old('pilihan_e', $soalDetail->pilihan_e) }}"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <textarea id="pilihan_e" name="pilihan_e" rows="2"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">{!! old('pilihan_e', $soalDetail->pilihan_e) !!}</textarea>
                         @error('pilihan_e')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -208,10 +203,10 @@
             const div = document.createElement('div');
             div.className = 'flex items-center space-x-2';
             div.innerHTML = `
-                            <input type="file" id="gambar_${newIndex}" name="gambar[]" accept="image/*"
-                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
-                        `;
+                                                <input type="file" id="gambar_${newIndex}" name="gambar[]" accept="image/*"
+                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
+                                            `;
             container.appendChild(div);
         }
 
@@ -235,5 +230,22 @@
                 container.querySelector('input[type="file"]').required = false;
             }
         }
+    </script>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        // Initialize CKEditor for all ckeditor class elements
+        document.querySelectorAll('.ckeditor').forEach(function (element) {
+            ClassicEditor
+                .create(element, {
+                    toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'undo', 'redo'],
+                    ckfinder: {
+                        uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
     </script>
 @endsection

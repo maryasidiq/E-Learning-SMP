@@ -101,51 +101,61 @@
                                         class="max-w-xs max-h-32 w-auto h-auto rounded-lg shadow-md object-contain">
                                 </div>
                             @endif
-                            <div class="prose dark:prose-invert max-w-none mb-3">
+                            <style>
+                                .pertanyaan-content ul {
+                                    list-style-type: disc !important;
+                                    padding-left: 1.5rem !important;
+                                }
+
+                                .pertanyaan-content li {
+                                    margin-bottom: 0.25rem !important;
+                                }
+                            </style>
+                            <div class="prose dark:prose-invert max-w-none mb-3 pertanyaan-content">
                                 {!! $item->pertanyaan !!}
                             </div>
                             @if($item->tipe == 'pilihan_ganda')
                                 <div class="space-y-1">
                                     @if($item->pilihan_a)
-                                        <div class="flex items-center">
-                                            <span class="font-medium mr-2">A.</span>
-                                            <span>{{ $item->pilihan_a }}</span>
+                                        <div class="flex items-start">
+                                            <span class="font-medium mr-2 mt-1">A.</span>
+                                            <div class="flex-1">{!! $item->pilihan_a !!}</div>
                                             @if($item->jawaban_benar == 'a')
                                                 <span class="ml-2 text-green-600 font-bold">✓ Jawaban Benar</span>
                                             @endif
                                         </div>
                                     @endif
                                     @if($item->pilihan_b)
-                                        <div class="flex items-center">
-                                            <span class="font-medium mr-2">B.</span>
-                                            <span>{{ $item->pilihan_b }}</span>
+                                        <div class="flex items-start">
+                                            <span class="font-medium mr-2 mt-1">B.</span>
+                                            <div class="flex-1">{!! $item->pilihan_b !!}</div>
                                             @if($item->jawaban_benar == 'b')
                                                 <span class="ml-2 text-green-600 font-bold">✓ Jawaban Benar</span>
                                             @endif
                                         </div>
                                     @endif
                                     @if($item->pilihan_c)
-                                        <div class="flex items-center">
-                                            <span class="font-medium mr-2">C.</span>
-                                            <span>{{ $item->pilihan_c }}</span>
+                                        <div class="flex items-start">
+                                            <span class="font-medium mr-2 mt-1">C.</span>
+                                            <div class="flex-1">{!! $item->pilihan_c !!}</div>
                                             @if($item->jawaban_benar == 'c')
                                                 <span class="ml-2 text-green-600 font-bold">✓ Jawaban Benar</span>
                                             @endif
                                         </div>
                                     @endif
                                     @if($item->pilihan_d)
-                                        <div class="flex items-center">
-                                            <span class="font-medium mr-2">D.</span>
-                                            <span>{{ $item->pilihan_d }}</span>
+                                        <div class="flex items-start">
+                                            <span class="font-medium mr-2 mt-1">D.</span>
+                                            <div class="flex-1">{!! $item->pilihan_d !!}</div>
                                             @if($item->jawaban_benar == 'd')
                                                 <span class="ml-2 text-green-600 font-bold">✓ Jawaban Benar</span>
                                             @endif
                                         </div>
                                     @endif
                                     @if($item->pilihan_e)
-                                        <div class="flex items-center">
-                                            <span class="font-medium mr-2">E.</span>
-                                            <span>{{ $item->pilihan_e }}</span>
+                                        <div class="flex items-start">
+                                            <span class="font-medium mr-2 mt-1">E.</span>
+                                            <div class="flex-1">{!! $item->pilihan_e !!}</div>
                                             @if($item->jawaban_benar == 'e')
                                                 <span class="ml-2 text-green-600 font-bold">✓ Jawaban Benar</span>
                                             @endif
