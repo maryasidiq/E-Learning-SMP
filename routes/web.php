@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/soal/siswa/{id}', 'SiswaSoalController@show')->name('soal.siswa.show');
     Route::get('/soal/siswa/kerjakan/{id}', 'SiswaSoalController@kerjakan')->name('soal.siswa.kerjakan');
     Route::post('/soal/siswa/simpan-jawaban/{id}', 'SiswaSoalController@simpanJawaban')->name('soal.siswa.simpan-jawaban');
-    Route::get('/ulangan/siswa', 'UlanganController@siswa')->name('ulangan.siswa');
+    Route::get('/ulangan/siswa', 'NilaiController@siswa')->name('ulangan.siswa');
     Route::get('/sikap/siswa', 'SikapController@siswa')->name('sikap.siswa');
     Route::get('/rapot/siswa', 'RapotController@siswa')->name('rapot.siswa');
   });
@@ -69,7 +69,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal/guru', 'JadwalController@guru')->name('jadwal.guru');
     Route::resource('/materi', 'MateriMapelController');
     Route::resource('/nilai', 'NilaiController');
-    Route::resource('/ulangan', 'UlanganController');
+    Route::get('/guru/nilai/mapel', 'NilaiController@mapel')->name('guru.nilai.mapel');
+    Route::get('/guru/nilai/edit/{siswa_id}/{mapel_id}', 'NilaiController@edit')->name('guru.nilai.edit');
+    Route::patch('/guru/nilai/update/{siswa_id}', 'NilaiController@update')->name('guru.nilai.update');
+    Route::resource('/ulangan', 'NilaiController');
     Route::resource('/sikap', 'SikapController');
     Route::get('/rapot/predikat', 'RapotController@predikat');
     Route::resource('/rapot', 'RapotController');
@@ -142,9 +145,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/jadwal/get-mapel-by-kelas/{kelas_id}', 'JadwalController@getMapelByKelas')->name('jadwal.getMapelByKelas');
     Route::get('/admin/jadwal/get-guru-by-mapel/{mapel_id}', 'JadwalController@getGuruByMapel')->name('jadwal.getGuruByMapel');
     Route::resource('/jadwal', 'JadwalController');
-    Route::get('/ulangan-kelas', 'UlanganController@create')->name('ulangan-kelas');
-    Route::get('/ulangan-siswa/{id}', 'UlanganController@edit')->name('ulangan-siswa');
-    Route::get('/ulangan-show/{id}', 'UlanganController@ulangan')->name('ulangan-show');
+    Route::get('/ulangan-kelas', 'NilaiController@create')->name('ulangan-kelas');
+    Route::get('/ulangan-siswa/{id}', 'NilaiController@edit')->name('ulangan-siswa');
+    Route::get('/ulangan-show/{id}', 'NilaiController@ulangan')->name('ulangan-show');
     Route::get('/sikap-kelas', 'SikapController@create')->name('sikap-kelas');
     Route::get('/sikap-siswa/{id}', 'SikapController@edit')->name('sikap-siswa');
     Route::get('/sikap-show/{id}', 'SikapController@sikap')->name('sikap-show');

@@ -21,5 +21,10 @@ class Kelas extends Model
         return $this->belongsTo('App\Paket')->withDefault();
     }
 
+    public function jadwal()
+    {
+        return $this->hasMany('App\Jadwal');
+    }
+
     protected $table = 'kelas';
 }

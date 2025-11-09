@@ -206,50 +206,11 @@
                             <p>Materi Mapel</p>
                         </a>
                     </li>
-                    <li class="nav-item has-treeview" id="liNilaiGuru">
-                        <a href="#" class="nav-link" id="NilaiGuru">
+                    <li class="nav-item">
+                        <a href="{{ route('guru.nilai.mapel') }}" class="nav-link" id="NilaiGuru">
                             <i class="nav-icon fas fa-file-signature"></i>
-                            <p>
-                                Nilai
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
+                            <p>Entry Nilai</p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
-                            <li class="nav-item">
-                                <a href="{{ route('ulangan.index') }}" class="nav-link" id="UlanganGuru">
-                                    <i class="fas fa-file-alt nav-icon"></i>
-                                    <p>Entry Nilai Ulangan</p>
-                                </a>
-                            </li>
-                            @if (
-                                    Auth::user()->guru(Auth::user()->id_card) && Auth::user()->guru(Auth::user()->id_card)->mapel && (
-                                        Auth::user()->guru(Auth::user()->id_card)->mapel->contains(function ($mapel) {
-                                            return $mapel->nama_mapel == "Pendidikan Agama dan Budi Pekerti" ||
-                                                $mapel->nama_mapel == "Pendidikan Pancasila dan Kewarganegaraan";
-                                        })
-                                    )
-                                )
-                                <li class="nav-item">
-                                    <a href="{{ route('sikap.index') }}" class="nav-link" id="SikapGuru">
-                                        <i class="fas fa-file-alt nav-icon"></i>
-                                        <p>Entry Nilai Sikap</p>
-                                    </a>
-                                </li>
-                            @else
-                            @endif
-                            <li class="nav-item">
-                                <a href="{{ route('rapot.index') }}" class="nav-link" id="RapotGuru">
-                                    <i class="fas fa-file-alt nav-icon"></i>
-                                    <p>Entry Nilai Rapot</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('nilai.index') }}" class="nav-link" id="DesGuru">
-                                    <i class="fas fa-file-alt nav-icon"></i>
-                                    <p>Deskripsi Predikat</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 @elseif (Auth::user()->role == 'Siswa' && Auth::user()->siswa(Auth::user()->no_induk))
                     <li class="nav-item has-treeview">
