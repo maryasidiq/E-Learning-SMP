@@ -69,13 +69,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal/guru', 'JadwalController@guru')->name('jadwal.guru');
     Route::resource('/materi', 'MateriMapelController');
     Route::resource('/nilai', 'NilaiController');
-    // Route::delete('/nilai/batch', 'NilaiController@batchDestroy')->name('nilai.batch.destroy');
-    Route::delete('/nilai/batch-destroy', 'NilaiController@batchDestroy')
-      ->name('nilai.batch.destroy')
-      ->middleware('auth');
     Route::get('/guru/nilai/mapel', 'NilaiController@mapel')->name('guru.nilai.mapel');
+    Route::get('/guru/nilai/tambah/{id}', 'NilaiController@createNilai')->name('guru.nilai.tambah');
+    Route::get('/guru/nilai/hapus/{id}', 'NilaiController@hapusNilai')->name('guru.nilai.hapus');
+    Route::get('/guru/nilai/edit/all/{id}', 'NilaiController@editAllNilai')->name('guru.nilai.edit.all');
     Route::get('/guru/nilai/edit/{siswa_id}/{mapel_id}', 'NilaiController@edit')->name('guru.nilai.edit');
     Route::post('/guru/nilai/update/{siswa_id}', 'NilaiController@update')->name('guru.nilai.update');
+    Route::put('/guru/nilai/update/all/{id}', 'NilaiController@updateAllNilai')->name('guru.nilai.update.all');
     Route::resource('/ulangan', 'NilaiController');
     Route::resource('/sikap', 'SikapController');
     Route::get('/rapot/predikat', 'RapotController@predikat');

@@ -138,6 +138,28 @@ class NilaiController extends Controller
     }
 
     /**
+     * Show the form for creating a new nilai entry.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createNilai($id)
+    {
+        $id = Crypt::decrypt($id);
+        $guru = Guru::where('id_card', Auth::user()->id_card)->first();
+        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
+        if (!$mapel) {
+            abort(404, 'Mapel tidak ditemukan atau tidak diajarkan oleh guru ini.');
+        }
+        $kelas = Kelas::whereHas('jadwal', function ($query) use ($guru, $id) {
+            $query->where('guru_id', $guru->id)->where('mapel_id', $id);
+        })->with('guru')->get();
+        $siswa = Siswa::whereIn('kelas_id', $kelas->pluck('id'))->get();
+
+        return view('guru.nilai.tambah', compact('guru', 'mapel', 'kelas', 'siswa'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -189,85 +211,27 @@ class NilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Batch delete nilai for selected grades.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function batchDestroy(Request $request)
-    // {
-    //     $request->validate([
-    //         'grades' => 'required|array',
-    //         'grades.*.siswa_id' => 'required|integer|exists:siswa,id',
-    //         'grades.*.judul_nilai' => 'required|string',
-    //         'mapel_id' => 'required|integer|exists:mapel,id',
-    //     ]);
-
-    //     $grades = $request->grades;
-    //     $mapelId = $request->mapel_id;
-
-    //     $affectedSiswa = [];
-
-    //     // Delete specific nilai for each grade
-    //     foreach ($grades as $grade) {
-    //         \App\NilaiAkhir::where('siswa_id', $grade['siswa_id'])
-    //             ->where('mapel_id', $mapelId)
-    //             ->where('judul_nilai', $grade['judul_nilai'])
-    //             ->delete();
-
-    //         if (!in_array($grade['siswa_id'], $affectedSiswa)) {
-    //             $affectedSiswa[] = $grade['siswa_id'];
-    //         }
-    //     }
-
-    //     // Recalculate rata-rata for affected siswa
-    //     foreach ($affectedSiswa as $siswaId) {
-    //         $this->calculateRataRata($siswaId, $mapelId);
-    //     }
-
-    //     return response()->json(['success' => 'Nilai berhasil dihapus!']);
-    // }
-    public function batchDestroy(Request $request)
+    public function destroy(Request $request, $id)
     {
         $request->validate([
-            'grades' => 'required|array|min:1',
-            'grades.*.siswa_id' => 'required|integer|exists:siswa,id', // ✅ FIX
-            'grades.*.judul_nilai' => 'required|string',
-            'mapel_id' => 'required|integer|exists:mapel,id',
+            'judul_nilai' => 'required|string',
         ]);
 
-        try {
-            $affectedSiswa = [];
+        $judulNilai = $request->judul_nilai;
 
-            foreach ($request->grades as $g) {
-                \DB::table('nilai_akhirs')
-                    ->where('mapel_id', $request->mapel_id)
-                    ->where('siswa_id', $g['siswa_id'])
-                    ->where('judul_nilai', $g['judul_nilai'])
-                    ->delete();
+        // Delete nilai entries with the specified judul_nilai and mapel_id
+        NilaiAkhir::where('judul_nilai', $judulNilai)->where('mapel_id', $id)->delete();
 
-                if (!in_array($g['siswa_id'], $affectedSiswa)) {
-                    $affectedSiswa[] = $g['siswa_id'];
-                }
-            }
-
-            // ✅ Recalculate rata-rata agar tampilan tabel tetap akurat
-            foreach ($affectedSiswa as $siswaId) {
-                $this->calculateRataRata($siswaId, $request->mapel_id);
-            }
-
-            return response()->json(['success' => 'Nilai berhasil dihapus!']);
-        } catch (\Exception $e) {
-            \Log::error('Batch destroy nilai error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal menghapus nilai.'], 500);
+        // Recalculate rata-rata for all affected siswa
+        $affectedSiswa = NilaiAkhir::where('mapel_id', $id)->distinct('siswa_id')->pluck('siswa_id');
+        foreach ($affectedSiswa as $siswaId) {
+            $this->calculateRataRata($siswaId, $id);
         }
+
+        return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil dihapus!');
     }
+
+
 
     public function mapel()
     {
@@ -275,6 +239,100 @@ class NilaiController extends Controller
         $jadwal = Jadwal::where('guru_id', $guru->id)->orderBy('mapel_id')->get();
         $mapel = $jadwal->groupBy('mapel_id');
         return view('guru.nilai.mapel', compact('mapel', 'guru'));
+    }
+
+    /**
+     * Show the form for deleting nilai entries.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function hapusNilai($id)
+    {
+        $id = Crypt::decrypt($id);
+        $guru = Guru::where('id_card', Auth::user()->id_card)->first();
+        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
+        if (!$mapel) {
+            abort(404, 'Mapel tidak ditemukan atau tidak diajarkan oleh guru ini.');
+        }
+        $kelas = Kelas::whereHas('jadwal', function ($query) use ($guru, $id) {
+            $query->where('guru_id', $guru->id)->where('mapel_id', $id);
+        })->with('guru')->get();
+        $siswa = Siswa::whereIn('kelas_id', $kelas->pluck('id'))->get();
+
+        // Get existing nilai data for this mapel
+        $existingNilai = NilaiAkhir::where('mapel_id', $id)->get()->groupBy(['judul_nilai', 'siswa_id']);
+
+        return view('guru.nilai.hapus', compact('guru', 'mapel', 'kelas', 'siswa', 'existingNilai'));
+    }
+
+    /**
+     * Show the form for editing all nilai entries.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function editAllNilai($id)
+    {
+        $id = Crypt::decrypt($id);
+        $guru = Guru::where('id_card', Auth::user()->id_card)->first();
+        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
+        if (!$mapel) {
+            abort(404, 'Mapel tidak ditemukan atau tidak diajarkan oleh guru ini.');
+        }
+        $kelas = Kelas::whereHas('jadwal', function ($query) use ($guru, $id) {
+            $query->where('guru_id', $guru->id)->where('mapel_id', $id);
+        })->with('guru')->get();
+        $siswa = Siswa::whereIn('kelas_id', $kelas->pluck('id'))->get();
+
+        // Get existing nilai data for this mapel
+        $existingNilai = NilaiAkhir::where('mapel_id', $id)->get()->groupBy(['judul_nilai', 'siswa_id']);
+
+        return view('guru.nilai.edit.all', compact('guru', 'mapel', 'kelas', 'siswa', 'existingNilai'));
+    }
+
+    /**
+     * Update all nilai entries in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAllNilai(Request $request, $id)
+    {
+        $request->validate([
+            'nilai' => 'required|array',
+            'nilai.*.*' => 'required|numeric|min:0|max:100',
+            'bobot' => 'required|array',
+            'bobot.*.*' => 'required|integer|min:1',
+            'sumber' => 'required|array',
+            'sumber.*.*' => 'required|in:manual,soal',
+        ]);
+
+        foreach ($request->nilai as $siswaId => $judulNilaiData) {
+            foreach ($judulNilaiData as $judulNilai => $nilai) {
+                $bobot = $request->bobot[$siswaId][$judulNilai];
+                $sumber = $request->sumber[$siswaId][$judulNilai];
+
+                NilaiAkhir::updateOrCreate(
+                    [
+                        'siswa_id' => $siswaId,
+                        'mapel_id' => $id,
+                        'judul_nilai' => $judulNilai,
+                    ],
+                    [
+                        'nilai' => $nilai,
+                        'sumber' => $sumber,
+                        'bobot' => $bobot,
+                    ]
+                );
+
+                // Calculate rata-rata
+                $this->calculateRataRata($siswaId, $id);
+            }
+        }
+
+        return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil diperbarui!');
     }
 
     private function calculateRataRata($siswa_id, $mapel_id)
