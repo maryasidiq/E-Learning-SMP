@@ -144,6 +144,7 @@
                     <tbody>
                         @foreach ($siswa as $s)
                             <tr>
+
                                 <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-2 border">{{ $s->nama_siswa }}</td>
                                 <td class="px-4 py-2 border">{{ $s->no_induk }}</td>
@@ -157,6 +158,44 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Form Hapus Nilai -->
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mt-4">
+                <h4 class="text-lg font-semibold mb-4">Hapus Nilai</h4>
+                <form id="delete-nilai-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="judul_delete" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih
+                            Judul Nilai</label>
+                        <select
+                            class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            id="judul_delete" name="judul_delete" required>
+                            <option value="">Pilih Judul Nilai</option>
+                            @foreach(($existingNilai ?? collect())->keys() as $judul)
+                                <option value="{{ $judul }}">{{ $judul }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih nilai yang Akan
+                            Dihapus Nilainya</label>
+                        <div class="mt-2">
+                            <label class="flex items-center mb-2">
+                                <input type="checkbox" id="select-all-grades" class="mr-2">
+                                Pilih Semua
+                            </label>
+                            <div id="grades-list" class="space-y-2">
+                                <!-- Students will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group md:col-span-2 flex items-end">
+                        <button type="button" onclick="deleteNilai()"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Hapus Nilai Terpilih
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -168,6 +207,9 @@
 
         // Existing nilai data
         const existingNilaiData = @json($existingNilai ?? collect());
+
+        // Siswa data
+        const siswaData = @json($siswa);
 
         // Function to get nilai from soal for a specific siswa
         function getNilaiFromSoal(soalJudul, siswaId) {
@@ -239,7 +281,7 @@
 
         // Function to calculate rata-rata for all siswa
         function calculateAllRataRata() {
-                                                                                                            {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                                                                                                                                                                                                                                                                                                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
             let total = 0;
             let totalBobot = 0;
             for (let i = 1; i <= latihanCount; i++) {
@@ -258,249 +300,536 @@
                 rataRataCell.textContent = rataRata;
             }
         });
+            // Toggle input fields based on sumber selection
+            document.getElementById('sumber').addEventListener('change', function () {
+                if (this.value === 'manual') {
+                    document.getElementById('manual-input').style.display = 'block';
+                    document.getElementById('soal-input').style.display = 'none';
+                } else {
+                    document.getElementById('manual-input').style.display = 'none';
+                    document.getElementById('soal-input').style.display = 'block';
+                }
+            });
+
+            // Handle judul_nilai selection
+            document.getElementById('judul_nilai').addEventListener('change', function () {
+                const customInput = document.getElementById('judul_nilai_custom');
+                if (this.value === '') {
+                    customInput.style.display = 'block';
+                    customInput.required = true;
+                } else {
+                    customInput.style.display = 'none';
+                    customInput.required = false;
+                    customInput.value = '';
+                }
+            });
+
+            // Handle form submission for adding nilai
+            document.getElementById('add-nilai-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                let judulNilai = document.getElementById('judul_nilai').value;
+                const customJudul = document.getElementById('judul_nilai_custom').value;
+                if (judulNilai === '' && customJudul) {
+                    judulNilai = customJudul;
+                }
+                const bobot = document.getElementById('bobot').value;
+                const sumber = document.getElementById('sumber').value;
+                const nilaiManual = document.getElementById('nilai_manual').value;
+                const soal = document.getElementById('soal').value;
+
+                if (!judulNilai || !bobot || !sumber) {
+                    alert('Harap isi semua field yang diperlukan.');
+                    return;
+                }
+
+                // Prepare data for all siswa
+                const data = [];
+                                                                                                                                                                                                                                                                                                                        {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                    let nilai = 0;
+                    if (sumber === 'manual') {
+                        nilai = parseFloat(nilaiManual) || 0;
+                    } else {
+                        nilai = getNilaiFromSoal(soal, siswaId) || 0;
+                    }
+                    data.push({
+                        siswa_id: siswaId,
+                        mapel_id: {{ $mapel->mapel_id }},
+                        judul_nilai: judulNilai,
+                        nilai: nilai,
+                        sumber: sumber,
+                        bobot: parseInt(bobot) || 1,
+                        soal: soal
+                    });
+                });
+
+                // Send AJAX to save
+                fetch('{{ route("nilai.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            toastr.success(result.success);
+                            // Add the column dynamically to the table
+                            latihanCount++;
+                            const table = document.getElementById('nilai-table');
+                            const thead = table.querySelector('thead tr');
+                            const tbody = table.querySelector('tbody');
+
+                            // Add header
+                            const thNilai = document.createElement('th');
+                            thNilai.className = 'px-4 py-2 border';
+                            thNilai.textContent = judulNilai;
+                            thead.insertBefore(thNilai, thead.lastElementChild);
+
+                            const thBobot = document.createElement('th');
+                            thBobot.className = 'px-4 py-2 border';
+                            thBobot.textContent = 'Bobot';
+                            thead.insertBefore(thBobot, thead.lastElementChild);
+
+                            const thSumber = document.createElement('th');
+                            thSumber.className = 'px-4 py-2 border';
+                            thSumber.textContent = 'Sumber';
+                            thead.insertBefore(thSumber, thead.lastElementChild);
+
+                            // Add cells to each row
+                            tbody.querySelectorAll('tr').forEach((row, index) => {
+                                const siswaId = {{ $siswa->pluck('id')->toJson() }}[index];
+
+                                const tdNilai = document.createElement('td');
+                                tdNilai.className = 'px-4 py-2 border';
+                                if (sumber === 'manual') {
+                                    tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai" value="${nilaiManual}">`;
+                                } else {
+                                    const soalNilai = getNilaiFromSoal(soal, siswaId);
+                                    tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai dari Soal" value="${soalNilai}">`;
+                                }
+                                row.insertBefore(tdNilai, row.lastElementChild);
+
+                                const tdBobot = document.createElement('td');
+                                tdBobot.className = 'px-2 py-2 border';
+                                tdBobot.innerHTML = `<input type="number" class="bobot-${latihanCount}-${siswaId}" min="1" value="${bobot}" placeholder="Bobot">`;
+                                row.insertBefore(tdBobot, row.lastElementChild);
+
+                                const tdSumber = document.createElement('td');
+                                tdSumber.className = 'px-4 py-2 border';
+                                tdSumber.innerHTML = `<select class="sumber-${latihanCount}-${siswaId}"><option value="${sumber}" selected>${sumber === 'manual' ? 'Manual' : 'Soal'}</option></select>`;
+                                row.insertBefore(tdSumber, row.lastElementChild);
+
+
+                            });
+
+                            // Reset form
+                            this.reset();
+                            document.getElementById('manual-input').style.display = 'block';
+                            document.getElementById('soal-input').style.display = 'none';
+
+                            // Calculate rata-rata
+                            calculateAllRataRata();
+                        } else {
+                            toastr.error(result.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        toastr.error('Terjadi kesalahan saat menyimpan data');
+                    });
+            });
+
+            document.getElementById('add-latihan').addEventListener('click', function () {
+                latihanCount++;
+                const table = document.getElementById('nilai-table');
+                const thead = table.querySelector('thead tr');
+                const tbody = table.querySelector('tbody');
+
+                // Add header
+                const thNilai = document.createElement('th');
+                thNilai.className = 'px-4 py-2 border';
+                thNilai.textContent = `Latihan ${latihanCount}`;
+                thead.insertBefore(thNilai, thead.lastElementChild);
+
+                const thBobot = document.createElement('th');
+                thBobot.className = 'px-4 py-2 border';
+                thBobot.textContent = `Bobot ${latihanCount}`;
+                thead.insertBefore(thBobot, thead.lastElementChild);
+
+                const thSumber = document.createElement('th');
+                thSumber.className = 'px-4 py-2 border';
+                thSumber.textContent = `Sumber ${latihanCount}`;
+                thead.insertBefore(thSumber, thead.lastElementChild);
+
+                // Add cells to each row
+                tbody.querySelectorAll('tr').forEach((row, index) => {
+                    const siswaId = {{ $siswa->pluck('id')->toJson() }}[index];
+
+                    const tdNilai = document.createElement('td');
+                    tdNilai.className = 'px-4 py-2 border';
+                    tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai">`;
+                    row.insertBefore(tdNilai, row.lastElementChild);
+
+                    const tdBobot = document.createElement('td');
+                    tdBobot.className = 'px-2 py-2 border';
+                    tdBobot.innerHTML = `<input type="number" class="bobot-${latihanCount}-${siswaId}" min="1" value="1" placeholder="Bobot">`;
+                    row.insertBefore(tdBobot, row.lastElementChild);
+
+                    const tdSumber = document.createElement('td');
+                    tdSumber.className = 'px-4 py-2 border';
+                    tdSumber.innerHTML = `
+                                                                                                                                                                                                                                                                                                                                                                                                                            <select class="sumber-${latihanCount}-${siswaId}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="manual">Manual</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="soal">Soal</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                            </select>
+                                                                                                                                                                                                                                                                                                                                                                                                                        `;
+                    row.insertBefore(tdSumber, row.lastElementChild);
+                });
+            });
+
+            document.getElementById('save-nilai').addEventListener('click', function () {
+                // Collect data and send to server
+                const data = [];
+                                                                                                                                                                                                                                                                                                                                                                                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                    for (let i = 1; i <= latihanCount; i++) {
+                        const nilai = document.querySelector(`.latihan-${i}-${siswaId}`).value;
+                        const bobot = document.querySelector(`.bobot-${i}-${siswaId}`).value;
+                        const sumber = document.querySelector(`.sumber-${i}-${siswaId}`).value;
+                        const judul = document.querySelector(`th:nth-child(${3 + (i - 1) * 3})`).textContent; // Get judul from header
+                        if (nilai || bobot) {
+                            data.push({
+                                siswa_id: siswaId,
+                                mapel_id: {{ $mapel->mapel_id }},
+                                judul_nilai: judul,
+                                nilai: parseFloat(nilai) || 0,
+                                sumber: sumber,
+                                bobot: parseInt(bobot) || 1
+                            });
+                        }
+                    }
+                });
+
+                // Send AJAX request
+                fetch('{{ route("nilai.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            toastr.success(result.success);
+                            // Reset form after successful save
+                            document.getElementById('add-nilai-form').reset();
+                            document.getElementById('manual-input').style.display = 'block';
+                            document.getElementById('soal-input').style.display = 'none';
+                        } else {
+                            toastr.error(result.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        toastr.error('Terjadi kesalahan saat menyimpan data');
+                    });
+            });
+
+            // Calculate rata-rata on input change
+            document.addEventListener('input', function (e) {
+                if (e.target.className.includes('latihan-') || e.target.className.includes('bobot-')) {
+                    calculateAllRataRata();
+                }
+            });
+
+            // Handle select all checkbox
+            document.getElementById('select-all').addEventListener('change', function () {
+                const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+                rowCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                updateDeleteButton();
+            });
+
+            // Handle individual grade checkboxes
+            document.addEventListener('change', function (e) {
+                if (e.target.classList.contains('grade-checkbox')) {
+                    updateDeleteButton();
+                }
+            });
+
+            // Update delete button visibility and count
+            function updateDeleteButton() {
+                const selectedCheckboxes = document.querySelectorAll('.grade-checkbox:checked');
+                const count = selectedCheckboxes.length;
+                const deleteButton = document.getElementById('delete-selected');
+                const selectedCount = document.getElementById('selected-count');
+
+                selectedCount.textContent = count;
+                if (count > 0) {
+                    deleteButton.disabled = false;
+                    deleteButton.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                } else {
+                    deleteButton.disabled = true;
+                    deleteButton.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                }
+            }
+
+            // Handle judul_delete change to populate students
+            // document.getElementById('judul_delete').addEventListener('change', function () {
+            //     const judul = this.value;
+            //     const gradesList = document.getElementById('grades-list');
+            //     const selectAllCheckbox = document.getElementById('select-all-grades');
+            //     gradesList.innerHTML = '';
+            //     selectAllCheckbox.checked = false;
+
+            //     if (!judul) return;
+
+            //     // Get students who have the selected judul
+            //     const students = [];
+            //     console.log(siswaData);
+            //     siswaData.forEach(siswa => {
+            //         if (existingNilaiData[judul] && existingNilaiData[judul][siswa.id]) {
+            //             students.push(siswa);
+            //         }
+            //     });
+
+            //     if (students.length === 0) {
+            //         gradesList.innerHTML = '<p class="text-gray-500">Tidak ada siswa dengan judul nilai ini.</p>';
+            //         return;
+            //     }
+
+            //     students.forEach(siswa => {
+            //         const checkbox = document.createElement('label');
+            //         checkbox.className = 'flex items-center';
+            //         checkbox.innerHTML = `
+            //                                                             <input type="checkbox" class="grade-checkbox mr-2" data-siswa-id="${siswa.id}" data-judul="${judul}">
+            //                                                             ${siswa.nama_siswa} (${siswa.no_induk})
+            //                                                         `;
+            //         gradesList.appendChild(checkbox);
+            //     });
+
+            //     // Ensure all checkboxes are checked
+            //     document.querySelectorAll('#grades-list .grade-checkbox').forEach(cb => cb.checked = true);
+
+            //     // Automatically check the select all checkbox since all are checked
+            //     selectAllCheckbox.checked = true;
+            // });
+
+            // // Handle select all grades checkbox
+            // document.getElementById('select-all-grades').addEventListener('change', function () {
+            //     const gradeCheckboxes = document.querySelectorAll('#grades-list .grade-checkbox');
+            //     gradeCheckboxes.forEach(checkbox => {
+            //         checkbox.checked = this.checked;
+            //     });
+            // });
+
+            // // Function to delete nilai
+            // function deleteNilai() {
+            //     const judulDelete = document.getElementById('judul_delete');
+            //     const judul = judulDelete.value;
+            //     if (!judul) {
+            //         alert('Pilih judul nilai terlebih dahulu.');
+            //         return;
+            //     }
+
+            //     const selectedCheckboxes = document.querySelectorAll('#grades-list .grade-checkbox:checked');
+            //     if (selectedCheckboxes.length === 0) {
+            //         alert('Pilih setidaknya satu siswa untuk dihapus nilainya.');
+            //         return;
+            //     }
+
+            //     if (!confirm(`Apakah Anda yakin ingin menghapus nilai "${judul}" untuk siswa yang dipilih?`)) {
+            //         return;
+            //     }
+
+            //     const grades = Array.from(selectedCheckboxes).map(cb => ({
+            //         siswa_id: parseInt(cb.getAttribute('data-siswa-id')),
+            //         judul_nilai: cb.getAttribute('data-judul')
+            //     }));
+
+            //     console.log('Grades to delete:', grades);
+
+            //     // Send delete request
+            //     fetch('{{ route("nilai.batch.destroy") }}', {
+            //         method: 'DELETE',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            //         },
+            //         body: JSON.stringify({ grades: grades, mapel_id: {{ $mapel->mapel_id }} })
+            //     })
+            //         .then(response => {
+            //             console.log('Response status:', response.status);
+            //             console.log('Response headers:', response.headers);
+            //             return response.text(); // Get raw response first
+            //         })
+            //         .then(text => {
+            //             console.log('Raw response:', text);
+            //             try {
+            //                 const result = JSON.parse(text);
+            //                 console.log('Parsed result:', result);
+            //                 if (result.success) {
+            //                     toastr.success(result.success);
+            //                     // Reload the page to reflect changes
+            //                     location.reload();
+            //                 } else {
+            //                     toastr.error(result.error || 'Terjadi kesalahan');
+            //                 }
+            //             } catch (e) {
+            //                 console.error('JSON parse error:', e);
+            //                 toastr.error('Response tidak valid: ' + text);
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error('Error:', error);
+            //             toastr.error('Terjadi kesalahan saat menghapus data');
+            //         });
         }
 
-        // Toggle input fields based on sumber selection
-        document.getElementById('sumber').addEventListener('change', function () {
-            if (this.value === 'manual') {
-                document.getElementById('manual-input').style.display = 'block';
-                document.getElementById('soal-input').style.display = 'none';
-            } else {
-                document.getElementById('manual-input').style.display = 'none';
-                document.getElementById('soal-input').style.display = 'block';
-            }
-        });
+        // ======================
+        // BAGIAN HAPUS NILAI
+        // ======================
 
-        // Handle judul_nilai selection
-        document.getElementById('judul_nilai').addEventListener('change', function () {
-            const customInput = document.getElementById('judul_nilai_custom');
-            if (this.value === '') {
-                customInput.style.display = 'block';
-                customInput.required = true;
-            } else {
-                customInput.style.display = 'none';
-                customInput.required = false;
-                customInput.value = '';
-            }
-        });
+        // Ketika user memilih judul nilai untuk dihapus
+        document.getElementById('judul_delete').addEventListener('change', function () {
+            const judul = this.value.trim(); // pastikan tidak ada spasi
+            const gradesList = document.getElementById('grades-list');
+            const selectAllCheckbox = document.getElementById('select-all-grades');
 
-        // Handle form submission for adding nilai
-        document.getElementById('add-nilai-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            let judulNilai = document.getElementById('judul_nilai').value;
-            const customJudul = document.getElementById('judul_nilai_custom').value;
-            if (judulNilai === '' && customJudul) {
-                judulNilai = customJudul;
-            }
-            const bobot = document.getElementById('bobot').value;
-            const sumber = document.getElementById('sumber').value;
-            const nilaiManual = document.getElementById('nilai_manual').value;
-            const soal = document.getElementById('soal').value;
+            // Kosongkan daftar siswa
+            gradesList.innerHTML = '';
+            selectAllCheckbox.checked = false;
 
-            if (!judulNilai || !bobot || !sumber) {
-                alert('Harap isi semua field yang diperlukan.');
+            if (!judul) return; // kalau belum pilih, stop dulu
+
+            // Debug (sementara, boleh dihapus setelah tes)
+            console.log('existingNilaiData:', existingNilaiData);
+            console.log('judul dipilih:', judul);
+
+            // Cari siswa yang punya nilai dengan judul tersebut
+            const students = siswaData.filter(siswa => {
+                return existingNilaiData[judul]?.[siswa.id] !== undefined;
+            });
+
+            if (students.length === 0) {
+                gradesList.innerHTML = `
+                                                <p class="text-gray-500">
+                                                    Tidak ada siswa dengan judul nilai "<strong>${judul}</strong>".
+                                                </p>`;
                 return;
             }
 
-            // Prepare data for all siswa
-            const data = [];
-                                                                                    {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
-                let nilai = 0;
-                if (sumber === 'manual') {
-                    nilai = parseFloat(nilaiManual) || 0;
-                } else {
-                    nilai = getNilaiFromSoal(soal, siswaId) || 0;
-                }
-                data.push({
-                    siswa_id: siswaId,
-                    mapel_id: {{ $mapel->mapel_id }},
-                    judul_nilai: judulNilai,
-                    nilai: nilai,
-                    sumber: sumber,
-                    bobot: parseInt(bobot) || 1,
-                    soal: soal
-                });
+            // Tampilkan checkbox siswa
+            students.forEach(siswa => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center';
+                label.innerHTML = `
+                                                <input type="checkbox" 
+                                                       class="grade-checkbox mr-2" 
+                                                       data-siswa-id="${siswa.id}" 
+                                                       data-judul="${judul}" 
+                                                       checked>
+                                                ${siswa.nama_siswa} (${siswa.no_induk})
+                                            `;
+                gradesList.appendChild(label);
             });
 
-            // Send AJAX to save
-            fetch('{{ route("nilai.store") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        toastr.success(result.success);
-                        // Add the column dynamically to the table
-                        latihanCount++;
-                        const table = document.getElementById('nilai-table');
-                        const thead = table.querySelector('thead tr');
-                        const tbody = table.querySelector('tbody');
-
-                        // Add header
-                        const thNilai = document.createElement('th');
-                        thNilai.className = 'px-4 py-2 border';
-                        thNilai.textContent = judulNilai;
-                        thead.insertBefore(thNilai, thead.lastElementChild);
-
-                        const thBobot = document.createElement('th');
-                        thBobot.className = 'px-4 py-2 border';
-                        thBobot.textContent = 'Bobot';
-                        thead.insertBefore(thBobot, thead.lastElementChild);
-
-                        const thSumber = document.createElement('th');
-                        thSumber.className = 'px-4 py-2 border';
-                        thSumber.textContent = 'Sumber';
-                        thead.insertBefore(thSumber, thead.lastElementChild);
-
-                        // Add cells to each row
-                        tbody.querySelectorAll('tr').forEach((row, index) => {
-                            const siswaId = {{ $siswa->pluck('id')->toJson() }}[index];
-
-                            const tdNilai = document.createElement('td');
-                            tdNilai.className = 'px-4 py-2 border';
-                            if (sumber === 'manual') {
-                                tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai" value="${nilaiManual}">`;
-                            } else {
-                                const soalNilai = getNilaiFromSoal(soal, siswaId);
-                                tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai dari Soal" value="${soalNilai}">`;
-                            }
-                            row.insertBefore(tdNilai, row.lastElementChild);
-
-                            const tdBobot = document.createElement('td');
-                            tdBobot.className = 'px-2 py-2 border';
-                            tdBobot.innerHTML = `<input type="number" class="bobot-${latihanCount}-${siswaId}" min="1" value="${bobot}" placeholder="Bobot">`;
-                            row.insertBefore(tdBobot, row.lastElementChild);
-
-                            const tdSumber = document.createElement('td');
-                            tdSumber.className = 'px-4 py-2 border';
-                            tdSumber.innerHTML = `<select class="sumber-${latihanCount}-${siswaId}"><option value="${sumber}" selected>${sumber === 'manual' ? 'Manual' : 'Soal'}</option></select>`;
-                            row.insertBefore(tdSumber, row.lastElementChild);
-                        });
-
-                        // Reset form
-                        this.reset();
-                        document.getElementById('manual-input').style.display = 'block';
-                        document.getElementById('soal-input').style.display = 'none';
-
-                        // Calculate rata-rata
-                        calculateAllRataRata();
-                    } else {
-                        toastr.error(result.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('Terjadi kesalahan saat menyimpan data');
-                });
+            // Semua langsung terpilih
+            selectAllCheckbox.checked = true;
         });
 
-        document.getElementById('add-latihan').addEventListener('click', function () {
-            latihanCount++;
-            const table = document.getElementById('nilai-table');
-            const thead = table.querySelector('thead tr');
-            const tbody = table.querySelector('tbody');
-
-            // Add header
-            const thNilai = document.createElement('th');
-            thNilai.className = 'px-4 py-2 border';
-            thNilai.textContent = `Latihan ${latihanCount}`;
-            thead.insertBefore(thNilai, thead.lastElementChild);
-
-            const thBobot = document.createElement('th');
-            thBobot.className = 'px-4 py-2 border';
-            thBobot.textContent = `Bobot ${latihanCount}`;
-            thead.insertBefore(thBobot, thead.lastElementChild);
-
-            const thSumber = document.createElement('th');
-            thSumber.className = 'px-4 py-2 border';
-            thSumber.textContent = `Sumber ${latihanCount}`;
-            thead.insertBefore(thSumber, thead.lastElementChild);
-
-            // Add cells to each row
-            tbody.querySelectorAll('tr').forEach((row, index) => {
-                const siswaId = {{ $siswa->pluck('id')->toJson() }}[index];
-
-                const tdNilai = document.createElement('td');
-                tdNilai.className = 'px-4 py-2 border';
-                tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai">`;
-                row.insertBefore(tdNilai, row.lastElementChild);
-
-                const tdBobot = document.createElement('td');
-                tdBobot.className = 'px-2 py-2 border';
-                tdBobot.innerHTML = `<input type="number" class="bobot-${latihanCount}-${siswaId}" min="1" value="1" placeholder="Bobot">`;
-                row.insertBefore(tdBobot, row.lastElementChild);
-
-                const tdSumber = document.createElement('td');
-                tdSumber.className = 'px-4 py-2 border';
-                tdSumber.innerHTML = `
-                                                                                                                                                                                        <select class="sumber-${latihanCount}-${siswaId}">
-                                                                                                                                                                                            <option value="manual">Manual</option>
-                                                                                                                                                                                            <option value="soal">Soal</option>
-                                                                                                                                                                                        </select>
-                                                                                                                                                                                    `;
-                row.insertBefore(tdSumber, row.lastElementChild);
+        // Checkbox "Pilih Semua"
+        document.getElementById('select-all-grades').addEventListener('change', function () {
+            const gradeCheckboxes = document.querySelectorAll('#grades-list .grade-checkbox');
+            gradeCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
             });
         });
 
-        document.getElementById('save-nilai').addEventListener('click', function () {
-            // Collect data and send to server
-            const data = [];
-                                                                                                                                                                            {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
-                for (let i = 1; i <= latihanCount; i++) {
-                    const nilai = document.querySelector(`.latihan-${i}-${siswaId}`).value;
-                    const bobot = document.querySelector(`.bobot-${i}-${siswaId}`).value;
-                    const sumber = document.querySelector(`.sumber-${i}-${siswaId}`).value;
-                    const judul = document.querySelector(`th:nth-child(${3 + (i - 1) * 3})`).textContent; // Get judul from header
-                    if (nilai || bobot) {
-                        data.push({
-                            siswa_id: siswaId,
-                            mapel_id: {{ $mapel->mapel_id }},
-                            judul_nilai: judul,
-                            nilai: parseFloat(nilai) || 0,
-                            sumber: sumber,
-                            bobot: parseInt(bobot) || 1
-                        });
-                    }
-                }
-            });
-
-            // Send AJAX request
-            fetch('{{ route("nilai.store") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        toastr.success(result.success);
-                        // Reset form after successful save
-                        document.getElementById('add-nilai-form').reset();
-                        document.getElementById('manual-input').style.display = 'block';
-                        document.getElementById('soal-input').style.display = 'none';
-                    } else {
-                        toastr.error(result.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('Terjadi kesalahan saat menyimpan data');
-                });
-        });
-
-        // Calculate rata-rata on input change
-        document.addEventListener('input', function (e) {
-            if (e.target.className.includes('latihan-') || e.target.className.includes('bobot-')) {
-                calculateAllRataRata();
+        // Fungsi hapus nilai
+        function deleteNilai() {
+            const judulSelect = document.getElementById('judul_delete');
+            const judul = judulSelect.value.trim();
+            if (!judul) {
+                alert('Pilih judul nilai terlebih dahulu.');
+                return;
             }
-        });
+
+            const selectedCheckboxes = document.querySelectorAll('#grades-list .grade-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('Pilih setidaknya satu siswa untuk dihapus nilainya.');
+                return;
+            }
+
+            if (!confirm(`Apakah Anda yakin ingin menghapus nilai "${judul}" untuk siswa yang dipilih?`)) {
+                return;
+            }
+
+            const grades = Array.from(selectedCheckboxes).map(cb => ({
+                siswa_id: parseInt(cb.getAttribute('data-siswa-id')),
+                judul_nilai: cb.getAttribute('data-judul')
+            }));
+
+            console.log('Grades to delete:', grades);
+
+            fetch('{{ route("nilai.batch.destroy") }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    grades: grades,
+                    mapel_id: {{ $mapel->mapel_id }}
+                                })
+
+            })
+
+                .then(async response => {
+                    // logging useful debug info
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', Array.from(response.headers.entries()));
+
+                    const text = await response.text(); // baca raw dulu
+                    // coba parse JSON jika memungkinkan
+                    try {
+                        const json = JSON.parse(text);
+                        console.log('Parsed JSON:', json);
+                        if (response.ok && json.success) {
+                            toastr.success(json.success);
+                            setTimeout(() => location.reload(), 700);
+                        } else {
+                            // jika ada error key, tampilkan; kalau tidak, tampilkan seluruh JSON
+                            const errMsg = json.error || (json.message ? json.message : JSON.stringify(json));
+                            toastr.error(errMsg || 'Terjadi kesalahan');
+                        }
+                    } catch (err) {
+                        // bukan JSON — tampilkan raw text agar mudah debugging
+                        console.error('Response bukan JSON:', text);
+                        // Jika status redirect ke login (401/302/419) beri pesan khusus
+                        if (response.status === 419 || /csrf/i.test(text)) {
+                            toastr.error('Token CSRF kadaluwarsa atau tidak valid (status 419). Silakan refresh halaman dan coba lagi.');
+                        } else if (response.status === 401 || response.status === 302) {
+                            toastr.error('Anda mungkin tidak terautentikasi. Coba login ulang.');
+                        } else {
+                            // tampilkan potongan raw response (batasin panjang)
+                            const snippet = text.length > 800 ? text.slice(0, 800) + '... (truncated)' : text;
+                            toastr.error('Response tidak valid (bukan JSON). Lihat console untuk detail.');
+                            console.log('Raw response (truncated):', snippet);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    toastr.error('Terjadi kesalahan koneksi saat menghapus data.');
+                });
+        }
+
+
     </script>
 @endsection

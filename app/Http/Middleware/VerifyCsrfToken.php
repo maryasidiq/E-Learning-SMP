@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'guru/quis/generate-soal-excel',
         'guru/quis/check-generate-status',
+        'guru/nilai/update/*',
     ];
 }

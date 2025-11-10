@@ -194,6 +194,81 @@ class NilaiController extends Controller
         //
     }
 
+    /**
+     * Batch delete nilai for selected grades.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    // public function batchDestroy(Request $request)
+    // {
+    //     $request->validate([
+    //         'grades' => 'required|array',
+    //         'grades.*.siswa_id' => 'required|integer|exists:siswa,id',
+    //         'grades.*.judul_nilai' => 'required|string',
+    //         'mapel_id' => 'required|integer|exists:mapel,id',
+    //     ]);
+
+    //     $grades = $request->grades;
+    //     $mapelId = $request->mapel_id;
+
+    //     $affectedSiswa = [];
+
+    //     // Delete specific nilai for each grade
+    //     foreach ($grades as $grade) {
+    //         \App\NilaiAkhir::where('siswa_id', $grade['siswa_id'])
+    //             ->where('mapel_id', $mapelId)
+    //             ->where('judul_nilai', $grade['judul_nilai'])
+    //             ->delete();
+
+    //         if (!in_array($grade['siswa_id'], $affectedSiswa)) {
+    //             $affectedSiswa[] = $grade['siswa_id'];
+    //         }
+    //     }
+
+    //     // Recalculate rata-rata for affected siswa
+    //     foreach ($affectedSiswa as $siswaId) {
+    //         $this->calculateRataRata($siswaId, $mapelId);
+    //     }
+
+    //     return response()->json(['success' => 'Nilai berhasil dihapus!']);
+    // }
+    public function batchDestroy(Request $request)
+    {
+        $request->validate([
+            'grades' => 'required|array|min:1',
+            'grades.*.siswa_id' => 'required|integer|exists:siswa,id', // ✅ FIX
+            'grades.*.judul_nilai' => 'required|string',
+            'mapel_id' => 'required|integer|exists:mapel,id',
+        ]);
+
+        try {
+            $affectedSiswa = [];
+
+            foreach ($request->grades as $g) {
+                \DB::table('nilai_akhirs')
+                    ->where('mapel_id', $request->mapel_id)
+                    ->where('siswa_id', $g['siswa_id'])
+                    ->where('judul_nilai', $g['judul_nilai'])
+                    ->delete();
+
+                if (!in_array($g['siswa_id'], $affectedSiswa)) {
+                    $affectedSiswa[] = $g['siswa_id'];
+                }
+            }
+
+            // ✅ Recalculate rata-rata agar tampilan tabel tetap akurat
+            foreach ($affectedSiswa as $siswaId) {
+                $this->calculateRataRata($siswaId, $request->mapel_id);
+            }
+
+            return response()->json(['success' => 'Nilai berhasil dihapus!']);
+        } catch (\Exception $e) {
+            \Log::error('Batch destroy nilai error: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal menghapus nilai.'], 500);
+        }
+    }
+
     public function mapel()
     {
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
