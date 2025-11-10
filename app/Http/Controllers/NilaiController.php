@@ -335,6 +335,38 @@ class NilaiController extends Controller
         return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil diperbarui!');
     }
 
+    /**
+     * Display nilai for siswa.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function siswa()
+    {
+        $siswa = Siswa::where('no_induk', Auth::user()->no_induk)->first();
+        $nilaiTotal = NilaiTotal::where('siswa_id', $siswa->id)->with('mapel')->get();
+        return view('siswa.nilai.index', compact('nilaiTotal', 'siswa'));
+    }
+
+    /**
+     * Show detail nilai for siswa.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detailNilai($id)
+    {
+        $siswa = Siswa::where('no_induk', Auth::user()->no_induk)->first();
+        $nilaiTotal = NilaiTotal::where('id', $id)->where('siswa_id', $siswa->id)->with('mapel')->first();
+
+        if (!$nilaiTotal) {
+            abort(404, 'Nilai tidak ditemukan');
+        }
+
+        $nilaiDetails = json_decode($nilaiTotal->nilai_details, true) ?? [];
+
+        return view('siswa.nilai.detail', compact('nilaiTotal', 'nilaiDetails'));
+    }
+
     private function calculateRataRata($siswa_id, $mapel_id)
     {
         $nilaiAkhir = NilaiAkhir::where('siswa_id', $siswa_id)->where('mapel_id', $mapel_id)->get();

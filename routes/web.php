@@ -58,6 +58,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/soal/siswa/{id}', 'SiswaSoalController@show')->name('soal.siswa.show');
     Route::get('/soal/siswa/kerjakan/{id}', 'SiswaSoalController@kerjakan')->name('soal.siswa.kerjakan');
     Route::post('/soal/siswa/simpan-jawaban/{id}', 'SiswaSoalController@simpanJawaban')->name('soal.siswa.simpan-jawaban');
+    Route::get('/nilai/siswa', 'NilaiController@siswa')->name('nilai.siswa');
+    Route::get('/nilai/detail/{id}', 'NilaiController@detailNilai')->name('nilai.detail');
     Route::get('/ulangan/siswa', 'NilaiController@siswa')->name('ulangan.siswa');
     Route::get('/sikap/siswa', 'SikapController@siswa')->name('sikap.siswa');
     Route::get('/rapot/siswa', 'RapotController@siswa')->name('rapot.siswa');
