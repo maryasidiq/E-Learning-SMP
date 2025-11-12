@@ -138,7 +138,7 @@
                                                 class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 soal-select">
                                                 <option value="">Pilih Soal</option>
                                                 @foreach(\App\Soal::where('mapel_id', $mapel->mapel_id)->get() as $soal)
-                                                    <option value="{{ $soal->id }}" {{ $firstNilai && $firstNilai->soal == $soal->id ? 'selected' : '' }}>{{ $soal->judul }}</option>
+                                                    <option value="{{ $soal->id }}" {{ $firstNilai && $firstNilai->soal_id == $soal->id ? 'selected' : '' }}>{{ $soal->judul }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -199,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const updateBtn = document.getElementById('update-semua-nilai');
     if (updateBtn) {
         updateBtn.addEventListener('click', function () {
+            // Konfirmasi sebelum update
+            const confirmed = confirm('Apakah Anda yakin ingin mengupdate semua nilai?');
+            if (!confirmed) return;
+
             updateBtn.disabled = true;
             updateBtn.textContent = 'Menyimpan...';
 
@@ -241,11 +245,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(result => {
                 if (result.success) {
                     toastr.success(result.success);
+                    // Redirect ke halaman nilai setelah sukses
+                    setTimeout(() => {
+                        window.location.href = '{{ route("nilai.show", $mapel->mapel_id) }}';
+                    }, 2000);
                 } else {
                     toastr.error(result.error || 'Gagal menyimpan data');
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Update Semua Nilai';
                 }
-                updateBtn.disabled = false;
-                updateBtn.textContent = 'Update Semua Nilai';
             })
             .catch(error => {
                 console.error('Error:', error);

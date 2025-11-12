@@ -92,6 +92,7 @@ class NilaiController extends Controller
                     'nilai' => $nilai,
                     'sumber' => $item['sumber'],
                     'bobot' => $item['bobot'],
+                    'soal_id' => $item['soal'] ?? null,
                 ]
             );
 
@@ -142,7 +143,10 @@ class NilaiController extends Controller
             }
         }
 
-        return view('guru.nilai.nilai', compact('guru', 'mapel', 'kelas', 'siswa', 'nilaiSoal', 'existingNilai'));
+        // Get soal map for display
+        $soalMap = Soal::where('mapel_id', $id)->pluck('judul', 'id')->toArray();
+
+        return view('guru.nilai.nilai', compact('guru', 'mapel', 'kelas', 'siswa', 'nilaiSoal', 'existingNilai', 'soalMap'));
     }
 
     /**
@@ -197,13 +201,19 @@ class NilaiController extends Controller
         $request->validate([
             'nilai.*' => 'nullable|numeric|min:0|max:100',
             'bobot.*' => 'required|integer|min:1',
-            'sumber.*' => 'required|in:manual,soal',
+            'sumber.*' => 'nullable|in:manual,soal',
             'soal.*' => 'nullable|integer',
         ]);
 
         foreach ($request->nilai as $nilaiId => $nilai) {
-            $sumber = $request->sumber[$nilaiId];
-            $soalId = $request->soal[$nilaiId] ?? null;
+            // Get current nilai record to preserve sumber and soal_id if not provided
+            $currentNilai = NilaiAkhir::find($nilaiId);
+            if (!$currentNilai) {
+                continue;
+            }
+
+            $sumber = $request->sumber[$nilaiId] ?? $currentNilai->sumber;
+            $soalId = $request->soal[$nilaiId] ?? $currentNilai->soal_id;
 
             if ($sumber == 'soal') {
                 if (!$soalId) {
@@ -225,7 +235,7 @@ class NilaiController extends Controller
                 'nilai' => $nilai,
                 'bobot' => $request->bobot[$nilaiId],
                 'sumber' => $sumber,
-                'soal' => $soalId,
+                'soal_id' => $soalId,
             ]);
         }
 
@@ -337,118 +347,62 @@ class NilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function updateAllNilai(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'nilai' => 'required|array',
-    //         'nilai.*.*' => 'nullable|numeric|min:0|max:100',
-    //         'bobot' => 'required|array',
-    //         'bobot.*.*' => 'required|integer|min:1',
-    //         'sumber' => 'required|array',
-    //         'sumber.*.*' => 'required|in:manual,soal',
-    //         'soal' => 'nullable|array',
-    //         'soal.*.*' => 'nullable|integer',
-    //     ]);
 
-    //     foreach ($request->nilai as $siswaId => $judulNilaiData) {
-    //         foreach ($judulNilaiData as $judulNilai => $nilai) {
-    //             $bobot = $request->bobot[$siswaId][$judulNilai];
-    //             $sumber = $request->sumber[$siswaId][$judulNilai];
-    //             $soalId = $request->soal[$siswaId][$judulNilai] ?? null;
-
-    //             if ($sumber == 'soal') {
-    //                 if (!$soalId) {
-    //                     return redirect()->back()->withErrors(['error' => 'Soal harus dipilih untuk sumber soal!']);
-    //                 }
-    //                 // Calculate average from JawabanSoal for the soal
-    //                 $soal = Soal::find($soalId);
-    //                 if ($soal) {
-    //                     $jawaban = JawabanSoal::where('soal_id', $soal->id)->where('siswa_id', $siswaId)->get();
-    //                     $nilai = $jawaban->avg('nilai_akhir') ?? 0;
-    //                 } else {
-    //                     return redirect()->back()->withErrors(['error' => 'Soal tidak ditemukan!']);
-    //                 }
-    //             } else {
-    //                 $nilai = $nilai ?? 0;
-    //             }
-
-    //             NilaiAkhir::updateOrCreate(
-    //                 [
-    //                     'siswa_id' => $siswaId,
-    //                     'mapel_id' => $id,
-    //                     'judul_nilai' => $judulNilai,
-    //                 ],
-    //                 [
-    //                     'nilai' => $nilai,
-    //                     'sumber' => $sumber,
-    //                     'bobot' => $bobot,
-    //                     'soal' => $soalId,
-    //                 ]
-    //             );
-
-    //             // Calculate rata-rata
-    //             $this->calculateRataRata($siswaId, $id);
-    //         }
-    //     }
-
-    //     return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil diperbarui!');
-    // }
     public function updateAllNilai(Request $request, $id)
-{
-    $data = $request->all();
+    {
+        $data = $request->all();
 
-    if (!is_array($data)) {
-        return response()->json(['error' => 'Format data tidak valid'], 400);
-    }
-
-    try {
-        foreach ($data as $item) {
-            $siswaId = $item['siswa_id'] ?? null;
-            $judul = $item['judul_nilai'] ?? null;
-            $nilai = $item['nilai'] ?? 0;
-            $sumber = $item['sumber'] ?? 'manual';
-            $bobot = $item['bobot'] ?? 1;
-            $soalId = $item['soal'] ?? null;
-
-            if (!$siswaId || !$judul) {
-                continue;
-            }
-
-            // Jika sumber nilai dari soal, ambil dari jawaban soal
-            if ($sumber === 'soal') {
-                if (!$soalId) {
-                    return response()->json(['error' => 'Soal harus dipilih untuk sumber soal!'], 400);
-                }
-
-                $jawaban = \App\JawabanSoal::where('soal_id', $soalId)
-                    ->where('siswa_id', $siswaId)
-                    ->get();
-
-                $nilai = $jawaban->avg('nilai_akhir') ?? 0;
-            }
-
-            \App\NilaiAkhir::updateOrCreate(
-                [
-                    'siswa_id' => $siswaId,
-                    'mapel_id' => $id,
-                    'judul_nilai' => $judul,
-                ],
-                [
-                    'nilai' => $nilai,
-                    'sumber' => $sumber,
-                    'bobot' => $bobot,
-                    'soal' => $soalId,
-                ]
-            );
-
-            $this->calculateRataRata($siswaId, $id);
+        if (!is_array($data)) {
+            return response()->json(['error' => 'Format data tidak valid'], 400);
         }
 
-        return response()->json(['success' => 'Semua nilai berhasil diperbarui!']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        try {
+            foreach ($data as $item) {
+                $siswaId = $item['siswa_id'] ?? null;
+                $judulLama = $item['judul_lama'] ?? null;
+                $judulBaru = $item['judul_nilai'] ?? null;
+                $nilai = $item['nilai'] ?? 0;
+                $sumber = $item['sumber'] ?? 'manual';
+                $bobot = $item['bobot'] ?? 1;
+                $soalId = $item['soal'] ?? null;
+
+                if (!$siswaId || !$judulLama) {
+                    continue;
+                }
+
+                // Jika sumber nilai dari soal, ambil dari jawaban soal
+                if ($sumber === 'soal') {
+                    if (!$soalId) {
+                        return response()->json(['error' => 'Soal harus dipilih untuk sumber soal!'], 400);
+                    }
+
+                    $jawaban = \App\JawabanSoal::where('soal_id', $soalId)
+                        ->where('siswa_id', $siswaId)
+                        ->get();
+
+                    $nilai = $jawaban->avg('nilai_akhir') ?? 0;
+                }
+
+                // Update existing record by judul_lama
+                \App\NilaiAkhir::where('siswa_id', $siswaId)
+                    ->where('mapel_id', $id)
+                    ->where('judul_nilai', $judulLama)
+                    ->update([
+                        'judul_nilai' => $judulBaru,
+                        'nilai' => $nilai,
+                        'sumber' => $sumber,
+                        'bobot' => $bobot,
+                        'soal_id' => $soalId,
+                    ]);
+
+                $this->calculateRataRata($siswaId, $id);
+            }
+
+            return response()->json(['success' => 'Semua nilai berhasil diperbarui!']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 
 
     /**

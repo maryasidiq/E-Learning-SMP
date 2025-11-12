@@ -116,6 +116,9 @@
         // Existing nilai data
         const existingNilaiData = @json($existingNilai ?? collect());
 
+        // Soal map for display
+        const soalMap = @json($soalMap ?? []);
+
         // Siswa data
         const siswaData = @json($siswa);
 
@@ -178,7 +181,9 @@
 
                     const tdSumber = document.createElement('td');
                     tdSumber.className = 'px-4 py-2 border';
-                    tdSumber.innerHTML = `<select class="sumber-${latihanCount}-${siswaId}"><option value="${existingNilai ? existingNilai.sumber : 'manual'}" selected>${existingNilai && existingNilai.sumber === 'soal' ? 'Soal' : 'Manual'}</option></select>`;
+                    const sumberValue = existingNilai ? existingNilai.sumber : 'manual';
+                    const sumberText = sumberValue === 'soal' ? (soalMap[existingNilai.soal_id] || 'Soal') : 'Manual';
+                    tdSumber.innerHTML = `<select class="sumber-${latihanCount}-${siswaId}"><option value="${sumberValue}" selected>${sumberText}</option></select>`;
                     row.insertBefore(tdSumber, row.lastElementChild);
                 });
             });
@@ -189,7 +194,7 @@
 
         // Function to calculate rata-rata for all siswa
         function calculateAllRataRata() {
-                                                                                                                                                                                                                                                                                                                                                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                                                                                                                                                                                                                                                                                                                                                                        {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
             let total = 0;
             let totalBobot = 0;
             for (let i = 1; i <= latihanCount; i++) {
@@ -252,7 +257,7 @@
 
                 // Prepare data for all siswa
                 const data = [];
-                                                                                                                                                                                                                                                                                                                                                        {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                                                                                                                                                                                                                                                                                                                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
                     let nilai = 0;
                     if (sumber === 'manual') {
                         nilai = parseFloat(nilaiManual) || 0;
@@ -388,11 +393,11 @@
                     const tdSumber = document.createElement('td');
                     tdSumber.className = 'px-4 py-2 border';
                     tdSumber.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            <select class="sumber-${latihanCount}-${siswaId}">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="manual">Manual</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="soal">Soal</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            </select>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <select class="sumber-${latihanCount}-${siswaId}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="manual">Manual</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="soal">Soal</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </select>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                `;
                     row.insertBefore(tdSumber, row.lastElementChild);
                 });
             });
@@ -400,7 +405,7 @@
             document.getElementById('save-nilai').addEventListener('click', function () {
                 // Collect data and send to server
                 const data = [];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
                     for (let i = 1; i <= latihanCount; i++) {
                         const nilai = document.querySelector(`.latihan-${i}-${siswaId}`).value;
                         const bobot = document.querySelector(`.bobot-${i}-${siswaId}`).value;

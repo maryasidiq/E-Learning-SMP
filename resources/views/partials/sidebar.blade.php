@@ -61,7 +61,7 @@
                         <!-- Menu Item Dashboard -->
 
                         <!-- Menu Item Absen -->
-                        <li>
+                        <!-- <li>
                             <a href="{{ route('absen.harian') }}" class="menu-item group"
                                 :class="@json(Route::is('absen.harian')) ?
                                                                                                                                                 'menu-item-active' : 'menu-item-inactive'">
@@ -83,7 +83,7 @@
                                     Absensi Guru
                                 </span>
                             </a>
-                        </li>
+                        </li> -->
                         <!-- Menu Item Absen -->
 
                         <!-- Menu Item Jadwal -->
