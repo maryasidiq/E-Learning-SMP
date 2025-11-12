@@ -57,6 +57,7 @@ class NilaiController extends Controller
             '*.nilai' => 'nullable|numeric|min:0|max:100',
             '*.sumber' => 'required|in:manual,soal',
             '*.bobot' => 'required|integer|min:1',
+            '*.soal' => 'nullable|integer',
         ]);
 
         $data = $request->all();
@@ -66,11 +67,14 @@ class NilaiController extends Controller
 
         foreach ($data as $item) {
             if ($item['sumber'] == 'soal') {
+                if (!isset($item['soal']) || empty($item['soal'])) {
+                    return response()->json(['error' => 'Soal harus dipilih!']);
+                }
                 // Calculate average from JawabanSoal for the soal
-                $soal = Soal::where('judul', $item['soal'])->where('mapel_id', $item['mapel_id'])->first();
+                $soal = Soal::find($item['soal']);
                 if ($soal) {
                     $jawaban = JawabanSoal::where('soal_id', $soal->id)->where('siswa_id', $item['siswa_id'])->get();
-                    $nilai = $jawaban->avg('nilai_akhir');
+                    $nilai = $jawaban->avg('nilai_akhir') ?? 0;
                 } else {
                     return response()->json(['error' => 'Soal tidak ditemukan!']);
                 }
@@ -106,7 +110,11 @@ class NilaiController extends Controller
      */
     public function show($id)
     {
-        $id = Crypt::decrypt($id);
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
         if (!$mapel) {
@@ -145,7 +153,11 @@ class NilaiController extends Controller
      */
     public function createNilai($id)
     {
-        $id = Crypt::decrypt($id);
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
         if (!$mapel) {
@@ -183,16 +195,37 @@ class NilaiController extends Controller
     public function update(Request $request, $siswa_id)
     {
         $request->validate([
-            'nilai.*' => 'required|numeric|min:0|max:100',
+            'nilai.*' => 'nullable|numeric|min:0|max:100',
             'bobot.*' => 'required|integer|min:1',
             'sumber.*' => 'required|in:manual,soal',
+            'soal.*' => 'nullable|integer',
         ]);
 
         foreach ($request->nilai as $nilaiId => $nilai) {
+            $sumber = $request->sumber[$nilaiId];
+            $soalId = $request->soal[$nilaiId] ?? null;
+
+            if ($sumber == 'soal') {
+                if (!$soalId) {
+                    return response()->json(['error' => 'Soal harus dipilih untuk sumber soal!']);
+                }
+                // Calculate average from JawabanSoal for the soal
+                $soal = Soal::find($soalId);
+                if ($soal) {
+                    $jawaban = JawabanSoal::where('soal_id', $soal->id)->where('siswa_id', $siswa_id)->get();
+                    $nilai = $jawaban->avg('nilai_akhir') ?? 0;
+                } else {
+                    return response()->json(['error' => 'Soal tidak ditemukan!']);
+                }
+            } else {
+                $nilai = $nilai ?? 0;
+            }
+
             NilaiAkhir::where('id', $nilaiId)->update([
                 'nilai' => $nilai,
                 'bobot' => $request->bobot[$nilaiId],
-                'sumber' => $request->sumber[$nilaiId],
+                'sumber' => $sumber,
+                'soal' => $soalId,
             ]);
         }
 
@@ -231,8 +264,6 @@ class NilaiController extends Controller
         return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil dihapus!');
     }
 
-
-
     public function mapel()
     {
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
@@ -249,7 +280,11 @@ class NilaiController extends Controller
      */
     public function hapusNilai($id)
     {
-        $id = Crypt::decrypt($id);
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
         if (!$mapel) {
@@ -274,7 +309,11 @@ class NilaiController extends Controller
      */
     public function editAllNilai($id)
     {
-        $id = Crypt::decrypt($id);
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
         $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
         if (!$mapel) {
@@ -298,42 +337,119 @@ class NilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function updateAllNilai(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'nilai' => 'required|array',
+    //         'nilai.*.*' => 'nullable|numeric|min:0|max:100',
+    //         'bobot' => 'required|array',
+    //         'bobot.*.*' => 'required|integer|min:1',
+    //         'sumber' => 'required|array',
+    //         'sumber.*.*' => 'required|in:manual,soal',
+    //         'soal' => 'nullable|array',
+    //         'soal.*.*' => 'nullable|integer',
+    //     ]);
+
+    //     foreach ($request->nilai as $siswaId => $judulNilaiData) {
+    //         foreach ($judulNilaiData as $judulNilai => $nilai) {
+    //             $bobot = $request->bobot[$siswaId][$judulNilai];
+    //             $sumber = $request->sumber[$siswaId][$judulNilai];
+    //             $soalId = $request->soal[$siswaId][$judulNilai] ?? null;
+
+    //             if ($sumber == 'soal') {
+    //                 if (!$soalId) {
+    //                     return redirect()->back()->withErrors(['error' => 'Soal harus dipilih untuk sumber soal!']);
+    //                 }
+    //                 // Calculate average from JawabanSoal for the soal
+    //                 $soal = Soal::find($soalId);
+    //                 if ($soal) {
+    //                     $jawaban = JawabanSoal::where('soal_id', $soal->id)->where('siswa_id', $siswaId)->get();
+    //                     $nilai = $jawaban->avg('nilai_akhir') ?? 0;
+    //                 } else {
+    //                     return redirect()->back()->withErrors(['error' => 'Soal tidak ditemukan!']);
+    //                 }
+    //             } else {
+    //                 $nilai = $nilai ?? 0;
+    //             }
+
+    //             NilaiAkhir::updateOrCreate(
+    //                 [
+    //                     'siswa_id' => $siswaId,
+    //                     'mapel_id' => $id,
+    //                     'judul_nilai' => $judulNilai,
+    //                 ],
+    //                 [
+    //                     'nilai' => $nilai,
+    //                     'sumber' => $sumber,
+    //                     'bobot' => $bobot,
+    //                     'soal' => $soalId,
+    //                 ]
+    //             );
+
+    //             // Calculate rata-rata
+    //             $this->calculateRataRata($siswaId, $id);
+    //         }
+    //     }
+
+    //     return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil diperbarui!');
+    // }
     public function updateAllNilai(Request $request, $id)
-    {
-        $request->validate([
-            'nilai' => 'required|array',
-            'nilai.*.*' => 'required|numeric|min:0|max:100',
-            'bobot' => 'required|array',
-            'bobot.*.*' => 'required|integer|min:1',
-            'sumber' => 'required|array',
-            'sumber.*.*' => 'required|in:manual,soal',
-        ]);
+{
+    $data = $request->all();
 
-        foreach ($request->nilai as $siswaId => $judulNilaiData) {
-            foreach ($judulNilaiData as $judulNilai => $nilai) {
-                $bobot = $request->bobot[$siswaId][$judulNilai];
-                $sumber = $request->sumber[$siswaId][$judulNilai];
+    if (!is_array($data)) {
+        return response()->json(['error' => 'Format data tidak valid'], 400);
+    }
 
-                NilaiAkhir::updateOrCreate(
-                    [
-                        'siswa_id' => $siswaId,
-                        'mapel_id' => $id,
-                        'judul_nilai' => $judulNilai,
-                    ],
-                    [
-                        'nilai' => $nilai,
-                        'sumber' => $sumber,
-                        'bobot' => $bobot,
-                    ]
-                );
+    try {
+        foreach ($data as $item) {
+            $siswaId = $item['siswa_id'] ?? null;
+            $judul = $item['judul_nilai'] ?? null;
+            $nilai = $item['nilai'] ?? 0;
+            $sumber = $item['sumber'] ?? 'manual';
+            $bobot = $item['bobot'] ?? 1;
+            $soalId = $item['soal'] ?? null;
 
-                // Calculate rata-rata
-                $this->calculateRataRata($siswaId, $id);
+            if (!$siswaId || !$judul) {
+                continue;
             }
+
+            // Jika sumber nilai dari soal, ambil dari jawaban soal
+            if ($sumber === 'soal') {
+                if (!$soalId) {
+                    return response()->json(['error' => 'Soal harus dipilih untuk sumber soal!'], 400);
+                }
+
+                $jawaban = \App\JawabanSoal::where('soal_id', $soalId)
+                    ->where('siswa_id', $siswaId)
+                    ->get();
+
+                $nilai = $jawaban->avg('nilai_akhir') ?? 0;
+            }
+
+            \App\NilaiAkhir::updateOrCreate(
+                [
+                    'siswa_id' => $siswaId,
+                    'mapel_id' => $id,
+                    'judul_nilai' => $judul,
+                ],
+                [
+                    'nilai' => $nilai,
+                    'sumber' => $sumber,
+                    'bobot' => $bobot,
+                    'soal' => $soalId,
+                ]
+            );
+
+            $this->calculateRataRata($siswaId, $id);
         }
 
-        return redirect()->route('nilai.show', $id)->with('success', 'Nilai berhasil diperbarui!');
+        return response()->json(['success' => 'Semua nilai berhasil diperbarui!']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
 
     /**
      * Display nilai for siswa.

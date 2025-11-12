@@ -57,6 +57,10 @@
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot</label>
                                     <input type="number" name="bobot[{{ $nilai->id }}]" value="{{ $nilai->bobot }}" min="1"
                                         class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                            class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
                                         required>
                                 </div>
                                 <div class="form-group">
@@ -66,6 +70,19 @@
                                         required>
                                         <option value="manual" {{ $nilai->sumber == 'manual' ? 'selected' : '' }}>Manual</option>
                                         <option value="soal" {{ $nilai->sumber == 'soal' ? 'selected' : '' }}>Soal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group md:col-span-3" id="soal-input-{{ $nilai->id }}"
+                                    style="display: {{ $nilai->sumber == 'soal' ? 'block' : 'none' }};">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Soal</label>
+                                    <select name="soal[{{ $nilai->id }}]"
+                                        class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">Pilih Soal</option>
+                                        @foreach(\App\Soal::where('mapel_id', $mapel->mapel_id)->get() as $soal)
+                                            <option value="{{ $soal->id }}" {{ $nilai->soal == $soal->id ? 'selected' : '' }}>
+                                                {{ $soal->judul }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -84,10 +101,25 @@
                     </a>
                 </div>
             </form>
+                                        <input type="number" name="bobot[{{ $nilai->id }}]" value="{{ $nilai->bobot }}" min="1"
         </div>
     </div>
 
     <script>
+        // Toggle soal input based on sumber selection
+        @foreach($existingNilai as $judul => $nilaiList)
+            @foreach($nilaiList as $nilai)
+                document.querySelector('select[name="sumber[{{ $nilai->id }}]"]').addEventListener('change', function () {
+                    const soalInput = document.getElementById('soal-input-{{ $nilai->id }}');
+                    if (this.value === 'soal') {
+                        soalInput.style.display = 'block';
+                    } else {
+                        soalInput.style.display = 'none';
+                    }
+                });
+            @endforeach
+        @endforeach
+
         document.getElementById('edit-nilai-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);

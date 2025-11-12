@@ -89,8 +89,7 @@
                             id="bobot" name="bobot" min="1" value="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="sumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sumber
-                            Nilai</label>
+                        <label for="sumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sumber Nilai</label>
                         <select
                             class="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             id="sumber" name="sumber" required>
@@ -99,7 +98,8 @@
                         </select>
                     </div>
                     <div class="form-group flex items-end">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button type="submit" id="tambah-nilai-btn"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Tambah Nilai
                         </button>
                     </div>
@@ -112,7 +112,7 @@
                                     <label class="w-32 text-sm">{{ $s->nama_siswa }}</label>
                                     <input type="number"
                                         class="form-control flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                        name="nilai_manual[{{ $s->id }}]" min="0" max="100" placeholder="Nilai" required>
+                                        name="nilai_manual[{{ $s->id }}]" min="0" max="100" placeholder="Nilai">
                                 </div>
                             @endforeach
                         </div>
@@ -125,7 +125,7 @@
                             id="soal" name="soal">
                             <option value="">Pilih Soal</option>
                             @foreach(\App\Soal::where('mapel_id', $mapel->mapel_id)->get() as $soal)
-                                <option value="{{ $soal->judul }}">{{ $soal->judul }}</option>
+                                <option value="{{ $soal->id }}">{{ $soal->judul }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -164,6 +164,12 @@
         // Handle form submission for adding nilai
         document.getElementById('add-nilai-form').addEventListener('submit', function (e) {
             e.preventDefault();
+
+            // Disable button to prevent double submission
+            const submitBtn = document.getElementById('tambah-nilai-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+
             let judulNilai = document.getElementById('judul_nilai').value;
             const customJudul = document.getElementById('judul_nilai_custom').value;
             if (judulNilai === '' && customJudul) {
@@ -176,21 +182,33 @@
             // Check if judul_nilai is provided either from select or custom input
             if (!judulNilai && !customJudul) {
                 alert('Harap isi nama nilai.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Tambah Nilai';
                 return;
             }
 
             if (!bobot || !sumber) {
                 alert('Harap isi semua field yang diperlukan.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Tambah Nilai';
+                return;
+            }
+
+            if (sumber === 'soal' && !soal) {
+                alert('Harap pilih soal.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Tambah Nilai';
                 return;
             }
 
             // Prepare data for all siswa
             const data = [];
-                            {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                    {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
                 let nilai = 0;
                 if (sumber === 'manual') {
                     // Get nilai from individual inputs
                     const nilaiInput = document.querySelector(`input[name="nilai_manual[${siswaId}]"]`);
+                    nilaiInput.removeAttribute('required');
                     nilai = parseFloat(nilaiInput.value) || 0;
                 } else {
                     // For soal, we'll need to get nilai from soal in the controller
@@ -225,11 +243,15 @@
                         window.location.href = '{{ route("nilai.show", $mapel->mapel_id) }}';
                     } else {
                         toastr.error(result.error);
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Tambah Nilai';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     toastr.error('Terjadi kesalahan saat menyimpan data');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Tambah Nilai';
                 });
         });
     </script>
