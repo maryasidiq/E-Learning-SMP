@@ -11,6 +11,11 @@
         </div>
 
         <div class="mb-4">
+            <strong class="text-gray-700 dark:text-gray-300">Kelas:</strong>
+            <span class="text-gray-900 dark:text-gray-100">{{ $materi->kelas->nama_kelas }}</span>
+        </div>
+
+        <div class="mb-4">
             <strong class="text-gray-700 dark:text-gray-300">Tipe Materi:</strong>
             <span class="text-gray-900 dark:text-gray-100">{{ ucfirst($materi->tipe) }}</span>
         </div>

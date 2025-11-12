@@ -32,10 +32,10 @@ class MateriMapelController extends Controller
     public function create()
     {
         $guru = Auth::user()->guru(Auth::user()->id_card);
-        $mapelKelas = \DB::table('guru_mapel')
-            ->join('mapel', 'guru_mapel.mapel_id', '=', 'mapel.id')
-            ->join('kelas', 'guru_mapel.guru_id', '=', 'kelas.guru_id')
-            ->where('guru_mapel.guru_id', $guru->id)
+        $mapelKelas = \DB::table('jadwal')
+            ->join('mapel', 'jadwal.mapel_id', '=', 'mapel.id')
+            ->join('kelas', 'jadwal.kelas_id', '=', 'kelas.id')
+            ->where('jadwal.guru_id', $guru->id)
             ->select('mapel.id as mapel_id', 'mapel.nama_mapel', 'kelas.id as kelas_id', 'kelas.nama_kelas')
             ->distinct()
             ->get();
@@ -110,9 +110,7 @@ class MateriMapelController extends Controller
     {
         $id = Crypt::decrypt($id);
         $materi = MateriMapel::findorfail($id);
-        $guru = Auth::user()->guru(Auth::user()->id_card);
-        $mapel = $guru->mapel;
-        return view('guru.materi.edit', compact('materi', 'mapel'));
+        return view('guru.materi.edit', compact('materi'));
     }
 
     /**
@@ -125,7 +123,7 @@ class MateriMapelController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'mapel_id' => 'required|integer',
+            'mapel_kelas' => 'required|string',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'tipe' => 'required|in:teks,pdf,ppt,excel,file',
@@ -135,8 +133,12 @@ class MateriMapelController extends Controller
 
         $materi = MateriMapel::findorfail($id);
 
+        // Parse mapel_kelas value (format: mapel_id-kelas_id)
+        list($mapel_id, $kelas_id) = explode('-', $request->mapel_kelas);
+
         $data = [
-            'mapel_id' => $request->mapel_id,
+            'mapel_id' => (int) $mapel_id,
+            'kelas_id' => (int) $kelas_id,
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'tipe' => $request->tipe,

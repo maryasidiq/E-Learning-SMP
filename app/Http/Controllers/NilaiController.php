@@ -12,6 +12,8 @@ use App\NilaiAkhir;
 use App\NilaiTotal;
 use App\Soal;
 use App\JawabanSoal;
+use App\Exports\NilaiExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
@@ -435,6 +437,63 @@ class NilaiController extends Controller
         $nilaiDetails = json_decode($nilaiTotal->nilai_details, true) ?? [];
 
         return view('siswa.nilai.detail', compact('nilaiTotal', 'nilaiDetails'));
+    }
+
+    /**
+     * Show mapel selection for admin/operator.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function adminMapel()
+    {
+        $gurus = \App\Guru::with(['jadwals.mapel', 'jadwals.kelas'])->get();
+        return view('admin.nilai.mapel', compact('gurus'));
+    }
+
+    /**
+     * Show nilai for admin/operator (readonly).
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function adminShow($id)
+    {
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
+
+        $mapel = \App\Mapel::findOrFail($id);
+        $kelas = \App\Kelas::whereHas('jadwal', function ($query) use ($id) {
+            $query->where('mapel_id', $id);
+        })->with('guru')->get();
+        $siswa = \App\Siswa::whereIn('kelas_id', $kelas->pluck('id'))->get();
+
+        // Get existing nilai data for this mapel
+        $existingNilai = \App\NilaiAkhir::where('mapel_id', $id)->get()->groupBy(['judul_nilai', 'siswa_id']);
+
+        return view('admin.nilai.show', compact('mapel', 'kelas', 'siswa', 'existingNilai'));
+    }
+
+    /**
+     * Export nilai to Excel for admin/operator.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function export($id)
+    {
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
+
+        $mapel = \App\Mapel::findOrFail($id);
+        $filename = 'nilai_' . $mapel->nama_mapel . '_' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new NilaiExport($id), $filename);
     }
 
     private function calculateRataRata($siswa_id, $mapel_id)

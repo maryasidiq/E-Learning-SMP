@@ -132,12 +132,12 @@
                         </li>
                     @else
                     @endif
-                    <li class="nav-item">
-                        <a href="{{ route('guru.absensi') }}" class="nav-link" id="AbsensiGuru">
-                            <i class="fas fa-calendar-check nav-icon"></i>
-                            <p>Absensi Guru</p>
-                        </a>
-                    </li>
+                    <!-- <li class="nav-item">
+                                    <a href="{{ route('guru.absensi') }}" class="nav-link" id="AbsensiGuru">
+                                        <i class="fas fa-calendar-check nav-icon"></i>
+                                        <p>Absensi Guru</p>
+                                    </a>
+                                </li> -->
                     <li class="nav-item has-treeview" id="liNilai">
                         <a href="#" class="nav-link" id="Nilai">
                             <i class="nav-icon fas fa-file-signature"></i>
@@ -148,6 +148,12 @@
                         </a>
                         <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
+                                <a href="{{ route('admin.nilai.mapel') }}" class="nav-link" id="LihatNilai">
+                                    <i class="fas fa-eye nav-icon"></i>
+                                    <p>Lihat Nilai</p>
+                                </a>
+                            </li>
+                            <!-- <li class="nav-item">
                                 <a href="{{ route('ulangan-kelas') }}" class="nav-link" id="Ulangan">
                                     <i class="fas fa-file-alt nav-icon"></i>
                                     <p>Nilai Ulangan</p>
@@ -170,7 +176,7 @@
                                     <i class="fas fa-file-alt nav-icon"></i>
                                     <p>Deskripsi Predikat</p>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <li class="nav-item">

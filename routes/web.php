@@ -151,6 +151,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/jadwal/get-mapel-by-kelas/{kelas_id}', 'JadwalController@getMapelByKelas')->name('jadwal.getMapelByKelas');
     Route::get('/admin/jadwal/get-guru-by-mapel/{mapel_id}', 'JadwalController@getGuruByMapel')->name('jadwal.getGuruByMapel');
     Route::resource('/jadwal', 'JadwalController');
+    Route::get('/nilai/mapel', 'NilaiController@mapel')->name('nilai.mapel');
+    Route::get('/nilai/show/{id}', 'NilaiController@show')->name('nilai.show');
+    Route::get('/nilai/export/{id}', 'NilaiController@export')->name('nilai.export');
+    Route::get('/admin/nilai/mapel', 'NilaiController@adminMapel')->name('admin.nilai.mapel');
+    Route::get('/admin/nilai/show/{id}', 'NilaiController@adminShow')->name('admin.nilai.show');
     Route::get('/ulangan-kelas', 'NilaiController@create')->name('ulangan-kelas');
     Route::get('/ulangan-siswa/{id}', 'NilaiController@edit')->name('ulangan-siswa');
     Route::get('/ulangan-show/{id}', 'NilaiController@ulangan')->name('ulangan-show');

@@ -10,19 +10,29 @@
             @method('PUT')
 
             <div class="mb-4">
-                <label for="mapel_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mata
-                    Pelajaran</label>
-                <select id="mapel_id" name="mapel_id"
+                <label for="mapel_kelas" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mata Pelajaran
+                    dan Kelas</label>
+                <select id="mapel_kelas" name="mapel_kelas"
                     class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     required>
-                    <option value="">Pilih Mata Pelajaran</option>
-                    @foreach($mapel as $item)
-                        <option value="{{ $item->id }}" {{ $materi->mapel_id == $item->id ? 'selected' : '' }}>
-                            {{ $item->nama_mapel }}
-                        </option>
+                    <option value="">Pilih Mata Pelajaran dan Kelas</option>
+                    @php
+                        $guru = Auth::user()->guru(Auth::user()->id_card);
+                        $jadwals = \App\Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get()->groupBy('mapel_id');
+                    @endphp
+                    @foreach($jadwals as $mapelId => $jadwalGroup)
+                        @php
+                            $mapel = $jadwalGroup->first()->mapel;
+                            $kelasNames = $jadwalGroup->pluck('kelas.nama_kelas')->unique()->sort()->join(', ');
+                        @endphp
+                        @foreach($jadwalGroup as $jadwal)
+                            <option value="{{ $jadwal->mapel_id }}-{{ $jadwal->kelas_id }}" {{ $materi->mapel_id == $jadwal->mapel_id && $materi->kelas_id == $jadwal->kelas_id ? 'selected' : '' }}>
+                                {{ $mapel->nama_mapel }} - {{ $jadwal->kelas->nama_kelas }}
+                            </option>
+                        @endforeach
                     @endforeach
                 </select>
-                @error('mapel_id')
+                @error('mapel_kelas')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>

@@ -15,10 +15,19 @@
                     class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     required>
                     <option value="">Pilih Mata Pelajaran dan Kelas</option>
-                    @foreach($mapelKelas as $item)
-                        <option value="{{ $item->mapel_id }}-{{ $item->kelas_id }}">{{ $item->nama_mapel }} -
-                            {{ $item->nama_kelas }}
-                        </option>
+                    @php
+                        $guru = Auth::user()->guru(Auth::user()->id_card);
+                        $jadwals = \App\Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get()->groupBy('mapel_id');
+                    @endphp
+                    @foreach($jadwals as $mapelId => $jadwalGroup)
+                        @php
+                            $mapel = $jadwalGroup->first()->mapel;
+                            $kelasNames = $jadwalGroup->pluck('kelas.nama_kelas')->unique()->sort()->join(', ');
+                        @endphp
+                        @foreach($jadwalGroup as $jadwal)
+                            <option value="{{ $jadwal->mapel_id }}-{{ $jadwal->kelas_id }}">{{ $mapel->nama_mapel }} -
+                                {{ $jadwal->kelas->nama_kelas }}</option>
+                        @endforeach
                     @endforeach
                 </select>
                 @error('mapel_kelas')

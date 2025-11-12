@@ -1,35 +1,36 @@
 {{-- @extends('template_backend.home')
 @section('heading', 'Jadwal Guru')
 @section('heading')
-    Jadwal Guru {{ Auth::user()->guru(Auth::user()->id_card) ? Auth::user()->guru(Auth::user()->id_card)->nama_guru : Auth::user()->name }}
+Jadwal Guru {{ Auth::user()->guru(Auth::user()->id_card) ? Auth::user()->guru(Auth::user()->id_card)->nama_guru :
+Auth::user()->name }}
 @endsection
 @section('page')
-  <li class="breadcrumb-item active">Jadwal Guru</li>
+<li class="breadcrumb-item active">Jadwal Guru</li>
 @endsection
 @section('content')
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-          <table id="example2" class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Hari</th>
-                    <th>Kelas</th>
-                    <th>Jam Mengajar</th>
-                    <th>Ruang Kelas</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($jadwal as $data)
-                <tr>
-                    <td>{{ $data->hari->nama_hari }}</td>
-                    <td>{{ $data->kelas->nama_kelas }}</td>
-                    <td>{{ $data->jam_mulai }} - {{ $data->jam_selesai }}</td>
-                    <td>{{ $data->ruang->nama_ruang }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-          </table>
+            <table id="example2" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Hari</th>
+                        <th>Kelas</th>
+                        <th>Jam Mengajar</th>
+                        <th>Ruang Kelas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($jadwal as $data)
+                    <tr>
+                        <td>{{ $data->hari->nama_hari }}</td>
+                        <td>{{ $data->kelas->nama_kelas }}</td>
+                        <td>{{ $data->jam_mulai }} - {{ $data->jam_selesai }}</td>
+                        <td>{{ $data->ruang->nama_ruang }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
         <!-- /.card-body -->
     </div>
@@ -38,9 +39,9 @@
 <!-- /.col -->
 @endsection
 @section('script')
-    <script>
-        $("#JadwalGuru").addClass("active");
-    </script>
+<script>
+    $("#JadwalGuru").addClass("active");
+</script>
 @endsection --}}
 
 @extends('layouts.app2')
@@ -58,6 +59,13 @@
                             <div class="flex items-center">
                                 <p class="font-bold text-theme-sm dark:text-gray-300">
                                     Hari
+                                </p>
+                            </div>
+                        </th>
+                        <th class="px-5 py-3 sm:px-6">
+                            <div class="flex items-center">
+                                <p class="font-bold text-theme-sm dark:text-gray-300">
+                                    Mapel
                                 </p>
                             </div>
                         </th>
@@ -92,6 +100,11 @@
                             <td class="px-5 py-4 sm:px-6">
                                 <span class="text-gray-800 text-theme-sm dark:text-gray-400">
                                     {{ $data->hari->nama_hari }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-4 sm:px-6">
+                                <span class="text-gray-800 text-theme-sm dark:text-gray-400">
+                                    {{ $data->mapel->nama_mapel }}
                                 </span>
                             </td>
                             <td class="px-5 py-4 sm:px-6">

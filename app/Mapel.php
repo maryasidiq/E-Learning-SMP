@@ -22,6 +22,11 @@ class Mapel extends Model
         return $this->belongsToMany('App\Guru')->withTimestamps();
     }
 
+    public function jadwal()
+    {
+        return $this->hasMany('App\Jadwal');
+    }
+
     public function sikap($id)
     {
         $siswa = Siswa::where('no_induk', Auth::user()->no_induk)->first();
