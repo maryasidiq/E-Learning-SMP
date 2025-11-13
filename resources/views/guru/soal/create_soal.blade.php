@@ -14,8 +14,8 @@
                     <input type="number" id="jumlah_soal" name="jumlah_soal" min="1" max="50"
                         value="{{ old('jumlah_soal', 1) }}"
                         class="mt-1 block w-full border-gray-300
-                                                                                                                                dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500
-                                                                                                                                focus:border-blue-500">
+                                                                                                                                        dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500
+                                                                                                                                        focus:border-blue-500">
                     @error('jumlah_soal')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -37,12 +37,26 @@
 
                 <div class="flex space-x-2">
                     <button type="button" onclick="generateSoalForm()"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        Buat Form Soal Manual
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                        </div>
+                        <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <span class="relative z-10">Buat Form Soal Manual</span>
                     </button>
                     <button type="button" onclick="generateSoalFromExcel()"
-                        class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        Generate dari Excel
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-green-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                        </div>
+                        <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="relative z-10">Generate dari Excel</span>
                     </button>
                 </div>
             </div>
@@ -57,14 +71,28 @@
                 <!-- Soal akan di-generate di sini -->
             </div>
 
+            <!-- Footer Actions -->
             <div class="flex items-center justify-between mt-6">
                 <a href="{{ route('soal.show', Crypt::encrypt($soal->id)) }}"
-                    class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    Kembali
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                    </div>
+                    <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span class="relative z-10">Kembali</span>
                 </a>
                 <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    Simpan Semua Soal
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-green-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                    </div>
+                    <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="relative z-10">Simpan Semua Soal</span>
                 </button>
             </div>
         </form>
@@ -85,94 +113,94 @@
                 const soalDiv = document.createElement('div');
                 soalDiv.className = 'mb-8 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg';
                 soalDiv.innerHTML = `
-                                                                                                                                                                            <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${i}</h3>
+                                                                                                                                                                                    <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${i}</h3>
 
-                                                                                                                                                                            <div class="mb-4">
-                                                                                                                                                                                <label for="tipe_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
-                                                                                                                                                                                <select id="tipe_${i}" name="soal[${i}][tipe]"
-                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                                                                                                                                    required onchange="toggleOptions(${i})">
-                                                                                                                                                                                    <option value="">Pilih Tipe Soal</option>
-                                                                                                                                                                                    <option value="pilihan_ganda">Pilihan Ganda</option>
-                                                                                                                                                                                    <option value="essay">Essay</option>
-                                                                                                                                                                                </select>
-                                                                                                                                                                            </div>
-
-                                                                                                            <div class="mb-4">
-                                                                                                                <label for="pertanyaan_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
-                                                                                                                <textarea id="pertanyaan_${i}" name="soal[${i}][pertanyaan]" rows="4"
-                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"
-                                                                                                                    required></textarea>
-                                                                                                            </div>
-
-                                                                                                            <div class="mb-4">
-                                                                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gambar (Opsional - Maksimal 4)</label>
-                                                                                                                <div id="gambar_container_${i}" class="space-y-2">
-                                                                                                                    <div class="flex items-center space-x-2">
-                                                                                                                        <input type="file" id="gambar_${i}_1" name="soal[${i}][gambar][]" accept="image/*"
-                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                                                                        <button type="button" onclick="addGambar(${i})" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">+</button>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB per gambar</p>
-                                                                                                            </div>
-
-                                                                                                                                                                            <div id="pilihan_ganda_options_${i}" class="mb-4" style="display: none;">
-                                                                                                                                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
-
-                                                                                                                                                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                                                <div>
-                                                                                                                    <label for="pilihan_a_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
-                                                                                                                    <textarea id="pilihan_a_${i}" name="soal[${i}][pilihan_a]" rows="2"
-                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
-                                                                                                                </div>
-
-                                                                                                                <div>
-                                                                                                                    <label for="pilihan_b_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
-                                                                                                                    <textarea id="pilihan_b_${i}" name="soal[${i}][pilihan_b]" rows="2"
-                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
-                                                                                                                </div>
-
-                                                                                                                <div>
-                                                                                                                    <label for="pilihan_c_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
-                                                                                                                    <textarea id="pilihan_c_${i}" name="soal[${i}][pilihan_c]" rows="2"
-                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
-                                                                                                                </div>
-
-                                                                                                                <div>
-                                                                                                                    <label for="pilihan_d_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
-                                                                                                                    <textarea id="pilihan_d_${i}" name="soal[${i}][pilihan_d]" rows="2"
-                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
-                                                                                                                </div>
-
-                                                                                                                <div>
-                                                                                                                    <label for="pilihan_e_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
-                                                                                                                    <textarea id="pilihan_e_${i}" name="soal[${i}][pilihan_e]" rows="2"
-                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
-                                                                                                                </div>
-
-                                                                                                                                                                                    <div>
-                                                                                                                                                                                        <label for="jawaban_benar_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
-                                                                                                                                                                                        <select id="jawaban_benar_${i}" name="soal[${i}][jawaban_benar]"
-                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                                                                                                                                            <option value="">Pilih Jawaban Benar</option>
-                                                                                                                                                                                            <option value="a">A</option>
-                                                                                                                                                                                            <option value="b">B</option>
-                                                                                                                                                                                            <option value="c">C</option>
-                                                                                                                                                                                            <option value="d">D</option>
-                                                                                                                                                                                            <option value="e">E</option>
+                                                                                                                                                                                    <div class="mb-4">
+                                                                                                                                                                                        <label for="tipe_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
+                                                                                                                                                                                        <select id="tipe_${i}" name="soal[${i}][tipe]"
+                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                                                                                                                                            required onchange="toggleOptions(${i})">
+                                                                                                                                                                                            <option value="">Pilih Tipe Soal</option>
+                                                                                                                                                                                            <option value="pilihan_ganda">Pilihan Ganda</option>
+                                                                                                                                                                                            <option value="essay">Essay</option>
                                                                                                                                                                                         </select>
                                                                                                                                                                                     </div>
-                                                                                                                                                                                </div>
-                                                                                                                                                                            </div>
 
-                                                                                                                                                                            <div class="mb-4">
-                                                                                                                                                                                <label for="bobot_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
-                                                                                                                                                                                <input type="number" id="bobot_${i}" name="soal[${i}][bobot]" value="1" min="1"
-                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                                                                                                                                    required>
-                                                                                                                                                                            </div>
-                                                                                                                                                                        `;
+                                                                                                                    <div class="mb-4">
+                                                                                                                        <label for="pertanyaan_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
+                                                                                                                        <textarea id="pertanyaan_${i}" name="soal[${i}][pertanyaan]" rows="4"
+                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"
+                                                                                                                            required></textarea>
+                                                                                                                    </div>
+
+                                                                                                                    <div class="mb-4">
+                                                                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gambar (Opsional - Maksimal 4)</label>
+                                                                                                                        <div id="gambar_container_${i}" class="space-y-2">
+                                                                                                                            <div class="flex items-center space-x-2">
+                                                                                                                                <input type="file" id="gambar_${i}_1" name="soal[${i}][gambar][]" accept="image/*"
+                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                                                                <button type="button" onclick="addGambar(${i})" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB per gambar</p>
+                                                                                                                    </div>
+
+                                                                                                                                                                                    <div id="pilihan_ganda_options_${i}" class="mb-4" style="display: none;">
+                                                                                                                                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
+
+                                                                                                                                                                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                                                                        <div>
+                                                                                                                            <label for="pilihan_a_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
+                                                                                                                            <textarea id="pilihan_a_${i}" name="soal[${i}][pilihan_a]" rows="2"
+                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
+                                                                                                                        </div>
+
+                                                                                                                        <div>
+                                                                                                                            <label for="pilihan_b_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
+                                                                                                                            <textarea id="pilihan_b_${i}" name="soal[${i}][pilihan_b]" rows="2"
+                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
+                                                                                                                        </div>
+
+                                                                                                                        <div>
+                                                                                                                            <label for="pilihan_c_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
+                                                                                                                            <textarea id="pilihan_c_${i}" name="soal[${i}][pilihan_c]" rows="2"
+                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
+                                                                                                                        </div>
+
+                                                                                                                        <div>
+                                                                                                                            <label for="pilihan_d_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
+                                                                                                                            <textarea id="pilihan_d_${i}" name="soal[${i}][pilihan_d]" rows="2"
+                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
+                                                                                                                        </div>
+
+                                                                                                                        <div>
+                                                                                                                            <label for="pilihan_e_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
+                                                                                                                            <textarea id="pilihan_e_${i}" name="soal[${i}][pilihan_e]" rows="2"
+                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"></textarea>
+                                                                                                                        </div>
+
+                                                                                                                                                                                            <div>
+                                                                                                                                                                                                <label for="jawaban_benar_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
+                                                                                                                                                                                                <select id="jawaban_benar_${i}" name="soal[${i}][jawaban_benar]"
+                                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                                                                                                                                    <option value="">Pilih Jawaban Benar</option>
+                                                                                                                                                                                                    <option value="a">A</option>
+                                                                                                                                                                                                    <option value="b">B</option>
+                                                                                                                                                                                                    <option value="c">C</option>
+                                                                                                                                                                                                    <option value="d">D</option>
+                                                                                                                                                                                                    <option value="e">E</option>
+                                                                                                                                                                                                </select>
+                                                                                                                                                                                            </div>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
+
+                                                                                                                                                                                    <div class="mb-4">
+                                                                                                                                                                                        <label for="bobot_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
+                                                                                                                                                                                        <input type="number" id="bobot_${i}" name="soal[${i}][bobot]" value="1" min="1"
+                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                                                                                                                                            required>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                `;
                 container.appendChild(soalDiv);
             }
 
@@ -239,94 +267,94 @@
                 const soalDiv = document.createElement('div');
                 soalDiv.className = 'mb-8 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg';
                 soalDiv.innerHTML = `
-                                                                                                                                                                            <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${i}</h3>
+                                                                                                                                                                                    <h3 class="text-lg font-semibold mb-4 dark:text-gray-300">Soal ${i}</h3>
 
-                                                                                                                                                                            <div class="mb-4">
-                                                                                                                                                                                <label for="tipe_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
-                                                                                                                                                                                <select id="tipe_${i}" name="soal[${i}][tipe]"
-                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                                                                                                                                    required onchange="toggleOptions(${i})">
-                                                                                                                                                                                    <option value="">Pilih Tipe Soal</option>
-                                                                                                                                                                                    <option value="pilihan_ganda" ${soal.tipe === 'pilihan_ganda' ? 'selected' : ''}>Pilihan Ganda</option>
-                                                                                                                                                                                    <option value="essay" ${soal.tipe === 'essay' ? 'selected' : ''}>Essay</option>
-                                                                                                                                                                                </select>
-                                                                                                                                                                            </div>
-
-                                                                                                                                                            <div class="mb-4">
-                                                                                                                                                                <label for="pertanyaan_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
-                                                                                                                                                                <textarea id="pertanyaan_${i}" name="soal[${i}][pertanyaan]" rows="4"
-                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"
-                                                                                                                                                                    required>${soal.pertanyaan || ''}</textarea>
-                                                                                                                                                            </div>
-
-                                                                                                                                                                <div class="mb-4">
-                                                                                                                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gambar (Opsional - Maksimal 4)</label>
-                                                                                                                                                                    <div id="gambar_container_excel_${i}" class="space-y-2">
-                                                                                                                                                                        <div class="flex items-center space-x-2">
-                                                                                                                                                                            <input type="file" id="gambar_excel_${i}_1" name="soal[${i}][gambar][]" accept="image/*"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                                                                                                                            <button type="button" onclick="addGambarExcel(${i})" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">+</button>
-                                                                                                                                                                        </div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB per gambar</p>
-                                                                                                                                                                </div>
-
-                                                                                                                                                                            <div id="pilihan_ganda_options_${i}" class="mb-4" style="display: ${soal.tipe === 'pilihan_ganda' ? 'block' : 'none'};">
-                                                                                                                                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
-
-                                                                                                                                                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label for="pilihan_a_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
-                                                                                                                                                                            <textarea id="pilihan_a_${i}" name="soal[${i}][pilihan_a]" rows="2"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_a || ''}</textarea>
-                                                                                                                                                                        </div>
-
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label for="pilihan_b_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
-                                                                                                                                                                            <textarea id="pilihan_b_${i}" name="soal[${i}][pilihan_b]" rows="2"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_b || ''}</textarea>
-                                                                                                                                                                        </div>
-
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label for="pilihan_c_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
-                                                                                                                                                                            <textarea id="pilihan_c_${i}" name="soal[${i}][pilihan_c]" rows="2"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_c || ''}</textarea>
-                                                                                                                                                                        </div>
-
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label for="pilihan_d_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
-                                                                                                                                                                            <textarea id="pilihan_d_${i}" name="soal[${i}][pilihan_d]" rows="2"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_d || ''}</textarea>
-                                                                                                                                                                        </div>
-
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label for="pilihan_e_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
-                                                                                                                                                                            <textarea id="pilihan_e_${i}" name="soal[${i}][pilihan_e]" rows="2"
-                                                                                                                                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_e || ''}</textarea>
-                                                                                                                                                                        </div>
-
-                                                                                                                                                                                    <div>
-                                                                                                                                                                                        <label for="jawaban_benar_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
-                                                                                                                                                                                        <select id="jawaban_benar_${i}" name="soal[${i}][jawaban_benar]"
-                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                                                                                                                                            <option value="">Pilih Jawaban Benar</option>
-                                                                                                                                                                                            <option value="a" ${soal.jawaban_benar === 'a' ? 'selected' : ''}>A</option>
-                                                                                                                                                                                            <option value="b" ${soal.jawaban_benar === 'b' ? 'selected' : ''}>B</option>
-                                                                                                                                                                                            <option value="c" ${soal.jawaban_benar === 'c' ? 'selected' : ''}>C</option>
-                                                                                                                                                                                            <option value="d" ${soal.jawaban_benar === 'd' ? 'selected' : ''}>D</option>
-                                                                                                                                                                                            <option value="e" ${soal.jawaban_benar === 'e' ? 'selected' : ''}>E</option>
+                                                                                                                                                                                    <div class="mb-4">
+                                                                                                                                                                                        <label for="tipe_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Soal</label>
+                                                                                                                                                                                        <select id="tipe_${i}" name="soal[${i}][tipe]"
+                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                                                                                                                                            required onchange="toggleOptions(${i})">
+                                                                                                                                                                                            <option value="">Pilih Tipe Soal</option>
+                                                                                                                                                                                            <option value="pilihan_ganda" ${soal.tipe === 'pilihan_ganda' ? 'selected' : ''}>Pilihan Ganda</option>
+                                                                                                                                                                                            <option value="essay" ${soal.tipe === 'essay' ? 'selected' : ''}>Essay</option>
                                                                                                                                                                                         </select>
                                                                                                                                                                                     </div>
+
+                                                                                                                                                                    <div class="mb-4">
+                                                                                                                                                                        <label for="pertanyaan_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pertanyaan</label>
+                                                                                                                                                                        <textarea id="pertanyaan_${i}" name="soal[${i}][pertanyaan]" rows="4"
+                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor"
+                                                                                                                                                                            required>${soal.pertanyaan || ''}</textarea>
+                                                                                                                                                                    </div>
+
+                                                                                                                                                                        <div class="mb-4">
+                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gambar (Opsional - Maksimal 4)</label>
+                                                                                                                                                                            <div id="gambar_container_excel_${i}" class="space-y-2">
+                                                                                                                                                                                <div class="flex items-center space-x-2">
+                                                                                                                                                                                    <input type="file" id="gambar_excel_${i}_1" name="soal[${i}][gambar][]" accept="image/*"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                                                                                                                    <button type="button" onclick="addGambarExcel(${i})" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">+</button>
                                                                                                                                                                                 </div>
                                                                                                                                                                             </div>
+                                                                                                                                                                            <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB per gambar</p>
+                                                                                                                                                                        </div>
 
-                                                                                                                                                                            <div class="mb-4">
-                                                                                                                                                                                <label for="bobot_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
-                                                                                                                                                                                <input type="number" id="bobot_${i}" name="soal[${i}][bobot]" value="${soal.bobot || 1}" min="1"
-                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                                                                                                                                                    required>
-                                                                                                                                                                            </div>
-                                                                                                                                                                        `;
+                                                                                                                                                                                    <div id="pilihan_ganda_options_${i}" class="mb-4" style="display: ${soal.tipe === 'pilihan_ganda' ? 'block' : 'none'};">
+                                                                                                                                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Jawaban</label>
+
+                                                                                                                                                                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label for="pilihan_a_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan A</label>
+                                                                                                                                                                                    <textarea id="pilihan_a_${i}" name="soal[${i}][pilihan_a]" rows="2"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_a || ''}</textarea>
+                                                                                                                                                                                </div>
+
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label for="pilihan_b_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan B</label>
+                                                                                                                                                                                    <textarea id="pilihan_b_${i}" name="soal[${i}][pilihan_b]" rows="2"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_b || ''}</textarea>
+                                                                                                                                                                                </div>
+
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label for="pilihan_c_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan C</label>
+                                                                                                                                                                                    <textarea id="pilihan_c_${i}" name="soal[${i}][pilihan_c]" rows="2"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_c || ''}</textarea>
+                                                                                                                                                                                </div>
+
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label for="pilihan_d_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan D</label>
+                                                                                                                                                                                    <textarea id="pilihan_d_${i}" name="soal[${i}][pilihan_d]" rows="2"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_d || ''}</textarea>
+                                                                                                                                                                                </div>
+
+                                                                                                                                                                                <div>
+                                                                                                                                                                                    <label for="pilihan_e_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilihan E (Opsional)</label>
+                                                                                                                                                                                    <textarea id="pilihan_e_${i}" name="soal[${i}][pilihan_e]" rows="2"
+                                                                                                                                                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ckeditor">${soal.pilihan_e || ''}</textarea>
+                                                                                                                                                                                </div>
+
+                                                                                                                                                                                            <div>
+                                                                                                                                                                                                <label for="jawaban_benar_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban Benar</label>
+                                                                                                                                                                                                <select id="jawaban_benar_${i}" name="soal[${i}][jawaban_benar]"
+                                                                                                                                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                                                                                                                                    <option value="">Pilih Jawaban Benar</option>
+                                                                                                                                                                                                    <option value="a" ${soal.jawaban_benar === 'a' ? 'selected' : ''}>A</option>
+                                                                                                                                                                                                    <option value="b" ${soal.jawaban_benar === 'b' ? 'selected' : ''}>B</option>
+                                                                                                                                                                                                    <option value="c" ${soal.jawaban_benar === 'c' ? 'selected' : ''}>C</option>
+                                                                                                                                                                                                    <option value="d" ${soal.jawaban_benar === 'd' ? 'selected' : ''}>D</option>
+                                                                                                                                                                                                    <option value="e" ${soal.jawaban_benar === 'e' ? 'selected' : ''}>E</option>
+                                                                                                                                                                                                </select>
+                                                                                                                                                                                            </div>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
+
+                                                                                                                                                                                    <div class="mb-4">
+                                                                                                                                                                                        <label for="bobot_${i}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bobot Nilai</label>
+                                                                                                                                                                                        <input type="number" id="bobot_${i}" name="soal[${i}][bobot]" value="${soal.bobot || 1}" min="1"
+                                                                                                                                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                                                                                                                                                            required>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                `;
                 container.appendChild(soalDiv);
             });
 
@@ -393,10 +421,10 @@
             const div = document.createElement('div');
             div.className = 'flex items-center space-x-2';
             div.innerHTML = `
-                                                                        <input type="file" id="gambar_${soalIndex}_${newIndex}" name="soal[${soalIndex}][gambar][]" accept="image/*"
-                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                        <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
-                                                                    `;
+                                                                                <input type="file" id="gambar_${soalIndex}_${newIndex}" name="soal[${soalIndex}][gambar][]" accept="image/*"
+                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
+                                                                            `;
             container.appendChild(div);
         }
 
@@ -412,10 +440,10 @@
             const div = document.createElement('div');
             div.className = 'flex items-center space-x-2';
             div.innerHTML = `
-                                                                        <input type="file" id="gambar_excel_${soalIndex}_${newIndex}" name="soal[${soalIndex}][gambar][]" accept="image/*"
-                                                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                                        <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
-                                                                    `;
+                                                                                <input type="file" id="gambar_excel_${soalIndex}_${newIndex}" name="soal[${soalIndex}][gambar][]" accept="image/*"
+                                                                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                                                <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
+                                                                            `;
             container.appendChild(div);
         }
 
