@@ -114,25 +114,25 @@ class NilaiController extends Controller
     public function show($id)
     {
         try {
-            $id = Crypt::decrypt($id);
+            $mapel_id = Crypt::decrypt($id);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            // If decryption fails, assume $id is already plain
+            $mapel_id = $id;
         }
         $guru = Guru::where('id_card', Auth::user()->id_card)->first();
-        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
+        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $mapel_id)->first();
         if (!$mapel) {
             abort(404, 'Mapel tidak ditemukan atau tidak diajarkan oleh guru ini.');
         }
-        $kelas = Kelas::whereHas('jadwal', function ($query) use ($guru, $id) {
-            $query->where('guru_id', $guru->id)->where('mapel_id', $id);
+        $kelas = Kelas::whereHas('jadwal', function ($query) use ($guru, $mapel_id) {
+            $query->where('guru_id', $guru->id)->where('mapel_id', $mapel_id);
         })->with('guru')->get();
         $siswa = Siswa::whereIn('kelas_id', $kelas->pluck('id'))->get();
 
         // Get existing nilai data for this mapel
-        $existingNilai = NilaiAkhir::where('mapel_id', $id)->get()->groupBy(['judul_nilai', 'siswa_id']);
+        $existingNilai = NilaiAkhir::where('mapel_id', $mapel_id)->get()->groupBy(['judul_nilai', 'siswa_id']);
 
         // Get nilai soal data for all soal in this mapel
-        $soalList = Soal::where('mapel_id', $id)->get();
+        $soalList = Soal::where('mapel_id', $mapel_id)->get();
         $nilaiSoal = [];
         foreach ($soalList as $soal) {
             $jawaban = JawabanSoal::where('soal_id', $soal->id)->get();
@@ -146,7 +146,7 @@ class NilaiController extends Controller
         }
 
         // Get soal map for display
-        $soalMap = Soal::where('mapel_id', $id)->pluck('judul', 'id')->toArray();
+        $soalMap = Soal::where('mapel_id', $mapel_id)->pluck('judul', 'id')->toArray();
 
         return view('guru.nilai.nilai', compact('guru', 'mapel', 'kelas', 'siswa', 'nilaiSoal', 'existingNilai', 'soalMap'));
     }
@@ -492,6 +492,32 @@ class NilaiController extends Controller
 
         $mapel = \App\Mapel::findOrFail($id);
         $filename = 'nilai_' . $mapel->nama_mapel . '_' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new NilaiExport($id), $filename);
+    }
+
+    /**
+     * Export nilai to Excel for guru.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function guruExport($id)
+    {
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // If decryption fails, assume $id is already plain
+        }
+
+        $guru = Guru::where('id_card', Auth::user()->id_card)->first();
+        $mapel = Jadwal::where('guru_id', $guru->id)->where('mapel_id', $id)->first();
+        if (!$mapel) {
+            abort(404, 'Mapel tidak ditemukan atau tidak diajarkan oleh guru ini.');
+        }
+
+        $mapelData = \App\Mapel::findOrFail($id);
+        $filename = 'nilai_' . $mapelData->nama_mapel . '_' . date('Y-m-d') . '.xlsx';
 
         return Excel::download(new NilaiExport($id), $filename);
     }

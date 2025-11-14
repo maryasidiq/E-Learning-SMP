@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/guru/nilai/edit/{siswa_id}/{mapel_id}', 'NilaiController@edit')->name('guru.nilai.edit');
     Route::post('/guru/nilai/update/{siswa_id}', 'NilaiController@update')->name('guru.nilai.update');
     Route::put('/guru/nilai/update/all/{id}', 'NilaiController@updateAllNilai')->name('guru.nilai.update.all');
+    Route::get('/guru/nilai/export/{id}', 'NilaiController@guruExport')->name('guru.nilai.export');
     Route::resource('/ulangan', 'NilaiController');
     Route::resource('/sikap', 'SikapController');
     Route::get('/rapot/predikat', 'RapotController@predikat');

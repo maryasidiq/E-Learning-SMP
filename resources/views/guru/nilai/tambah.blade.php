@@ -221,7 +221,7 @@
         {{-- Action Button --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-8">
             <button type="submit" id="tambah-nilai-btn"
-                class="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                class="group bg-gradient-to-r from-[#CB1C8D] to-[#F56EB3] hover:from-[#b5187f] hover:to-[#e15fa5] border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-pink-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
                 <div
                     class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
                 </div>
@@ -277,14 +277,12 @@
             }
         });
 
-        // Handle form submission for adding nilai
-        document.getElementById('add-nilai-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-
+        // Function to handle nilai submission
+        function submitNilai() {
             // Disable button to prevent double submission
             const submitBtn = document.getElementById('tambah-nilai-btn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.querySelector('span').textContent = 'Menyimpan...';
 
             let judulNilai = document.getElementById('judul_nilai').value;
             const customJudul = document.getElementById('judul_nilai_custom').value;
@@ -299,27 +297,27 @@
             if (!judulNilai && !customJudul) {
                 alert('Harap isi nama nilai.');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Tambah Nilai';
+                submitBtn.querySelector('span').textContent = 'Tambah Nilai';
                 return;
             }
 
             if (!bobot || !sumber) {
                 alert('Harap isi semua field yang diperlukan.');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Tambah Nilai';
+                submitBtn.querySelector('span').textContent = 'Tambah Nilai';
                 return;
             }
 
             if (sumber === 'soal' && !soal) {
                 alert('Harap pilih soal.');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Tambah Nilai';
+                submitBtn.querySelector('span').textContent = 'Tambah Nilai';
                 return;
             }
 
             // Prepare data for all siswa
             const data = [];
-                                                {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
+                                                        {{ $siswa->pluck('id')->toJson() }}.forEach(siswaId => {
                 let nilai = 0;
                 if (sumber === 'manual') {
                     // Get nilai from individual inputs
@@ -360,15 +358,27 @@
                     } else {
                         toastr.error(result.error);
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Tambah Nilai';
+                        submitBtn.querySelector('span').textContent = 'Tambah Nilai';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     toastr.error('Terjadi kesalahan saat menyimpan data');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Tambah Nilai';
+                    submitBtn.querySelector('span').textContent = 'Tambah Nilai';
                 });
+        }
+
+        // Handle form submission for adding nilai
+        document.getElementById('add-nilai-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            submitNilai();
+        });
+
+        // Handle button click for adding nilai
+        document.getElementById('tambah-nilai-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            submitNilai();
         });
     </script>
 @endsection
