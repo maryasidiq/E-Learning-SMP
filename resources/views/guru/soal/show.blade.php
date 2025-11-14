@@ -221,7 +221,7 @@
                                             margin-bottom: 0.25rem !important;
                                         }
                                     </style>
-                                    <div class="prose dark:prose-invert max-w-none pertanyaan-content">
+                                    <div class="prose dark:prose-invert dark:text-white max-w-none pertanyaan-content">
                                         {!! $item->pertanyaan !!}
                                     </div>
                                 </div>
@@ -231,7 +231,7 @@
                                         @if($item->pilihan_a)
                                             <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
                                                 <span class="font-bold mr-3 mt-1 text-blue-600 dark:text-blue-400">A.</span>
-                                                <div class="flex-1">{!! $item->pilihan_a !!}</div>
+                                                <div class="flex-1 dark:text-white">{!! $item->pilihan_a !!}</div>
                                                 @if($item->jawaban_benar == 'a')
                                                     <span class="ml-3 text-green-600 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg text-sm">✓ Jawaban Benar</span>
                                                 @endif
@@ -240,7 +240,7 @@
                                         @if($item->pilihan_b)
                                             <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
                                                 <span class="font-bold mr-3 mt-1 text-blue-600 dark:text-blue-400">B.</span>
-                                                <div class="flex-1">{!! $item->pilihan_b !!}</div>
+                                                <div class="flex-1 dark:text-white">{!! $item->pilihan_b !!}</div>
                                                 @if($item->jawaban_benar == 'b')
                                                     <span class="ml-3 text-green-600 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg text-sm">✓ Jawaban Benar</span>
                                                 @endif
@@ -249,7 +249,7 @@
                                         @if($item->pilihan_c)
                                             <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
                                                 <span class="font-bold mr-3 mt-1 text-blue-600 dark:text-blue-400">C.</span>
-                                                <div class="flex-1">{!! $item->pilihan_c !!}</div>
+                                                <div class="flex-1 dark:text-white">{!! $item->pilihan_c !!}</div>
                                                 @if($item->jawaban_benar == 'c')
                                                     <span class="ml-3 text-green-600 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg text-sm">✓ Jawaban Benar</span>
                                                 @endif
@@ -258,7 +258,7 @@
                                         @if($item->pilihan_d)
                                             <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
                                                 <span class="font-bold mr-3 mt-1 text-blue-600 dark:text-blue-400">D.</span>
-                                                <div class="flex-1">{!! $item->pilihan_d !!}</div>
+                                                <div class="flex-1 dark:text-white">{!! $item->pilihan_d !!}</div>
                                                 @if($item->jawaban_benar == 'd')
                                                     <span class="ml-3 text-green-600 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg text-sm">✓ Jawaban Benar</span>
                                                 @endif
@@ -267,7 +267,7 @@
                                         @if($item->pilihan_e)
                                             <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
                                                 <span class="font-bold mr-3 mt-1 text-blue-600 dark:text-blue-400">E.</span>
-                                                <div class="flex-1">{!! $item->pilihan_e !!}</div>
+                                                <div class="flex-1 dark:text-white" >{!! $item->pilihan_e !!}</div>
                                                 @if($item->jawaban_benar == 'e')
                                                     <span class="ml-3 text-green-600 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg text-sm">✓ Jawaban Benar</span>
                                                 @endif
@@ -313,7 +313,7 @@
                 </div>
             @endif
         <!-- Footer Actions -->
-        <div class="flex items-center justify-center">
+        <div class="flex items-center justify-center mt-8">
             <a href="{{ route('soal.index') }}"
                 class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>

@@ -162,33 +162,45 @@
                 @enderror
             </div>
 
-            <!-- Footer Actions -->
-            <div class="flex items-center justify-between">
-                <a href="{{ route('soal.show', Crypt::encrypt($soal->id)) }}"
-                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
-                    </div>
-                    <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            
+        </form>
+        <!-- Footer Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-8">
+
+            <!-- Tombol Kembali -->
+            <a href="{{ route('soal.show', Crypt::encrypt($soal->id)) }}"
+            class="group bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                
+                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
+                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+
+                <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    <span class="relative z-10">Kembali</span>
-                </a>
-                <button type="submit"
-                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-orange-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
-                    </div>
-                    <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    Kembali
+                </span>
+            </a>
+
+            <!-- Tombol Update Soal -->
+            <button type="submit"
+                class="group bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-orange-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+
+                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
+                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+
+                <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                        </path>
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                    <span class="relative z-10">Update Soal</span>
-                </button>
-            </div>
-        </form>
+                    Update Soal
+                </span>
+            </button>
+
+        </div>
+  
     </div>
 
     <script>

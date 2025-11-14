@@ -165,12 +165,12 @@
                     <tbody>
                         @foreach ($siswa as $s)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 font-medium">{{ $s->nama_siswa }}</td>
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700">{{ $s->no_induk }}</td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white font-medium">{{ $s->nama_siswa }}</td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white">{{ $s->no_induk }}</td>
                                 <!-- More cells will be added dynamically -->
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 rata-rata-{{ $s->id }} font-bold text-[#CB1C8D]">0</td>
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700">
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 rata-rata-{{ $s->id }}  font-bold text-[#CB1C8D]">0</td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white">
                                     <a href="{{ route('guru.nilai.edit', ['siswa_id' => $s->id, 'mapel_id' => $mapel->mapel_id]) }}" class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white rounded-lg bg-[#CB1C8D] shadow-theme-xs hover:bg-[#b5187f] dark:bg-[#F56EB3] dark:hover:bg-[#e15fa5] transition-colors duration-200">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -244,27 +244,52 @@
                 thead.insertBefore(thSumber, thead.lastElementChild);
 
                 // Add cells to each row
-                tbody.querySelectorAll('tr').forEach((row, rowIndex) => {
-                    const siswaId = {{ $siswa->pluck('id')->toJson() }}[rowIndex];
-                    const existingNilai = getExistingNilai(judul, siswaId);
+tbody.querySelectorAll('tr').forEach((row, rowIndex) => {
+    const siswaId = {{ $siswa->pluck('id')->toJson() }}[rowIndex];
+    const existingNilai = getExistingNilai(judul, siswaId);
 
-                    const tdNilai = document.createElement('td');
-                    tdNilai.className = 'px-4 py-2 border';
-                    tdNilai.innerHTML = `<input type="number" class="latihan-${latihanCount}-${siswaId}" min="0" max="100" placeholder="Nilai" value="${existingNilai ? existingNilai.nilai : ''}">`;
-                    row.insertBefore(tdNilai, row.lastElementChild);
+    const tdNilai = document.createElement('td');
+    tdNilai.className = 'px-4 py-2 border';
+    tdNilai.innerHTML = `
+        <input 
+            type="number" 
+            class="latihan-${latihanCount}-${siswaId} mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
+            min="0" max="100" 
+            placeholder="Nilai" 
+            value="${existingNilai ? existingNilai.nilai : ''}"
+        >
+    `;
+    row.insertBefore(tdNilai, row.lastElementChild);
 
-                    const tdBobot = document.createElement('td');
-                    tdBobot.className = 'px-4 py-2 border';
-                    tdBobot.innerHTML = `<input type="number" class="bobot-${latihanCount}-${siswaId}" min="0" max="100" value="${existingNilai ? existingNilai.bobot : '1'}" placeholder="Bobot">`;
-                    row.insertBefore(tdBobot, row.lastElementChild);
+    const tdBobot = document.createElement('td');
+    tdBobot.className = 'px-4 py-2 border';
+    tdBobot.innerHTML = `
+        <input 
+            type="number" 
+            class="bobot-${latihanCount}-${siswaId} mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
+            min="0" max="100" 
+            value="${existingNilai ? existingNilai.bobot : '1'}" 
+            placeholder="Bobot"
+        >
+    `;
+    row.insertBefore(tdBobot, row.lastElementChild);
 
-                    const tdSumber = document.createElement('td');
-                    tdSumber.className = 'px-4 py-2 border';
-                    const sumberValue = existingNilai ? existingNilai.sumber : 'manual';
-                    const sumberText = sumberValue === 'soal' ? (soalMap[existingNilai.soal_id] || 'Soal') : 'Manual';
-                    tdSumber.innerHTML = `<select class="sumber-${latihanCount}-${siswaId}"><option value="${sumberValue}" selected>${sumberText}</option></select>`;
-                    row.insertBefore(tdSumber, row.lastElementChild);
-                });
+    const tdSumber = document.createElement('td');
+tdSumber.className = 'px-4 py-2 border';
+const sumberValue = existingNilai ? existingNilai.sumber : 'manual';
+const sumberText = sumberValue === 'soal' ? (soalMap[existingNilai.soal_id] || 'Soal') : 'Manual';
+
+tdSumber.innerHTML = `
+    <select 
+        class="sumber-${latihanCount}-${siswaId} mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        style="color:#CB1C8D;"
+    >
+        <option value="${sumberValue}" selected>${sumberText}</option>
+    </select>
+`;
+row.insertBefore(tdSumber, row.lastElementChild);
+
+});
             });
 
             // Calculate initial rata-rata

@@ -754,7 +754,7 @@ span.flatpickr-weekday,
 .ck-content {
   font-size: 1rem;
   line-height: 1.7;
-  color: #1f2937; /* text-gray-800 */
+   /* text-gray-800 */
 }
 
 .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4 {
@@ -791,5 +791,10 @@ span.flatpickr-weekday,
 }
 .ck-content li {
     margin-bottom: 0.25rem;
+}
+
+
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 

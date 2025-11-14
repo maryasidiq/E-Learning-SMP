@@ -71,7 +71,8 @@
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Kelas</p>
                         <p class="font-semibold text-gray-900 dark:text-white text-lg">
-                            {{ $kelas->pluck('nama_kelas')->join(', ') }}</p>
+                            {{ $kelas->pluck('nama_kelas')->join(', ') }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -89,7 +90,8 @@
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Wali Kelas</p>
                         <p class="font-semibold text-gray-900 dark:text-white text-lg">
-                            {{ $kelas->pluck('guru.nama_guru')->join(', ') }}</p>
+                            {{ $kelas->pluck('guru.nama_guru')->join(', ') }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -136,65 +138,13 @@
             </div>
         </div>
 
-        {{-- Form Hapus Nilai --}}
-        <div
-            class="bg-white dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl mb-8">
-            <div class="bg-gradient-to-r from-red-500 to-red-600 px-8 py-6">
-                <h2 class="text-2xl font-bold text-white">Form Hapus Nilai</h2>
-                <p class="text-white/90 mt-1">Pilih nilai yang ingin dihapus dengan hati-hati</p>
-            </div>
-
-            <div class="p-8">
-                <form id="hapus-nilai-form" method="POST" action="{{ route('nilai.destroy', $mapel->mapel_id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <div class="mb-6">
-                        <label for="judul_nilai" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Nama
-                            Nilai</label>
-                        <select
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
-                            id="judul_nilai" name="judul_nilai" required>
-                            <option value="">Pilih Nama Nilai</option>
-                            @foreach($existingNilai as $judul => $nilai)
-                                <option value="{{ $judul }}">{{ $judul }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <button type="submit"
-                            class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-red-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 px-6 py-3">
-                            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                </path>
-                            </svg>
-                            Hapus Nilai
-                        </button>
-                        <a href="{{ route('nilai.show', $mapel->mapel_id) }}"
-                            class="group bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                            <span class="relative z-10 inline-flex items-center gap-2 px-6 py-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                                </svg>
-                                Kembali ke Entry Nilai
-                            </span>
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         {{-- Table Preview --}}
         <div
-            class="bg-white dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl">
+            class="bg-white dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl mb-8">
             <div class="bg-gradient-to-r from-[#CB1C8D] to-[#F56EB3] px-8 py-6">
                 <h2 class="text-2xl font-bold text-white">Preview Nilai Siswa</h2>
                 <p class="text-white/90 mt-1">Tinjau nilai sebelum menghapus</p>
             </div>
-
             <div class="overflow-x-auto">
                 <table id="nilai-table"
                     class="min-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
@@ -211,17 +161,82 @@
                     </thead>
                     <tbody>
                         @foreach ($siswa as $s)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 font-medium">
-                                    {{ $s->nama_siswa }}</td>
-                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700">{{ $s->no_induk }}</td>
+                            <tr
+                                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200 dark:text-white">
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white">
+                                    {{ $loop->iteration }}
+                                </td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 font-medium dark:text-white">
+                                    {{ $s->nama_siswa }}
+                                </td>
+                                <td class="px-6 py-4 border border-gray-200 dark:border-gray-700 dark:text-white">
+                                    {{ $s->no_induk }}
+                                </td>
                                 <!-- More cells will be added dynamically -->
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        {{-- Form Hapus Nilai --}}
+        <div
+            class="bg-white dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl">
+            <div class="bg-gradient-to-r from-[#CB1C8D] to-[#F56EB3] px-8 py-6">
+                <h2 class="text-2xl font-bold text-white">Form Hapus Nilai</h2>
+                <p class="text-white/90 mt-1">Pilih nilai yang ingin dihapus dengan hati-hati</p>
+            </div>
+
+            <div class="p-8">
+                <form id="hapus-nilai-form" method="POST" action="{{ route('nilai.destroy', $mapel->mapel_id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <div class="mb-6">
+                        <label for="judul_nilai" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Nama
+                            Nilai</label>
+                        <select
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#CB1C8D] focus:border-[#CB1C8D] bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
+                            id="judul_nilai" name="judul_nilai" required>
+                            <option value="">Pilih Nama Nilai</option>
+                            @foreach($existingNilai as $judul => $nilai)
+                                <option value="{{ $judul }}">{{ $judul }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-8">
+            <button type="submit" id="hapus-nilai-btn" form="hapus-nilai-form"
+                class="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                </div>
+                <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    Hapus Nilai
+                </span>
+            </button>
+            <a href="{{ route('nilai.show', $mapel->mapel_id) }}"
+                class="group bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                </div>
+                <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Kembali ke Entry Nilai
+                </span>
+            </a>
         </div>
     </div>
 
