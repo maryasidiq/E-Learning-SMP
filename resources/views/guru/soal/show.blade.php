@@ -26,37 +26,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
-                        <a href="{{ route('soal.edit', Crypt::encrypt($soal->id)) }}"
-                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-yellow-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
-                            </div>
-                            <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                </path>
-                            </svg>
-                            <span class="relative z-10">Edit Soal</span>
-                        </a>
-                        <a href="{{ route('soal.create-soal', Crypt::encrypt($soal->id)) }}"
-                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-green-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
-                            </div>
-                            <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            <span class="relative z-10">Tambah Soal</span>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
+        
+
 
         <!-- Info Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 ">
             <div
                 class="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
                 <div class="flex items-center">
@@ -131,9 +108,55 @@
             </div>
         </div>
 
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+    <!-- Tombol Edit Soal -->
+    <a href="{{ route('soal.edit', Crypt::encrypt($soal->id)) }}"
+        class="group w-full bg-gradient-to-r from-yellow-600 via-amber-600 to-yellow-700 
+        hover:from-yellow-700 hover:via-amber-700 hover:to-yellow-800 
+        border border-transparent rounded-xl font-bold text-sm text-white uppercase 
+        tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-yellow-500/25 
+        focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] 
+        hover:-translate-y-0.5 relative overflow-hidden">
+
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
+            translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+        </div>
+
+        <span class="relative z-10 flex items-center justify-center px-6 py-4">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+            </svg>
+            Edit Soal
+        </span>
+    </a>
+
+    <!-- Tombol Tambah Soal -->
+    <a href="{{ route('soal.create-soal', Crypt::encrypt($soal->id)) }}"
+        class="group bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-blue-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
+            translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+        </div>
+
+        <span class="relative z-10 flex items-center justify-center px-6 py-4">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Tambah Soal
+        </span>
+    </a>
+
+</div>
         <!-- Daftar Soal -->
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 mt-8">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Soal</h2>
                 <div class="flex items-center bg-blue-50 dark:bg-blue-900/20 rounded-full px-4 py-2">
                     <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -151,48 +174,63 @@
                             <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                             <!-- Card Header -->
-                            <div class="relative bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-600 p-6 text-white">
-                                <div class="absolute inset-0 bg-black/10"></div>
-                                <div class="relative flex justify-between items-start">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mr-4 shadow-lg">
-                                            <span class="text-lg font-bold text-white">{{ $index + 1 }}</span>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-xl font-bold text-white mb-1">Soal {{ $index + 1 }}</h3>
-                                            <div class="flex items-center space-x-3">
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
-                                                    {{ ucfirst(str_replace('_', ' ', $item->tipe)) }}
-                                                </span>
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
-                                                    Bobot: {{ $item->bobot }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <a href="{{ route('soal.edit-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}"
-                                            class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-xl hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                            </svg>
-                                            Edit
-                                        </a>
-                                        <form action="{{ route('soal.destroy-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex items-center px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white text-sm font-medium rounded-xl hover:bg-red-500 transition-all duration-300 transform hover:scale-105"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus soal ini?')">
-                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+<div class="relative bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-600 p-6 text-white">
+    <div class="absolute inset-0 bg-black/10"></div>
+
+    <div class="relative flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+
+        <!-- Bagian Kiri (Nomor + Info Soal) -->
+        <div class="flex items-start">
+            <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mr-4 shadow-lg shrink-0">
+                <span class="text-lg font-bold text-white">{{ $index + 1 }}</span>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-white mb-1">Soal {{ $index + 1 }}</h3>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
+                        {{ ucfirst(str_replace('_', ' ', $item->tipe)) }}
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
+                        Bobot: {{ $item->bobot }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bagian Tombol -->
+        <div class="flex flex-row sm:flex-row gap-2 w-full sm:w-auto justify-start sm:justify-end">
+
+            <a href="{{ route('soal.edit-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}"
+                class="inline-flex items-center justify-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-xl hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                    </path>
+                </svg>
+                Edit
+            </a>
+
+            <form action="{{ route('soal.destroy-soal', [Crypt::encrypt($soal->id), Crypt::encrypt($item->id)]) }}" method="POST" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="inline-flex items-center justify-center px-4 py-2 bg-red-500/80 backdrop-blur-sm text-white text-sm font-medium rounded-xl hover:bg-red-500 transition-all duration-300 transform hover:scale-105"
+                    onclick="return confirm('Apakah Anda yakin ingin menghapus soal ini?')">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    Hapus
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
 
                             <!-- Card Body -->
                             <div class="relative p-6">

@@ -162,45 +162,47 @@
                 @enderror
             </div>
 
-            
-        </form>
-        <!-- Footer Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-8">
+            <!-- Footer Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-8">
+                <!-- Tombol Update Soal -->
+                <button type="submit"
+                    class="group bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-orange-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
 
-            <!-- Tombol Kembali -->
-            <a href="{{ route('soal.show', Crypt::encrypt($soal->id)) }}"
-            class="group bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0
+                                translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                    </div>
+
+                    <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                        Update Soal
+                    </span>
+                </button>
+                <!-- Tombol Kembali -->
+                <a href="{{ route('soal.show', Crypt::encrypt($soal->id)) }}"
+                    class="group bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-gray-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
+
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0
+                                translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                    </div>
+
+                    <span class="relative z-10 flex items-center justify-center px-6 py-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Kembali
+                    </span>
+                </a>
+
                 
-                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
-                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
 
-                <span class="relative z-10 flex items-center justify-center px-6 py-4">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Kembali
-                </span>
-            </a>
+            </div>
+        </form>
 
-            <!-- Tombol Update Soal -->
-            <button type="submit"
-                class="group bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest shadow-lg hover:shadow-xl focus:ring-4 focus:ring-orange-500/25 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5 relative overflow-hidden">
-
-                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
-                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-
-                <span class="relative z-10 flex items-center justify-center px-6 py-4">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                    Update Soal
-                </span>
-            </button>
-
-        </div>
-  
     </div>
 
     <script>
@@ -231,10 +233,10 @@
             const div = document.createElement('div');
             div.className = 'flex items-center space-x-2';
             div.innerHTML = `
-                                                    <input type="file" id="gambar_${newIndex}" name="gambar[]" accept="image/*"
-                                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                    <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
-                                                `;
+                                                            <input type="file" id="gambar_${newIndex}" name="gambar[]" accept="image/*"
+                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                            <button type="button" onclick="removeGambar(this)" class="px-3 py-1 bg-red-500 text-white rounded text-sm">-</button>
+                                                        `;
             container.appendChild(div);
         }
 
@@ -262,6 +264,8 @@
 
     <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
     <script>
+        let ckEditors = [];
+
         // Initialize CKEditor for all ckeditor class elements
         document.querySelectorAll('.ckeditor').forEach(function (element) {
             ClassicEditor
@@ -271,9 +275,36 @@
                         uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
                     }
                 })
+                .then(editor => {
+                    ckEditors.push(editor);
+                    // Sync data to textarea on change
+                    editor.model.document.on('change:data', () => {
+                        if (editor.sourceElement) {
+                            editor.sourceElement.value = editor.getData();
+                        }
+                    });
+                    // Initial sync
+                    if (editor.sourceElement) {
+                        editor.sourceElement.value = editor.getData();
+                    }
+                })
                 .catch(error => {
                     console.error(error);
                 });
+        });
+
+        // Sync CKEditor content to textareas on form submit
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    ckEditors.forEach(editor => {
+                        if (editor.sourceElement) {
+                            editor.sourceElement.value = editor.getData();
+                        }
+                    });
+                });
+            }
         });
     </script>
 @endsection
