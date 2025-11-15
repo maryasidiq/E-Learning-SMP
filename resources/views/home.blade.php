@@ -175,7 +175,7 @@
                                 <p class="text-xs text-gray-500 dark:text-gray-400 lg:hidden">Informasi terbaru sekolah</p>
                             </div>
                         </div>
-                        <div class="prose prose-xs sm:prose-sm dark:prose-invert max-w-none">
+                        <div class="prose prose-xs sm:prose-sm dark:prose-invert max-w-none dark:text-white">
                             {!! $pengumuman->isi !!}
                         </div>
                     </div>

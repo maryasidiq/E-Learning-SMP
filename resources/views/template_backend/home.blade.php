@@ -108,7 +108,7 @@
 </head>
 <!-- sidebar-collapse -->
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-open">
+<body id="sidebar-body" class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapse">
     <div class="wrapper">
 
         @include('template_backend.navbar')
