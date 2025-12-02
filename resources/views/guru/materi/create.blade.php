@@ -316,15 +316,15 @@
                     class="flex flex-col sm:flex-row gap-4 w-full justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <!-- Tombol Simpan -->
                     <button type="submit" class="flex-1 inline-flex items-center justify-center px-4 py-3
-                    bg-gradient-to-r from-emerald-600 to-teal-600
-                    hover:from-emerald-700 hover:to-teal-700
-                    border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest
-                    shadow-lg hover:shadow-xl
-                    focus:ring-4 focus:ring-emerald-500/25 focus:ring-offset-2
-                    transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5
-                    relative overflow-hidden">
+                        bg-gradient-to-r from-emerald-600 to-teal-600
+                        hover:from-emerald-700 hover:to-teal-700
+                        border border-transparent rounded-xl font-bold text-sm text-white uppercase tracking-widest
+                        shadow-lg hover:shadow-xl
+                        focus:ring-4 focus:ring-emerald-500/25 focus:ring-offset-2
+                        transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-0.5
+                        relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0
-                               translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                                   translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
                         </div>
                         <svg class="w-5 h-5 mr-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -351,34 +351,43 @@
     <script>
         // Initialize CKEditor for existing editors
         document.querySelectorAll('.ckeditor-editor').forEach(function (element) {
-            ClassicEditor
-                .create(element, {
-                    toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
-                    ckfinder: {
-                        uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            if (!element.dataset.ckeditorInitialized) {
+                ClassicEditor
+                    .create(element, {
+                        toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
+                        ckfinder: {
+                            uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
+                        }
+                    })
+                    .then(editor => {
+                        element.dataset.ckeditorInitialized = 'true';
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
         });
 
         document.getElementById('tipe').addEventListener('change', function () {
             var tipe = this.value;
             var kontenField = document.getElementById('konten-field');
             var fileField = document.getElementById('file-field');
+            var kontenElement = document.querySelector('#konten');
 
             if (tipe === 'teks') {
                 kontenField.style.display = 'block';
                 fileField.style.display = 'none';
                 // Initialize CKEditor for the konten field if not already done
-                if (!document.querySelector('#konten').classList.contains('ck-editor__editable')) {
+                if (!kontenElement.dataset.ckeditorInitialized) {
                     ClassicEditor
-                        .create(document.querySelector('#konten'), {
+                        .create(kontenElement, {
                             toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
                             ckfinder: {
                                 uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
                             }
+                        })
+                        .then(editor => {
+                            kontenElement.dataset.ckeditorInitialized = 'true';
                         })
                         .catch(error => {
                             console.error(error);

@@ -322,41 +322,44 @@
 
     <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
     <script>
-        // Initialize CKEditor for existing editors
-        document.querySelectorAll('.ckeditor-editor').forEach(function (element) {
-            ClassicEditor
-                .create(element, {
-                    toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
-                    ckfinder: {
-                        uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
+        // Function to initialize CKEditor
+        function initializeCKEditor(element) {
+            if (!element.dataset.ckeditorInitialized) {
+                element.dataset.ckeditorInitialized = 'true';
+                ClassicEditor
+                    .create(element, {
+                        toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
+                        ckfinder: {
+                            uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        element.dataset.ckeditorInitialized = ''; // Reset on error
+                    });
+            }
+        }
 
-        document.getElementById('tipe').addEventListener('change', function () {
+        // Initialize description editor
+        initializeCKEditor(document.getElementById('deskripsi'));
+
+        // Initialize konten editor if type is teks
+        var tipeSelect = document.getElementById('tipe');
+        if (tipeSelect.value === 'teks') {
+            initializeCKEditor(document.getElementById('konten'));
+        }
+
+        tipeSelect.addEventListener('change', function () {
             var tipe = this.value;
             var kontenField = document.getElementById('konten-field');
             var fileField = document.getElementById('file-field');
+            var kontenElement = document.querySelector('#konten');
 
             if (tipe === 'teks') {
                 kontenField.style.display = 'block';
                 fileField.style.display = 'none';
                 // Initialize CKEditor for the konten field if not already done
-                if (!document.querySelector('#konten').classList.contains('ck-editor__editable')) {
-                    ClassicEditor
-                        .create(document.querySelector('#konten'), {
-                            toolbar: ['bold', 'italic', 'underline', '|', 'bulletedList', '|', 'link', '|', 'blockQuote', 'codeBlock', '|', 'undo', 'redo'],
-                            ckfinder: {
-                                uploadUrl: '/admin/upload-image' // You can configure this later for image uploads
-                            }
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
+                initializeCKEditor(kontenElement);
             } else if (tipe === 'pdf' || tipe === 'ppt' || tipe === 'excel' || tipe === 'file') {
                 kontenField.style.display = 'none';
                 fileField.style.display = 'block';
@@ -380,8 +383,5 @@
                 preview.style.display = 'none';
             }
         });
-
-        // Trigger change on page load if there's a selected value
-        document.getElementById('tipe').dispatchEvent(new Event('change'));
     </script>
 @endsection
