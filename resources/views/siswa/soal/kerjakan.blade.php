@@ -259,6 +259,7 @@
         function updateProgress() {
             const radios = document.querySelectorAll('input[type="radio"]:checked');
             const textareas = document.querySelectorAll('textarea:not(:placeholder-shown)');
+            const fileInputs = document.querySelectorAll('input[type="file"]');
             const answered = new Set();
 
             // Count radio button answers
@@ -271,6 +272,14 @@
             textareas.forEach(textarea => {
                 const questionId = textarea.name.match(/jawaban\[(\d+)\]/)[1];
                 answered.add(questionId);
+            });
+
+            // Count file uploads (for tugas questions)
+            fileInputs.forEach(fileInput => {
+                if (fileInput.files.length > 0) {
+                    const questionId = fileInput.name.match(/file\[(\d+)\]/)[1];
+                    answered.add(questionId);
+                }
             });
 
             const answeredCount = answered.size;

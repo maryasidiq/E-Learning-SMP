@@ -86,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/soal', 'SoalController');
     Route::get('/soal/nilai/{id}', 'SoalController@nilai')->name('soal.nilai');
     Route::post('/soal/toggle-nilai-visibility/{id}', 'SoalController@toggleNilaiVisibility')->name('soal.toggle-nilai-visibility');
+    Route::get('/soal/detail-jawaban/{soal_id}/{siswa_id}', 'SoalController@detailJawaban')->name('soal.detail-jawaban');
     Route::get('/soal/create-soal/{id}', 'SoalController@createSoal')->name('soal.create-soal');
     Route::post('/soal/store-soal/{id}', 'SoalController@storeSoal')->name('soal.store-soal');
     Route::post('/guru/soal/generate-soal-excel', 'SoalController@generateSoalFromExcel')->name('soal.generate-soal-excel');

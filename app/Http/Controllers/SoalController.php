@@ -160,7 +160,7 @@ class SoalController extends Controller
             'waktu_selesai' => 'required|date|after:waktu_mulai',
             'durasi' => 'required|integer|min:1',
             'soal' => 'nullable|array',
-            'soal.*.tipe' => 'required_with:soal|in:pilihan_ganda,essay',
+            'soal.*.tipe' => 'required_with:soal|in:pilihan_ganda,essay,tugas',
             'soal.*.pertanyaan' => 'required_with:soal|string',
             'soal.*.pilihan_a' => 'nullable|string',
             'soal.*.pilihan_b' => 'nullable|string',
@@ -171,7 +171,7 @@ class SoalController extends Controller
             'soal.*.bobot' => 'required_with:soal|integer|min:1',
             'existing_soal' => 'nullable|array',
             'existing_soal.*.id' => 'required_with:existing_soal|integer|exists:soal_detail,id',
-            'existing_soal.*.tipe' => 'required_with:existing_soal|in:pilihan_ganda,essay',
+            'existing_soal.*.tipe' => 'required_with:existing_soal|in:pilihan_ganda,essay,tugas',
             'existing_soal.*.pertanyaan' => 'required_with:existing_soal|string',
             'existing_soal.*.gambar' => 'nullable|array|max:4',
             'existing_soal.*.gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -390,6 +390,27 @@ class SoalController extends Controller
         return redirect()->route('soal.nilai', Crypt::encrypt($id))->with('success', 'Visibilitas nilai berhasil diubah!');
     }
 
+    public function detailJawaban(string $soal_id, string $siswa_id)
+    {
+        $soal_id = Crypt::decrypt($soal_id);
+        $siswa_id = Crypt::decrypt($siswa_id);
+
+        $soal = Soal::findOrFail($soal_id);
+        $siswa = \App\Siswa::findOrFail($siswa_id);
+
+        // Get all answers for this student and soal
+        $jawabanSiswa = JawabanSoal::where('soal_id', $soal_id)
+            ->where('siswa_id', $siswa_id)
+            ->with(['soalDetail'])
+            ->orderBy('soal_detail_id')
+            ->get();
+
+        // Calculate final score
+        $nilaiAkhir = $jawabanSiswa->avg('nilai_akhir') ?? 0;
+
+        return view('guru.soal.detail_jawaban', compact('soal', 'siswa', 'jawabanSiswa', 'nilaiAkhir'));
+    }
+
     public function createSoal($id)
     {
         $id = Crypt::decrypt($id);
@@ -458,7 +479,7 @@ class SoalController extends Controller
         $soal_id = Crypt::decrypt($soal_id);
         $soal_detail_id = Crypt::decrypt($soal_detail_id);
         $request->validate([
-            'tipe' => 'required|in:pilihan_ganda,essay',
+            'tipe' => 'required|in:pilihan_ganda,essay,tugas',
             'pertanyaan' => 'required|string',
             'gambar' => 'nullable|array|max:4',
             'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

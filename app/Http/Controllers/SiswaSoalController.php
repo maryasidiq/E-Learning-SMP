@@ -121,6 +121,7 @@ class SiswaSoalController extends Controller
 
         foreach ($soalDetail as $item) {
             $jawaban = $request->input('jawaban.' . $item->id);
+            $filePath = null;
             $isCorrect = false;
 
             if ($item->tipe == 'pilihan_ganda') {
@@ -128,6 +129,13 @@ class SiswaSoalController extends Controller
             } elseif ($item->tipe == 'essay') {
                 // Untuk essay, simpan jawaban tapi tidak hitung skor otomatis
                 $isCorrect = false;
+            } elseif ($item->tipe == 'tugas') {
+                // Untuk tugas, simpan file yang diupload
+                if ($request->hasFile('file.' . $item->id)) {
+                    $file = $request->file('file.' . $item->id);
+                    $filePath = $file->store('tugas', 'public');
+                }
+                $isCorrect = false; // Tugas tidak otomatis benar
             }
 
             JawabanSoal::create([
@@ -135,6 +143,7 @@ class SiswaSoalController extends Controller
                 'soal_detail_id' => $item->id,
                 'siswa_id' => $siswa->id,
                 'jawaban' => $jawaban,
+                'file' => $filePath,
                 'is_correct' => $isCorrect,
                 'skor' => $isCorrect ? $item->bobot : 0,
             ]);
