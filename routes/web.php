@@ -37,6 +37,14 @@ Route::post('/cek-email', 'UserController@email')->name('cek-email')->middleware
 Route::get('/reset/password/{id}', 'UserController@password')->name('reset.password')->middleware('guest');
 Route::patch('/reset/password/update/{id}', 'UserController@update_password')->name('reset.password.update')->middleware('guest');
 
+// Public routes for user guides
+Route::get('/panduan', function () {
+  return view('panduan');
+})->name('panduan');
+Route::get('/panduan-admin', function () {
+  return view('panduan-admin');
+})->name('panduan-admin');
+
 Route::middleware(['auth'])->group(function () {
   Route::get('/', 'HomeController@index')->name('home');
   Route::get('/jadwal/sekarang', 'JadwalController@jadwalSekarang');

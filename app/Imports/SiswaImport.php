@@ -16,6 +16,9 @@ class SiswaImport implements ToModel
     public function model(array $row)
     {
         $kelas = Kelas::where('nama_kelas', $row[3])->first();
+        if (!$kelas) {
+            return null; // Skip row if kelas not found
+        }
         if ($row[2] == 'L') {
             $foto = 'uploads/siswa/52471919042020_male.jpg';
         } else {
