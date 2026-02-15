@@ -220,9 +220,38 @@
     </div>
 
     <script>
-        // Set waktu berakhir dari PHP
-        const waktuBerakhir = new Date('{{ $waktuBerakhir->format('Y-m-d H:i:s') }}').getTime();
+        // Data dari PHP
+        const soalId = {{ $soal->id }};
+        const durasiMenit = {{ $soal->durasi }};
+        const waktuSelesaiStr = '{{ $soal->waktu_selesai }}'; 
+        const serverTime = new Date('{{ now()->format('Y-m-d H:i:s') }}').getTime();
         const totalSoal = {{ count($soalDetail) }};
+        
+        // LocalStorage Keys
+        const STORAGE_KEY_START = `quiz_${soalId}_start_time`;
+        const STORAGE_KEY_ANSWERS = `quiz_${soalId}_answers`;
+
+        // 1. Timer Logic with Persistence
+        let startTime = localStorage.getItem(STORAGE_KEY_START);
+        
+        if (!startTime) {
+            // First time loading the quiz (or storage cleared)
+            startTime = serverTime; 
+            localStorage.setItem(STORAGE_KEY_START, startTime);
+        } else {
+            startTime = parseInt(startTime);
+        }
+
+        // Calculate Target End Time based on stored Start Time + Duration
+        // Note: JavaScipt timestamps are in milliseconds
+        const durationMs = durasiMenit * 60 * 1000;
+        const endTimeDuration = startTime + durationMs;
+        
+        // Calculate Absolute End Time (Hard Deadline from Server)
+        const endTimeAbsolute = new Date(waktuSelesaiStr).getTime();
+        
+        // The actual deadline is the earliest of the two
+        const waktuBerakhir = Math.min(endTimeDuration, endTimeAbsolute);
 
         function updateCountdown() {
             const sekarang = new Date().getTime();
@@ -231,6 +260,9 @@
             if (selisih <= 0) {
                 document.getElementById('countdown').innerHTML = 'WAKTU HABIS!';
                 document.getElementById('countdown').style.color = '#ef4444';
+                // Clear storage before submitting to avoid stale data on next attempt (if any)
+                localStorage.removeItem(STORAGE_KEY_START);
+                localStorage.removeItem(STORAGE_KEY_ANSWERS);
                 document.getElementById('SoalForm').submit();
                 return;
             }
@@ -246,71 +278,130 @@
                 countdownText = menit + 'm ' + detik + 's';
             }
 
-            document.getElementById('countdown').innerHTML = countdownText;
-
-            // Ubah warna jika waktu tersisa kurang dari 5 menit
-            if (menit < 5 && jam === 0) {
-                document.getElementById('countdown').style.color = '#ef4444';
-            } else {
-                document.getElementById('countdown').style.color = '#ffffff';
+            const countdownElem = document.getElementById('countdown');
+            if (countdownElem) {
+                countdownElem.innerHTML = countdownText;
+                // Ubah warna jika waktu tersisa kurang dari 5 menit
+                if (selisih < 5 * 60 * 1000) {
+                    countdownElem.style.color = '#ef4444';
+                } else {
+                    countdownElem.style.color = '#ffffff';
+                }
             }
+        }
+
+        // 2. Answer Persistence Logic
+        function loadAnswers() {
+            const savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY_ANSWERS) || '{}');
+            
+            // Restore Radio Buttons
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                const name = radio.name; 
+                // name format: jawaban[123]
+                if (savedAnswers[name] === radio.value) {
+                    radio.checked = true;
+                }
+            });
+
+            // Restore Textareas
+            document.querySelectorAll('textarea').forEach(textarea => {
+                const name = textarea.name;
+                if (savedAnswers[name]) {
+                    textarea.value = savedAnswers[name];
+                }
+            });
+
+            // Note: File inputs cannot be restored programmatically for security reasons
+        }
+
+        function saveAnswer(e) {
+            const target = e.target;
+            // Only save inputs related to the quiz form
+            if (!target.name || !target.name.startsWith('jawaban[')) return;
+
+            const savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY_ANSWERS) || '{}');
+            savedAnswers[target.name] = target.value;
+            localStorage.setItem(STORAGE_KEY_ANSWERS, JSON.stringify(savedAnswers));
+            
+            updateProgress();
         }
 
         function updateProgress() {
             const radios = document.querySelectorAll('input[type="radio"]:checked');
-            const textareas = document.querySelectorAll('textarea:not(:placeholder-shown)');
+            // Check textareas that have content (trim whitespace)
+            const textareas = Array.from(document.querySelectorAll('textarea')).filter(t => t.value.trim().length > 0);
             const fileInputs = document.querySelectorAll('input[type="file"]');
+            
             const answered = new Set();
 
             // Count radio button answers
             radios.forEach(radio => {
-                const questionId = radio.name.match(/jawaban\[(\d+)\]/)[1];
-                answered.add(questionId);
+                const match = radio.name.match(/jawaban\[(\d+)\]/);
+                if (match) answered.add(match[1]);
             });
 
-            // Count textarea answers (for essay questions)
+            // Count textarea answers
             textareas.forEach(textarea => {
-                const questionId = textarea.name.match(/jawaban\[(\d+)\]/)[1];
-                answered.add(questionId);
+                const match = textarea.name.match(/jawaban\[(\d+)\]/);
+                if (match) answered.add(match[1]);
             });
 
-            // Count file uploads (for tugas questions)
+            // Count file uploads
             fileInputs.forEach(fileInput => {
                 if (fileInput.files.length > 0) {
-                    const questionId = fileInput.name.match(/file\[(\d+)\]/)[1];
-                    answered.add(questionId);
+                    const match = fileInput.name.match(/file\[(\d+)\]/);
+                    if (match) answered.add(match[1]);
                 }
             });
 
             const answeredCount = answered.size;
             const progressPercent = (answeredCount / totalSoal) * 100;
 
-            document.getElementById('progress-bar').style.width = progressPercent + '%';
-            document.getElementById('progress-text').innerHTML = answeredCount + ' dari ' + totalSoal + ' soal';
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            if(progressBar) progressBar.style.width = progressPercent + '%';
+            if(progressText) progressText.innerHTML = answeredCount + ' dari ' + totalSoal + ' soal';
         }
-
-        // Update countdown setiap detik
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Jalankan sekali saat load
-
-        // Update progress saat ada perubahan
-        document.addEventListener('change', updateProgress);
-        document.addEventListener('input', updateProgress);
-        updateProgress(); // Jalankan sekali saat load
 
         function confirmSubmit() {
             if (confirm('Apakah Anda yakin ingin mengirim jawaban? Pastikan semua jawaban sudah benar.')) {
+                // Clear storage on intentional submit
+                localStorage.removeItem(STORAGE_KEY_START);
+                localStorage.removeItem(STORAGE_KEY_ANSWERS);
                 document.getElementById('SoalForm').submit();
             }
         }
 
-        // Prevent right-click dan shortcut keyboard
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAnswers();
+            updateProgress(); // Initial progress check
+            
+            // Start timer
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // Listen for changes
+            const form = document.getElementById('SoalForm');
+            if (form) {
+                form.addEventListener('change', saveAnswer);
+                form.addEventListener('input', (e) => {
+                    // Save textareas on input (debounced could be better but this is simple)
+                    if (e.target.tagName === 'TEXTAREA') {
+                        saveAnswer(e);
+                    }
+                });
+            }
+        });
+
+
+        // Prevent right-click dan shortcut keyboard (Original protections)
         document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
 
         document.addEventListener('keydown', function (e) {
-            // Prevent F12, Ctrl+Shift+I, Ctrl+U, dll
             if (e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && e.key === 'I') ||
                 (e.ctrlKey && e.key === 'U') ||
@@ -319,9 +410,6 @@
             }
         });
 
-        // Auto-submit saat waktu habis
-        setTimeout(function () {
-            document.getElementById('SoalForm').submit();
-        }, waktuBerakhir - new Date().getTime());
+        // Auto-submit saat waktu habis (handled in updateCountdown)
     </script>
 @endsection
